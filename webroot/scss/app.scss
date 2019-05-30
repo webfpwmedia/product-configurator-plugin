@@ -1,0 +1,40 @@
+/**
+
+- Bootstrap CSS Framework.
+- Shards Dashboard UI (a Bootstrap theme).
+- This plugin's custom CSS.
+
+@link https://getbootstrap.com/docs/4.1/getting-started/introduction/
+@link https://designrevision.com/docs/shards-dashboard-lite/
+
+ */
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "../shards/css/shards-dashboards.1.1.0.min";
+@import "../shards/css/extras.1.1.0.min";
+
+.card-footer {
+  background-color: rgba(0, 0, 0, .03);
+}
+
+.custom-select {
+  -webkit-appearance: none;
+}
+
+.form-group {
+  margin-bottom: 2rem;
+
+  .error-message {
+    width: 100%;
+    margin: 5px 0;
+    color: $danger;
+  }
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+textarea {
+  min-height: 400px;
+}

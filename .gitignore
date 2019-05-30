@@ -1,5 +1,8 @@
 # Plugin specific files #
 /data/mysql
+/node_modules
+/webroot/css
+/webroot/js/dist
 
 # CakePHP specific files #
 ##########################

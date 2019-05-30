@@ -26,15 +26,20 @@ class AppView extends View
 {
 
     /**
-     * Initialization hook method.
-     *
-     * Use this method to add common initialization code like loading helpers.
-     *
-     * e.g. `$this->loadHelper('Html');`
+     * initialize.
      *
      * @return void
      */
     public function initialize()
     {
+        parent::initialize();
+
+        # Bootstrap 4 templates.
+        $this->loadHelper('Form', [
+            'templates' => 'bootstrap4',
+            'widgets' => [
+                'json' => ['Json'],
+            ],
+        ]);
     }
 }

@@ -1,0 +1,116 @@
+<?php
+namespace App\Controller;
+
+/**
+ * Components Controller
+ *
+ * @property \App\Model\Table\ComponentsTable $Components
+ *
+ * @method \App\Model\Entity\Component[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ */
+class ComponentsController extends AppController
+{
+
+    /**
+     * View method
+     *
+     * @param string|null $id Component id.
+     * @return \Cake\Http\Response|void
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function view($id = null)
+    {
+        $component = $this->Components->get($id, [
+            'contain' => ['Configurators']
+        ]);
+        $configurator = $component->configurator;
+
+        $this
+            ->set('component', $component)
+            ->set('configurator', $configurator)
+            ->viewBuilder()
+            ->setTemplate('manage');
+    }
+
+    /**
+     * Add method
+     *
+     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     */
+    public function add()
+    {
+        $configurator = $this->Components->Configurators->get($this->getRequest()->getQuery('configurator_id'));
+
+        $component = $this->Components->newEntity();
+
+        if ($this->getRequest()->is('post')) {
+            $data = $this->getRequest()->getData();
+            $data['configurator_id'] = $configurator->id;
+
+            $component = $this->Components->patchEntity($component, $data);
+
+            if ($this->Components->save($component)) {
+                $this->Flash->success(__('The component has been saved.'));
+
+                return $this->redirect(['action' => 'view', $component->id]);
+            }
+
+            $this->Flash->error(__('The component could not be saved. Please, try again.'));
+        }
+
+        $this
+            ->set(compact('component', 'configurator'))
+            ->viewBuilder()
+            ->setTemplate('manage');
+    }
+
+    /**
+     * Edit method
+     *
+     * @param string|null $id Component id.
+     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function edit($id = null)
+    {
+        $component = $this->Components->get($id);
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $component = $this->Components->patchEntity($component, $this->request->getData());
+
+            if ($this->Components->save($component)) {
+                $this->Flash->success(__('The component has been saved.'));
+
+                return $this->redirect(['action' => 'view', $component->id]);
+            }
+
+            $this->Flash->error(__('The component could not be saved. Please, try again.'));
+        }
+
+        $this
+            ->set(compact('component', 'configurator'))
+            ->viewBuilder()
+            ->setTemplate('manage');
+    }
+
+    /**
+     * Delete method
+     *
+     * @param string|null $id Component id.
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function delete($id = null)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        $component = $this->Components->get($id);
+
+        if ($this->Components->delete($component)) {
+            $this->Flash->success(__('The component has been deleted.'));
+        } else {
+            $this->Flash->error(__('The component could not be deleted. Please, try again.'));
+        }
+
+        return $this->redirect(['controller' => 'Configurators', 'action' => 'view', $component->configurator_id]);
+    }
+}

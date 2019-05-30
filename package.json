@@ -1,0 +1,25 @@
+{
+  "name": "arc-product-configurator",
+  "version": "1.0.0",
+  "description": "Arc Point Group Product Configurator Plugin for CakePHP.",
+  "directories": {
+    "test": "tests"
+  },
+  "author": "Arc Point Group",
+  "private": true,
+  "devDependencies": {
+    "node-sass": "^4.11.0",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "garlicjs": "^1.4.2",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.15.0",
+    "shards-ui": "^2.1.2"
+  },
+  "scripts": {
+    "build": "npx node-sass --source-map true webroot/scss/ --output webroot/css/ && npx webpack"
+  }
+}

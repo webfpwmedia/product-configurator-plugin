@@ -1,0 +1,77 @@
+<?php
+/**
+ * @var \{{ namespace }}\View\AppView $this
+ * @var \App\Model\Entity\{{ singularHumanName }}[] ${{ pluralVar }}
+ */
+
+$this
+    ->assign('title', '{{ pluralHumanName }}')
+    ->assign('subtitle', __('Index Of'));
+
+?>
+{% set fields = Bake.filterFields(fields, schema, modelObject, indexColumns, ['binary', 'text']) %}
+
+<div class="row">
+    <div class="col">
+        <div class="card card-small mb-4">
+            <div class="card-header border-bottom">
+                <div class="row no-gutters">
+                    <div class="col">
+                        <h6 class="m-0">
+                            <?= __('Active {{ pluralHumanName }}') ?>
+                        </h6>
+                    </div>
+                    <div class="col text-right">
+                        <?= $this->Html->link(__('+ Add {{ singularHumanName }}'), ['action' => 'add']) ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body p-0 pb-3">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                {% for field in fields %}
+                                    <th scope="col" class="border-0"><?= __(ucfirst('{{ field }}')) ?></th>
+                                {% endfor %}
+                                <th scope="col" class="border-0">&nbsp;</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach (${{ pluralVar }} as ${{ singularVar }}): ?>
+                                <tr>
+                                    {% for field in fields %}
+                                        {% set isKey = false %}
+                                        {% if associations.BelongsTo %}
+                                            {% for alias, details in associations.BelongsTo if field == details.foreignKey %}
+                                                {% set isKey = true %}
+                                                <td><?= ${{ singularVar }}->has('{{ details.property }}') ? $this->Html->link(${{ singularVar }}->{{ details.property }}->{{ details.displayField }}, ['controller' => '{{ details.controller }}', 'action' => 'view', ${{ singularVar }}->{{ details.property }}->{{ details.primaryKey[0] }}]) : '' ?></td>
+                                            {% endfor %}
+                                        {% endif %}
+                                        {% if isKey is not same as(true) %}
+                                            {% set columnData = Bake.columnData(field, schema) %}
+                                            {% if columnData.type not in ['integer', 'float', 'decimal', 'biginteger', 'smallinteger', 'tinyinteger'] %}
+                                                <td><?= h(${{ singularVar }}->{{ field }}) ?></td>
+                                            {% else %}
+                                                <td><?= $this->Number->format(${{ singularVar }}->{{ field }}) ?></td>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% set pk = '$' ~ singularVar ~ '->' ~ primaryKey[0] %}
+                                    <td class="text-right">
+                                        <?= $this->Html->link(__('Details'),
+                                            ['action' => 'view', {{ pk|raw }}],
+                                            ['class' => 'btn btn-primary']);
+                                        ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
