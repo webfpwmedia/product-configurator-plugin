@@ -1,0 +1,68 @@
+version: "3.2"
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./config/nginx/Dockerfile
+    container_name: configurator-nginx
+    depends_on:
+      - mysql
+      - php
+    networks:
+      - app-tier
+    ports:
+      - 8080:80
+    volumes:
+      - ./logs:/srv/app/logs
+      - ./webroot:/srv/app/webroot
+
+  php:
+    build:
+      context: .
+      dockerfile: ./config/php/Dockerfile
+    container_name: configurator-php
+    depends_on:
+      - mysql
+    networks:
+      - app-tier
+    volumes:
+      - type: bind
+        source: vendor
+        target: /srv/app/vendor
+      - .:/srv/app
+      - ./config/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+
+  mysql:
+    container_name: configurator-mysql
+    environment:
+      MYSQL_DATABASE: configurator
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: configurator
+      MYSQL_PASSWORD: password
+    image: mysql:5.7
+    networks:
+      - app-tier
+    ports:
+      - 3307:3306
+    volumes:
+      - ./config/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./data/mysql:/var/lib/mysql
+
+  mysqltest:
+    container_name: configurator-mysqltest
+    environment:
+      MYSQL_DATABASE: configurator_tests
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: configurator_tests
+      MYSQL_PASSWORD: password
+    image: mysql:5.7
+    networks:
+      - app-tier
+    volumes:
+      - ./config/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
