@@ -1,5 +1,6 @@
 # Plugin specific files #
 /data/mysql
+/node_modules
 
 # CakePHP specific files #
 ##########################
