@@ -1,5 +1,5 @@
 {
-    "name": "arc/product-configurator",
+    "name": "arcpointgroup/product-configurator",
     "description": "Arc Point Group Product Configurator Plugin",
     "homepage": "https://github.com/arcpointgroup/product-configurator",
     "type": "cakephp-plugin",
