@@ -1,7 +1,7 @@
 <?php
 namespace ARC\ProductConfigurator\Model\Table;
 
-use Cake\ORM\Table;
+use ARC\ProductConfigurator\ORM\Table;
 use Cake\Validation\Validator;
 
 /**

@@ -1,6 +1,7 @@
 <?php
 
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 
 $config = [
     'common' => [
@@ -19,3 +20,7 @@ $config = [
 ];
 
 Configure::write('ProductConfigurator', $config);
+
+ConnectionManager::setConfig('configurator', [
+    'url' => 'mysql://root:secret@mysql/configurator?encoding=utf8&timezone=UTC&cacheMetadata=true&quoteIdentifiers=false&persistent=false',
+]);
