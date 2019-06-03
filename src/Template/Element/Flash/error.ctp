@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \App\View\AppView $this
+ * @var \ARC\ProductConfigurator\View\AppView $this
  * @var string $message
  * @var array $params
  */

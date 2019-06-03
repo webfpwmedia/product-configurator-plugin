@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \App\View\AjaxView $this
+ * @var \ARC\ProductConfigurator\View\AjaxView $this
  */
 ?>
 <?= $this->fetch('content') ?>

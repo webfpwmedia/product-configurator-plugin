@@ -1,5 +1,5 @@
 <?php
-namespace App\Model\Table;
+namespace ARC\ProductConfigurator\Model\Table;
 
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -9,17 +9,17 @@ use Cake\Validation\Validator;
 /**
  * Configurators Model
  *
- * @property \App\Model\Table\ComponentsTable|\Cake\ORM\Association\HasMany $Components
- * @property \App\Model\Table\StepsTable|\Cake\ORM\Association\HasMany $Steps
+ * @property \ARC\ProductConfigurator\Model\Table\ComponentsTable|\Cake\ORM\Association\HasMany $Components
+ * @property \ARC\ProductConfigurator\Model\Table\StepsTable|\Cake\ORM\Association\HasMany $Steps
  *
- * @method \App\Model\Entity\Configurator get($primaryKey, $options = [])
- * @method \App\Model\Entity\Configurator newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Configurator[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Configurator|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Configurator saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Configurator patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Configurator[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Configurator findOrCreate($search, callable $callback = null, $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Configurator get($primaryKey, $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Configurator newEntity($data = null, array $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Configurator[] newEntities(array $data, array $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Configurator|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Configurator saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Configurator patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Configurator[] patchEntities($entities, array $data, array $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Configurator findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */

@@ -1,7 +1,7 @@
 <?php
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Image[] $images
+ * @var \ARC\ProductConfigurator\View\AppView $this
+ * @var \ARC\ProductConfigurator\Model\Entity\Image[] $images
  */
 
 $this

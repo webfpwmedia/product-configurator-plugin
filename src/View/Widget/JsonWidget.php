@@ -1,5 +1,5 @@
 <?php
-namespace App\View\Widget;
+namespace ARC\ProductConfigurator\View\Widget;
 
 use Cake\View\Form\ContextInterface;
 use Cake\View\Widget\TextareaWidget;

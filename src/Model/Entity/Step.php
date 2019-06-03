@@ -1,5 +1,5 @@
 <?php
-namespace App\Model\Entity;
+namespace ARC\ProductConfigurator\Model\Entity;
 
 use Cake\ORM\Entity;
 
@@ -14,7 +14,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
  *
- * @property \App\Model\Entity\Configurator $configurator
+ * @property \ARC\ProductConfigurator\Model\Entity\Configurator $configurator
  */
 class Step extends Entity
 {

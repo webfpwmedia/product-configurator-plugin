@@ -1,5 +1,5 @@
 <?php
-namespace App\Model\Table;
+namespace ARC\ProductConfigurator\Model\Table;
 
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -8,16 +8,16 @@ use Cake\Validation\Validator;
 /**
  * Components Model
  *
- * @property \App\Model\Table\ConfiguratorsTable|\Cake\ORM\Association\BelongsTo $Configurators
+ * @property \ARC\ProductConfigurator\Model\Table\ConfiguratorsTable|\Cake\ORM\Association\BelongsTo $Configurators
  *
- * @method \App\Model\Entity\Component get($primaryKey, $options = [])
- * @method \App\Model\Entity\Component newEntity($data = null, array $options = [])
- * @method \App\Model\Entity\Component[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Component|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Component saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Component patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\Component[] patchEntities($entities, array $data, array $options = [])
- * @method \App\Model\Entity\Component findOrCreate($search, callable $callback = null, $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Component get($primaryKey, $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Component newEntity($data = null, array $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Component[] newEntities(array $data, array $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Component|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Component saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Component patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Component[] patchEntities($entities, array $data, array $options = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Component findOrCreate($search, callable $callback = null, $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */

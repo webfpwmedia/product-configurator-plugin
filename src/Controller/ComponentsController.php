@@ -1,12 +1,12 @@
 <?php
-namespace App\Controller;
+namespace ARC\ProductConfigurator\Controller;
 
 /**
  * Components Controller
  *
- * @property \App\Model\Table\ComponentsTable $Components
+ * @property \ARC\ProductConfigurator\Model\Table\ComponentsTable $Components
  *
- * @method \App\Model\Entity\Component[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Component[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class ComponentsController extends AppController
 {

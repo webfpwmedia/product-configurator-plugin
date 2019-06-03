@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller;
+namespace ARC\ProductConfigurator\Controller;
 
 use Aws\S3\S3Client;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
@@ -8,9 +8,9 @@ use League\Flysystem\Filesystem;
 /**
  * Images Controller
  *
- * @property \App\Model\Table\ImagesTable $Images
+ * @property \ARC\ProductConfigurator\Model\Table\ImagesTable $Images
  *
- * @method \App\Model\Entity\Image[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Image[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class ImagesController extends AppController
 {

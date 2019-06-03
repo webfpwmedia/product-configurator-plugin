@@ -1,7 +1,7 @@
 <?php
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Configurator[] $configurators
+ * @var \ARC\ProductConfigurator\View\AppView $this
+ * @var \ARC\ProductConfigurator\Model\Entity\Configurator[] $configurators
  */
 
 $this

@@ -1,10 +1,10 @@
 <?php
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Configurator $configurator
+ * @var \ARC\ProductConfigurator\View\AppView $this
+ * @var \ARC\ProductConfigurator\Model\Entity\Configurator $configurator
  */
 
-use App\Form\ConfiguratorContext;
+use ARC\ProductConfigurator\Form\ConfiguratorContext;
 
 $this
     ->assign('title', h($configurator->name))

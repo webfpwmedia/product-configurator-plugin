@@ -1,9 +1,9 @@
 <?php
 /**
- * @var \App\View\AppView $this
+ * @var \ARC\ProductConfigurator\View\AppView $this
  */
 
-use App\Application;
+use ARC\ProductConfigurator\Application;
 use Cake\Core\Configure;
 
 ?>

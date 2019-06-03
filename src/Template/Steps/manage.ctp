@@ -1,8 +1,8 @@
 <?php
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Configurator $configurator
- * @var \App\Model\Entity\Step $step
+ * @var \ARC\ProductConfigurator\View\AppView $this
+ * @var \ARC\ProductConfigurator\Model\Entity\Configurator $configurator
+ * @var \ARC\ProductConfigurator\Model\Entity\Step $step
  */
 
 $this

@@ -1,14 +1,14 @@
 <?php
-namespace App\Controller;
+namespace ARC\ProductConfigurator\Controller;
 
-use App\Form\ConfiguratorForm;
+use ARC\ProductConfigurator\Form\ConfiguratorForm;
 
 /**
  * Configurators Controller
  *
- * @property \App\Model\Table\ConfiguratorsTable $Configurators
+ * @property \ARC\ProductConfigurator\Model\Table\ConfiguratorsTable $Configurators
  *
- * @method \App\Model\Entity\Configurator[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method \ARC\ProductConfigurator\Model\Entity\Configurator[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class ConfiguratorsController extends AppController
 {
