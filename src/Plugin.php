@@ -12,6 +12,11 @@ use Cake\Core\PluginApplicationInterface;
 class Plugin extends BasePlugin
 {
 
+    /**
+     * bootstrap.
+     *
+     * @param PluginApplicationInterface $app
+     */
     public function bootstrap(PluginApplicationInterface $app)
     {
         parent::bootstrap($app);

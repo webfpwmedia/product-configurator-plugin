@@ -1,6 +1,8 @@
 <?php
 namespace ARC\ProductConfigurator\Form;
 
+use ARC\ProductConfigurator\Model\Table\ComponentsTable;
+use ARC\ProductConfigurator\Model\Table\ImagesTable;
 use Cake\Core\Configure;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventManager;
@@ -13,12 +15,12 @@ class ConfiguratorForm extends Form
     use ModelAwareTrait;
 
     /**
-     * @var ARC\ProductConfigurator\Model\Table\ComponentsTable
+     * @var ComponentsTable
      */
     public $Components;
 
     /**
-     * @var ARC\ProductConfigurator\Model\Table\ImagesTable
+     * @var ImagesTable
      */
     public $Images;
 

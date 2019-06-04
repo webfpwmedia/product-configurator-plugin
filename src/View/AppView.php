@@ -38,7 +38,7 @@ class AppView extends View
         $this->loadHelper('Form', [
             'templates' => 'bootstrap4',
             'widgets' => [
-                'json' => ['ARC\ProductConfigurator.Json'],
+                'json' => ['ARC/ProductConfigurator.Json'],
             ],
         ]);
     }
