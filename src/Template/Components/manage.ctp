@@ -9,20 +9,13 @@ $this
     ->assign('title', h($component->name ?? __('Add')))
     ->assign('subtitle', __('Component'));
 
-$action = ['controller' => 'Components', 'action' => 'edit', $component->id];
-
-if ($component->isNew()) {
-    $action['action'] = 'add';
-    $action['?']['configurator_id'] = $configurator->id;
-}
-
 ?>
 
 <div class="row">
     <div class="col-lg-8">
         <div class="card card-small mb-4">
             <div class="card-body">
-                <?= $this->Form->create($component, ['url' => $action]) ?>
+                <?= $this->Form->create($component) ?>
 
                 <?= $component->isNew()
                     ? null
