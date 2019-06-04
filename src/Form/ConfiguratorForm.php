@@ -53,7 +53,7 @@ class ConfiguratorForm extends Form
 
             $stringTemplate = new StringTemplate(['mask' => $component->image_mask]);
 
-            $imgBaseUrl = Configure::read('App.imageBaseUrl');
+            $imgBaseUrl = Configure::read('ARC.ProductConfigurator.imageBaseUrl');
 
             $images = $this->Images
                 ->find()
