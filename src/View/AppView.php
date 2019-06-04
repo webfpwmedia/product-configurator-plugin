@@ -13,6 +13,8 @@
  */
 namespace ARC\ProductConfigurator\View;
 
+use ARC\ProductConfigurator\View\Widget\JsonWidget;
+use Cake\Core\Configure;
 use Cake\View\View;
 
 /**
@@ -77,8 +79,10 @@ class AppView extends View
         $this->loadHelper('Form', [
             'templates' => $this->bootstrap4,
             'widgets' => [
-                'json' => ['ARC/ProductConfigurator.Json'],
+                'json' => [JsonWidget::class],
             ],
         ]);
+
+        Configure::write('App.imageBaseUrl', Configure::read('ARC.ProductConfigurator.imageBaseUrl'));
     }
 }

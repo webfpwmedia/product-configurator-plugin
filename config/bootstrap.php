@@ -14,7 +14,7 @@ $config = [
         'default' => 'F j, Y g:ia',
     ],
 
-    'imageBaseUrl' => env('IMG_IX_BASE_URL'),
+    'imageBaseUrl' => 'img/',
 
     'meta' => [
         'description' => 'Arc Point Group product configurator plugin for CakePHP.',
