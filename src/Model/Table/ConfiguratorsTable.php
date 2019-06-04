@@ -41,11 +41,11 @@ class ConfiguratorsTable extends Table
 
         $this->hasMany('Components', [
             'foreignKey' => 'configurator_id',
-            'className' => 'App.Components'
+            'className' => 'ARC/ProductConfigurator.Components'
         ]);
         $this->hasMany('Steps', [
             'foreignKey' => 'configurator_id',
-            'className' => 'App.Steps'
+            'className' => 'ARC/ProductConfigurator.Steps'
         ]);
     }
 

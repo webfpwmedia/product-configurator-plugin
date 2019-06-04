@@ -42,7 +42,7 @@ class StepsTable extends Table
         $this->belongsTo('Configurators', [
             'foreignKey' => 'configurator_id',
             'joinType' => 'INNER',
-            'className' => 'App.Configurators'
+            'className' => 'ARC/ProductConfigurator.Configurators'
         ]);
     }
 
