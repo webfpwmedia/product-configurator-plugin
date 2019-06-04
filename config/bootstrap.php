@@ -19,7 +19,7 @@ $config = [
     ],
 ];
 
-Configure::write('ProductConfigurator', $config);
+Configure::write('ARC.ProductConfigurator', $config);
 
 ConnectionManager::setConfig('configurator', [
     'url' => 'mysql://root:root@mysql/configurator?encoding=utf8&timezone=UTC&cacheMetadata=true&quoteIdentifiers=false&persistent=false',
