@@ -19,7 +19,7 @@ $this
             </div>
 
             <div class="card-body">
-                <?= $this->Form->create($configurator, ['url' => ['action' => 'edit', $configurator->id]]) ?>
+                <?= $this->Form->create($configurator) ?>
                 <?= $this->Form->control('name') ?>
                 <?= $this->Form->control('bootstrap', [
                     'type' => 'json',
