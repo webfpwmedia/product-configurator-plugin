@@ -14,7 +14,9 @@
  */
 namespace ARC\ProductConfigurator\Controller;
 
+use ARC\ProductConfigurator\View\AppView;
 use Cake\Controller\Controller;
+use Cake\Event\Event;
 
 /**
  * Application Controller
@@ -45,6 +47,22 @@ class AppController extends Controller
             $this->loadComponent('Security');
         } catch (\Exception $exception) {
             $this->log($exception->getMessage());
+        }
+    }
+
+    /**
+     * beforeRender.
+     *
+     * @param Event $event
+     *
+     * @return void
+     */
+    public function beforeRender(Event $event)
+    {
+        if (!$this->viewBuilder()->getClassName()) {
+            $this
+                ->viewBuilder()
+                ->setClassName(AppView::class);
         }
     }
 }
