@@ -37,8 +37,6 @@ class ComponentsTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
-
         $this->belongsTo('Configurators', [
             'foreignKey' => 'configurator_id',
             'joinType' => 'INNER',

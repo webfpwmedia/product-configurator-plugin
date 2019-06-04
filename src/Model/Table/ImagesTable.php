@@ -33,8 +33,6 @@ class ImagesTable extends Table
         $this->setTable('images');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
-
-        $this->addBehavior('Timestamp');
     }
 
     /**

@@ -37,7 +37,10 @@ class ConfiguratorsTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
+        $this
+            ->addBehavior('Json', [
+                'fields' => ['bootstrap'],
+            ]);
 
         $this->hasMany('Components', [
             'foreignKey' => 'configurator_id',
