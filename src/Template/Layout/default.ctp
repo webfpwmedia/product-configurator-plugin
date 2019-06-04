@@ -14,11 +14,16 @@ use Cake\Core\Configure;
         <meta http-equiv="x-ua-compatible" content="ie=edge">
 
         <title>
-            <?= __(Configure::read('common.name')) . ' | ' . __($this->fetch('title')) ?>
-            <?= $this->fetch('subtitle') ? '(' . __($this->fetch('subtitle')) . ')' : null ?>
+            <?= __(Configure::read('ARC.ProductConfigurator.common.name')) .
+                ' | ' .
+                __($this->fetch('title')) ?>
+
+            <?= $this->fetch('subtitle')
+                ? '(' . __($this->fetch('subtitle')) . ')'
+                : null ?>
         </title>
 
-        <meta name="description" content="<?= __(Configure::read('meta.description')) ?>">
+        <meta name="description" content="<?= __(Configure::read('ARC.ProductConfigurator.meta.description')) ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
@@ -43,7 +48,9 @@ use Cake\Core\Configure;
                         <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
                             <a class="navbar-brand w-100 mr-0" href="#" style="line-height: 25px;">
                                 <div class="d-table m-auto">
-                                    <span class="d-none d-md-inline ml-1"><?= __(Configure::read('common.name')) ?></span>
+                                    <span class="d-none d-md-inline ml-1">
+                                        <?= __(Configure::read('ARC.ProductConfigurator.common.name')) ?>
+                                    </span>
                                 </div>
                             </a>
                             <a class="toggle-sidebar d-sm-inline d-md-none d-lg-none">
@@ -105,7 +112,9 @@ use Cake\Core\Configure;
                     <footer class="main-footer d-flex p-2 px-3 bg-white border-top">
                         <span class="copyright ml-auto my-auto mr-2">
                             <?= __('Copyright') ?> &copy; <?= date('Y') ?>
-                            <a href="<?= Configure::read('common.website') ?>" rel="nofollow"><?= Configure::read('common.copyright') ?></a>
+                            <a href="<?= Configure::read('ARC.ProductConfigurator.common.website') ?>" rel="nofollow">
+                                <?= Configure::read('ARC.ProductConfigurator.common.copyright') ?>
+                            </a>
                         </span>
                     </footer>
                 </main>
