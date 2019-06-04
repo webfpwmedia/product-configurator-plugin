@@ -4,9 +4,9 @@ namespace App\Controller;
 /**
  * Steps Controller
  *
- * @property \App\Model\Table\StepsTable $Steps
+ * @property ARC\ProductConfigurator\Model\Table\StepsTable $Steps
  *
- * @method \App\Model\Entity\Step[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @method ARC\ProductConfigurator\Model\Entity\Step[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
 class StepsController extends AppController
 {

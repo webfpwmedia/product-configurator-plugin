@@ -3,7 +3,6 @@
  * @var \ARC\ProductConfigurator\View\AppView $this
  */
 
-use ARC\ProductConfigurator\Application;
 use Cake\Core\Configure;
 
 ?>
@@ -29,7 +28,7 @@ use Cake\Core\Configure;
 
         echo $this->fetch('cssPreApp');
 
-        echo $this->Html->css('app');
+        echo $this->Html->css('ARC/ProductConfigurator.app');
 
         echo $this->fetch('cssPostApp');
 
@@ -117,7 +116,7 @@ use Cake\Core\Configure;
 
         echo $this->fetch('jsPreApp');
 
-        echo $this->Html->script('dist/app.bundle');
+        echo $this->Html->script('ARC/ProductConfigurator.dist/app.bundle');
 
         echo $this->fetch('jsPostApp');
 

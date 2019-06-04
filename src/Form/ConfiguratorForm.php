@@ -13,12 +13,12 @@ class ConfiguratorForm extends Form
     use ModelAwareTrait;
 
     /**
-     * @var \App\Model\Table\ComponentsTable
+     * @var ARC\ProductConfigurator\Model\Table\ComponentsTable
      */
     public $Components;
 
     /**
-     * @var \App\Model\Table\ImagesTable
+     * @var ARC\ProductConfigurator\Model\Table\ImagesTable
      */
     public $Images;
 
