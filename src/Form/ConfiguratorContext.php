@@ -1,5 +1,5 @@
 <?php
-namespace App\Form;
+namespace ARC\ProductConfigurator\Form;
 
 use Cake\Http\ServerRequest;
 use Cake\View\Form\ContextInterface;
