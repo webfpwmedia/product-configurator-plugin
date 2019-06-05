@@ -37,7 +37,10 @@ class StepsTable extends Table
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp');
+        $this
+            ->addBehavior('Json', [
+                'fields' => ['config'],
+            ]);
 
         $this->belongsTo('Configurators', [
             'foreignKey' => 'configurator_id',
