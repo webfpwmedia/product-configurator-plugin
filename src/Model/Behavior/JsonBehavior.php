@@ -24,13 +24,20 @@ class JsonBehavior extends Behavior
         'fields' => [],
     ];
 
+    /**
+     * Marshals white-space chars into nothing on applicable fields.
+     *
+     * @param Event $event
+     * @param \ArrayObject $data
+     * @param \ArrayObject $options
+     */
     public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
     {
-        $fields = $this->getConfig('fields');
+        $fields = $this->getConfig('fields', []);
 
-        foreach ($data as $field => $value) {
-            if (in_array($field, $fields)) {
-                $data[$field] = str_replace(["\n", "\r", "\t"], '', $value);
+        foreach ($fields as $field) {
+            if (isset($data[$field])) {
+                $data[$field] = str_replace(["\n", "\r", "\t"], '', $data[$field]);
             }
         }
     }
