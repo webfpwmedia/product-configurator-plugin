@@ -1,57 +1,134 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
- * @link          https://cakephp.org CakePHP(tm) Project
- * @since         0.10.0
- * @license       https://opensource.org/licenses/mit-license.php MIT License
+ * @var \ARC\ProductConfigurator\View\AppView $this
  */
 
-$cakeDescription = 'CakePHP: the rapid development php framework';
+use Cake\Core\Configure;
+
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-    <?= $this->Html->charset() ?>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <?= $cakeDescription ?>:
-        <?= $this->fetch('title') ?>
-    </title>
-    <?= $this->Html->meta('icon') ?>
 
-    <?= $this->Html->css('base.css') ?>
-    <?= $this->Html->css('style.css') ?>
+<!doctype html>
+<html class="no-js h-100" lang="en">
+    <head>
+        <?= $this->Html->charset() ?>
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <?= $this->fetch('meta') ?>
-    <?= $this->fetch('css') ?>
-    <?= $this->fetch('script') ?>
-</head>
-<body>
-    <nav class="top-bar expanded" data-topbar role="navigation">
-        <ul class="title-area large-3 medium-4 columns">
-            <li class="name">
-                <h1><a href=""><?= $this->fetch('title') ?></a></h1>
-            </li>
-        </ul>
-        <div class="top-bar-section">
-            <ul class="right">
-                <li><a target="_blank" href="https://book.cakephp.org/3.0/">Documentation</a></li>
-                <li><a target="_blank" href="https://api.cakephp.org/3.0/">API</a></li>
-            </ul>
+        <title>
+            <?= __(Configure::read('ARC.ProductConfigurator.common.name')) .
+                ' | ' .
+                __($this->fetch('title')) ?>
+
+            <?= $this->fetch('subtitle')
+                ? '(' . __($this->fetch('subtitle')) . ')'
+                : null ?>
+        </title>
+
+        <meta name="description" content="<?= __(Configure::read('ARC.ProductConfigurator.meta.description')) ?>">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <?php
+
+        echo $this->fetch('cssPreApp');
+
+        echo $this->Html->css('ARC/ProductConfigurator.app');
+
+        echo $this->fetch('cssPostApp');
+
+        ?>
+    </head>
+    <body class="h-100">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Main Sidebar -->
+                <aside class="main-sidebar col-12 col-md-3 col-lg-2 px-0">
+                    <div class="main-navbar">
+                        <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
+                            <a class="navbar-brand w-100 mr-0" href="#" style="line-height: 25px;">
+                                <div class="d-table m-auto">
+                                    <span class="d-none d-md-inline ml-1">
+                                        <?= __(Configure::read('ARC.ProductConfigurator.common.name')) ?>
+                                    </span>
+                                </div>
+                            </a>
+                            <a class="toggle-sidebar d-sm-inline d-md-none d-lg-none">
+                                <i class="material-icons">&#xE5C4;</i>
+                            </a>
+                        </nav>
+                    </div>
+
+                    <div class="nav-wrapper">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $this->Url->build(['controller' => 'Configurators', 'action' => 'index']) ?>">
+                                    <i class="material-icons">settings</i>
+                                    <span><?= __('Configurators') ?></span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= $this->Url->build(['controller' => 'Images', 'action' => 'index']) ?>">
+                                    <i class="material-icons">image</i>
+                                    <span><?= __('Image Index') ?></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </aside>
+                <!-- End Main Sidebar -->
+
+                <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
+                    <div class="main-navbar sticky-top bg-white">
+                        <!-- Main Navbar -->
+                        <nav class="navbar navbar-light flex-md-nowrap p-0 justify-content-md-end">
+                            <nav class="nav">
+                                <a href="#" class="nav-link nav-link-icon toggle-sidebar d-md-inline d-lg-none text-center border-left" data-toggle="collapse" data-target=".header-navbar" aria-expanded="false" aria-controls="header-navbar">
+                                    <i class="material-icons"></i>
+                                </a>
+                            </nav>
+                        </nav>
+
+                        <?= $this->Flash->render() ?>
+                    </div>
+
+                    <div class="main-content-container container-fluid px-4">
+                        <div class="page-header row no-gutters py-4">
+                            <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
+                                <span class="text-uppercase page-subtitle">
+                                    <?= h(__($this->fetch('subtitle'))) ?>
+                                </span>
+
+                                <h3 class="page-title">
+                                    <?= h(__($this->fetch('title'))) ?>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <?= $this->fetch('content') ?>
+                    </div>
+
+                    <footer class="main-footer d-flex p-2 px-3 bg-white border-top">
+                        <span class="copyright ml-auto my-auto mr-2">
+                            <?= __('Copyright') ?> &copy; <?= date('Y') ?>
+                            <a href="<?= Configure::read('ARC.ProductConfigurator.common.website') ?>" rel="nofollow">
+                                <?= Configure::read('ARC.ProductConfigurator.common.copyright') ?>
+                            </a>
+                        </span>
+                    </footer>
+                </main>
+            </div>
         </div>
-    </nav>
-    <?= $this->Flash->render() ?>
-    <div class="container clearfix">
-        <?= $this->fetch('content') ?>
-    </div>
-    <footer>
-    </footer>
-</body>
+
+        <?php
+
+        echo $this->fetch('jsPreApp');
+
+        echo $this->Html->script('ARC/ProductConfigurator.dist/app.bundle');
+
+        echo $this->fetch('jsPostApp');
+
+        ?>
+    </body>
 </html>

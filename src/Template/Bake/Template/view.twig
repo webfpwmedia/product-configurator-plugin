@@ -1,0 +1,89 @@
+<?php
+/**
+ * @var \{{ namespace }}\View\AppView $this
+ * @var \ARC\ProductConfigurator\Model\Entity\{{ singularHumanName }} ${{ singularVar }}
+ */
+
+ $this
+    ->assign('title', h(${{ singularVar }}->{{ displayField }}))
+    ->assign('subtitle', __('{{ singularHumanName }}'));
+?>
+{% set associations = {'BelongsTo': [], 'HasOne': [], 'HasMany': [], 'BelongsToMany': []}|merge(associations) %}
+{% set fields = Bake.filterFields(fields, schema, modelObject) %}
+{% set fieldsData = Bake.getViewFieldsData(fields, schema, associations) %}
+{% set associationFields = fieldsData.associationFields %}
+{% set groupedFields = fieldsData.groupedFields %}
+{% set pK = '$' ~ singularVar ~ '->' ~ primaryKey[0] %}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card card-small mb-4">
+            <div class="card-body">
+                <?= $this->Form->create(${{ singularVar }}, ['url' => ['action' => 'edit', {{ pK|raw }}]]) ?>
+                {% for field in fields if field not in primaryKey %}
+                    {%- if keyFields[field] %}
+                        {%- set fieldData = Bake.columnData(field, schema) %}
+                        {%- if fieldData.null %}
+                            <?= $this->Form->control('{{ field }}', ['options' => ${{ keyFields[field] }}, 'empty' => true]) ?>
+                            {{- "\n" }}
+                        {%- else %}
+                            <?= $this->Form->control('{{ field }}', ['options' => ${{ keyFields[field] }}]) ?>
+                            {{- "\n" }}
+                        {%- endif %}
+                    {%- elseif field not in ['created', 'modified', 'updated'] %}
+                        {%- set fieldData = Bake.columnData(field, schema) %}
+                        {%- if fieldData.type in ['date', 'datetime', 'time'] and fieldData.null %}
+                            <?= $this->Form->control('{{ field }}', ['empty' => true]) ?>
+                            {{- "\n" }}
+                        {%- else %}
+                            <?= $this->Form->control('{{ field }}') ?>
+                            {{- "\n" }}
+                        {%- endif %}
+                    {%- endif %}
+                {%- endfor %}
+
+                {%- if associations.BelongsToMany %}
+                    {%- for assocName, assocData in associations.BelongsToMany %}
+                        <?= $this->Form->control('{{ assocData.property }}._ids', ['options' => ${{ assocData.variable }}]) ?>
+                        {{- "\n" }}
+                    {%- endfor %}
+                {% endif %}
+                <?= $this->Form->submit(__('Save')) ?>
+                <?= $this->Form->end() ?>
+            </div>
+
+            <div class="card-footer border-top text-right">
+                <?= $this->Form->postLink(__('Delete'),
+                    ['action' => 'delete', {{ pK|raw }}],
+                    [
+                        'confirm' => __('Click OK to delete this item and all of its associated data.'),
+                        'class' => 'btn btn-danger',
+                    ]) ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card card-small mb-4">
+            <div class="card-header border-bottom">
+                <h6 class="m-0">
+                    <?= __('Associated Data') ?>
+                </h6>
+            </div>
+
+            <div class="card-body">
+                <ul>
+                    <li>
+                        <?= $this->Html->link(__('Item #1'), '#') ?>
+                    </li>
+                    <li>
+                        <?= $this->Html->link(__('Item #2'), '#') ?>
+                    </li>
+                    <li>
+                        <?= $this->Html->link(__('Item #3'), '#') ?>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

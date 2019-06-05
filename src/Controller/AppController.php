@@ -12,8 +12,9 @@
  * @since     0.2.9
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace App\Controller;
+namespace ARC\ProductConfigurator\Controller;
 
+use ARC\ProductConfigurator\View\AppView;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 
@@ -29,11 +30,7 @@ class AppController extends Controller
 {
 
     /**
-     * Initialization hook method.
-     *
-     * Use this method to add common initialization code like loading components.
-     *
-     * e.g. `$this->loadComponent('Security');`
+     * initialize.
      *
      * @return void
      */
@@ -41,15 +38,31 @@ class AppController extends Controller
     {
         parent::initialize();
 
-        $this->loadComponent('RequestHandler', [
-            'enableBeforeRedirect' => false,
-        ]);
-        $this->loadComponent('Flash');
+        try {
+            $this->loadComponent('RequestHandler', [
+                'enableBeforeRedirect' => false,
+            ]);
 
-        /*
-         * Enable the following component for recommended CakePHP security settings.
-         * see https://book.cakephp.org/3.0/en/controllers/components/security.html
-         */
-        //$this->loadComponent('Security');
+            $this->loadComponent('Flash');
+            $this->loadComponent('Security');
+        } catch (\Exception $exception) {
+            $this->log($exception->getMessage());
+        }
+    }
+
+    /**
+     * beforeRender.
+     *
+     * @param Event $event
+     *
+     * @return void
+     */
+    public function beforeRender(Event $event)
+    {
+        if (!$this->viewBuilder()->getClassName()) {
+            $this
+                ->viewBuilder()
+                ->setClassName(AppView::class);
+        }
     }
 }
