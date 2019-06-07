@@ -38,7 +38,7 @@ class ConfiguratorsTable extends Table
         $this->setPrimaryKey('id');
 
         $this
-            ->addBehavior('Json', [
+            ->addBehavior('ARC/ProductConfigurator.Json', [
                 'fields' => ['bootstrap'],
             ]);
 

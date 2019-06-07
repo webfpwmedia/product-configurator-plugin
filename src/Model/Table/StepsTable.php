@@ -38,7 +38,7 @@ class StepsTable extends Table
         $this->setPrimaryKey('id');
 
         $this
-            ->addBehavior('Json', [
+            ->addBehavior('ARC/ProductConfigurator.Json', [
                 'fields' => ['config'],
             ]);
 
