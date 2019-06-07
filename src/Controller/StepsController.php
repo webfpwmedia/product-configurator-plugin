@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller;
+namespace ARC\ProductConfigurator\Controller;
 
 /**
  * Steps Controller
