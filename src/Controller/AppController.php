@@ -15,7 +15,7 @@
 namespace ARC\ProductConfigurator\Controller;
 
 use ARC\ProductConfigurator\View\AppView;
-use Cake\Controller\Controller;
+use App\Controller\AppController as BaseController;
 use Cake\Event\Event;
 
 /**
@@ -26,7 +26,7 @@ use Cake\Event\Event;
  *
  * @link https://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */
-class AppController extends Controller
+class AppController extends BaseController
 {
 
     /**
@@ -59,6 +59,8 @@ class AppController extends Controller
      */
     public function beforeRender(Event $event)
     {
+        parent::beforeRender($event);
+
         if (!$this->viewBuilder()->getClassName()) {
             $this
                 ->viewBuilder()
