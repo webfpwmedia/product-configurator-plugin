@@ -12,27 +12,6 @@ class ComponentsController extends AppController
 {
 
     /**
-     * View method
-     *
-     * @param string|null $id Component id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $component = $this->Components->get($id, [
-            'contain' => ['Configurators']
-        ]);
-        $configurator = $component->configurator;
-
-        $this
-            ->set('component', $component)
-            ->set('configurator', $configurator)
-            ->viewBuilder()
-            ->setTemplate('manage');
-    }
-
-    /**
      * Add method
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
@@ -52,7 +31,7 @@ class ComponentsController extends AppController
             if ($this->Components->save($component)) {
                 $this->Flash->success(__('The component has been saved.'));
 
-                return $this->redirect(['action' => 'view', $component->id]);
+                return $this->redirect(['action' => 'edit', $component->id]);
             }
 
             $this->Flash->error(__('The component could not be saved. Please, try again.'));
@@ -73,7 +52,7 @@ class ComponentsController extends AppController
      */
     public function edit($id = null)
     {
-        $component = $this->Components->get($id);
+        $component = $this->Components->get($id, ['contain' => ['Configurators']]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $component = $this->Components->patchEntity($component, $this->request->getData());
@@ -81,7 +60,7 @@ class ComponentsController extends AppController
             if ($this->Components->save($component)) {
                 $this->Flash->success(__('The component has been saved.'));
 
-                return $this->redirect(['action' => 'view', $component->id]);
+                return $this->redirect(['action' => 'edit', $component->id]);
             }
 
             $this->Flash->error(__('The component could not be saved. Please, try again.'));
@@ -111,6 +90,6 @@ class ComponentsController extends AppController
             $this->Flash->error(__('The component could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['controller' => 'Configurators', 'action' => 'view', $component->configurator_id]);
+        return $this->redirect(['controller' => 'Configurators', 'action' => 'edit', $component->configurator_id]);
     }
 }

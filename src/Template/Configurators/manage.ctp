@@ -71,7 +71,7 @@ $this
                         <?php foreach ($configurator->steps as $step): ?>
                             <li>
                                 <?= $this->Html->link(__($step->name),
-                                    ['controller' => 'Steps', 'action' => 'view', $step->id]) ?>
+                                    ['controller' => 'Steps', 'action' => 'edit', $step->id]) ?>
                             </li>
                         <?php endforeach; ?>
                     </ol>
@@ -99,7 +99,7 @@ $this
                         <?php foreach ($configurator->components as $component): ?>
                             <li>
                                 <?= $this->Html->link(__($component->name),
-                                    ['controller' => 'Components', 'action' => 'view', $component->id]) ?>
+                                    ['controller' => 'Components', 'action' => 'edit', $component->id]) ?>
 
                                 <p class="text-muted small">
                                     <?= $component->id ?>

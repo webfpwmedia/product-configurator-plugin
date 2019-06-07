@@ -12,24 +12,6 @@ class StepsController extends AppController
 {
 
     /**
-     * View method
-     *
-     * @param string|null $id Step id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $step = $this->Steps->get($id, ['contain' => ['Configurators']]);
-        $configurator = $step->configurator;
-
-        $this
-            ->set(compact('step', 'configurator'))
-            ->viewBuilder()
-            ->setTemplate('manage');
-    }
-
-    /**
      * Add method
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
@@ -49,7 +31,7 @@ class StepsController extends AppController
             if ($this->Steps->save($step)) {
                 $this->Flash->success(__('The step has been saved.'));
 
-                return $this->redirect(['action' => 'view', $step->id]);
+                return $this->redirect(['action' => 'edit', $step->id]);
             }
             $this->Flash->error(__('The step could not be saved. Please, try again.'));
         }
@@ -70,7 +52,7 @@ class StepsController extends AppController
     public function edit($id = null)
     {
         $step = $this->Steps->get($id, [
-            'contain' => []
+            'contain' => ['Configurators'],
         ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -79,7 +61,7 @@ class StepsController extends AppController
             if ($this->Steps->save($step)) {
                 $this->Flash->success(__('The step has been saved.'));
 
-                return $this->redirect(['action' => 'view', $step->id]);
+                return $this->redirect(['action' => 'edit', $step->id]);
             }
             $this->Flash->error(__('The step could not be saved. Please, try again.'));
         }
@@ -110,6 +92,6 @@ class StepsController extends AppController
             $this->Flash->error(__('The step could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['controller' => 'Configurators', 'action' => 'view', $step->configurator_id]);
+        return $this->redirect(['controller' => 'Configurators', 'action' => 'edit', $step->configurator_id]);
     }
 }

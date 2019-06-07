@@ -67,7 +67,7 @@ class ConfiguratorsController extends AppController
             if ($this->Configurators->save($configurator)) {
                 $this->Flash->success(__('The configurator has been saved.'));
 
-                return $this->redirect(['action' => 'view', $configurator->id]);
+                return $this->redirect(['action' => 'edit', $configurator->id]);
             }
 
             $this->Flash->error(__('The configurator could not be saved. Please, try again.'));
@@ -105,7 +105,7 @@ class ConfiguratorsController extends AppController
             if ($this->Configurators->save($configurator)) {
                 $this->Flash->success(__('The configurator has been saved.'));
 
-                return $this->redirect(['action' => 'view', $configurator->id]);
+                return $this->redirect(['action' => 'edit', $configurator->id]);
             }
 
             $this->Flash->error(__('The configurator could not be saved. Please, try again.'));

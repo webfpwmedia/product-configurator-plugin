@@ -64,7 +64,7 @@ if ($step->isNew()) {
                 <ul>
                     <li>
                         <?= $this->Html->link(__($configurator->name),
-                            ['controller' => 'Configurators', 'action' => 'view', $configurator->id]) ?>
+                            ['controller' => 'Configurators', 'action' => 'edit', $configurator->id]) ?>
                     </li>
                 </ul>
             </div>
