@@ -53,32 +53,6 @@ class ConfiguratorsController extends AppController
     }
 
     /**
-     * View method
-     *
-     * @param string|null $id Configurator id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $configurator = $this->Configurators->get($id, [
-            'contain' => [
-                'Components' => [
-                    'sort' => ['Components.name' => 'asc'],
-                ],
-                'Steps' => [
-                    'sort' => ['Steps.sort' => 'asc'],
-                ],
-            ]
-        ]);
-
-        $this
-            ->set('configurator', $configurator)
-            ->viewBuilder()
-            ->setTemplate('manage');
-    }
-
-    /**
      * Add method
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
@@ -115,7 +89,14 @@ class ConfiguratorsController extends AppController
     public function edit($id = null)
     {
         $configurator = $this->Configurators->get($id, [
-            'contain' => []
+            'contain' => [
+                'Components' => [
+                    'sort' => ['Components.name' => 'asc'],
+                ],
+                'Steps' => [
+                    'sort' => ['Steps.sort' => 'asc'],
+                ],
+            ]
         ]);
 
         if ($this->request->is(['patch', 'post', 'put'])) {

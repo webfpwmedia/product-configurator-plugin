@@ -46,7 +46,7 @@ $this
                                     <td><?= h($configurator->modified) ?></td>
                                     <td class="text-right">
                                         <?= $this->Html->link(__('Details'),
-                                            ['action' => 'view', $configurator->id],
+                                            ['action' => 'edit', $configurator->id],
                                             ['class' => 'btn btn-primary']);
                                         ?>
                                     </td>
