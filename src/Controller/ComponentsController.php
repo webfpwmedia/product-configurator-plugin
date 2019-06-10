@@ -67,7 +67,7 @@ class ComponentsController extends AppController
         }
 
         $this
-            ->set(compact('component', 'configurator'))
+            ->set(compact('component'))
             ->viewBuilder()
             ->setTemplate('manage');
     }

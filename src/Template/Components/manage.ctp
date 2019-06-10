@@ -9,6 +9,11 @@ $this
     ->assign('title', h($component->name ?? __('Add')))
     ->assign('subtitle', __('Component'));
 
+# Extant records are using `contain`.
+if (!$component->isNew()) {
+    $configurator = $component->configurator;
+}
+
 ?>
 
 <div class="row">

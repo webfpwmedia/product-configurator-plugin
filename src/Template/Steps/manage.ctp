@@ -16,6 +16,11 @@ if ($step->isNew()) {
     $action['?']['configurator_id'] = $configurator->id;
 }
 
+# Extant records are using `contain`.
+if (!$step->isNew()) {
+    $configurator = $step->configurator;
+}
+
 ?>
 
 <div class="row">

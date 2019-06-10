@@ -66,10 +66,8 @@ class StepsController extends AppController
             $this->Flash->error(__('The step could not be saved. Please, try again.'));
         }
 
-        $configurators = $this->Steps->Configurators->find('list');
-
         $this
-            ->set(compact('step', 'configurators'))
+            ->set(compact('step'))
             ->viewBuilder()
             ->setTemplate('manage');
     }
