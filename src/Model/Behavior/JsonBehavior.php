@@ -37,7 +37,7 @@ class JsonBehavior extends Behavior
 
         foreach ($fields as $field) {
             if (isset($data[$field])) {
-                $data[$field] = json_encode($data[$field]);
+                $data[$field] = json_decode($data[$field]);
             }
         }
     }
