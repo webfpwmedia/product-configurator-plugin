@@ -8,15 +8,13 @@ Implementing applications should override as needed.
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
 .arc.configurator {
-  @extend .row;
-
   .nav-steps {
     @extend .nav;
     @extend .justify-content-center;
   }
 
-  .nav-step-link {
-    @extend .nav-link;
+  .configuration {
+    @extend .row;
   }
 
   .output-ui {
