@@ -5,6 +5,8 @@ Implementing applications should override as needed.
 
  */
 
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
 .arc.configurator {
   @extend .row;
 

@@ -20,6 +20,6 @@
     "shards-ui": "^2.1.2"
   },
   "scripts": {
-    "build": "npx node-sass --source-map true webroot/scss/app.scss --output webroot/css/ && npx webpack"
+    "build": "npx node-sass --source-map true webroot/scss/ --output webroot/css/ && npx webpack"
   }
 }
