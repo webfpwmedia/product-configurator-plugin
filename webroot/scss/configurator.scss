@@ -10,6 +10,15 @@ Implementing applications should override as needed.
 .arc.configurator {
   @extend .row;
 
+  .nav-steps {
+    @extend .nav;
+    @extend .justify-content-center;
+  }
+
+  .nav-step-link {
+    @extend .nav-link;
+  }
+
   .output-ui {
     @extend .col-5;
   }

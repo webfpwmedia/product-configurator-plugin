@@ -12,6 +12,14 @@ $this
 ?>
 
 <div class="arc configurator">
+    <ul class="nav-steps">
+        <?php foreach ($configurator->steps as $step): ?>
+            <li class="nav-step-item">
+                <a class="nav-step-link" href="#step-<?= $step->id ?>"><?= h($step->name) ?></a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
     <div class="output-ui">
         <div id="arc-configurator-image" class="image-stack"></div>
     </div>
