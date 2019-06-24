@@ -11,15 +11,17 @@ $this
     ->assign('subtitle', __('Configurator'));
 ?>
 
-<div class="row">
-    <div class="col-md-4">
-        <div id="configuration"></div>
+<div class="arc configurator">
+    <div class="output-ui">
+        <div id="arc-configurator-image" class="image-stack"></div>
     </div>
-    <div class="col-md-8">
+
+    <div class="input-form">
         <?= $this->Form->create(new ConfiguratorContext($this->getRequest(), $configurator->bootstrap), [
-            'id' => 'configurator',
+            'id' => 'arc-configurator-form',
             'class' => 'garlic-persist',
         ]); ?>
+
         <?php foreach ($configurator->steps as $step) : ?>
             <div class="step">
                 <h2 class="step-header"><?= h($step->name) ?></h2>
@@ -30,6 +32,7 @@ $this
                         ?>
                         <?php if (isset($componentOptions['options'])) : ?>
                             <legend><?= h($componentOptions['name']) ?></legend>
+
                             <?=
                             $this->Form->control($controlName, [
                                 'label' => false,
