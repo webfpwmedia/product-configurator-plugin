@@ -25,6 +25,7 @@ $this
         <?php foreach ($configurator->steps as $step) : ?>
             <div class="step">
                 <h2 class="step-header"><?= h($step->name) ?></h2>
+
                 <div class="step-body">
                     <?php foreach ($step->config as $componentOptions) : ?>
                         <?php
@@ -63,6 +64,7 @@ $this
                 </div>
             </div>
         <?php endforeach; ?>
+
         <?= $this->Form->submit(); ?>
         <?= $this->Form->end(); ?>
     </div>

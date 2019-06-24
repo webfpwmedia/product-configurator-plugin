@@ -1,0 +1,18 @@
+/**
+
+Basic styling to present a user-friendly configurator page for public viewing.
+Implementing applications should override as needed.
+
+ */
+
+.arc.configurator {
+  @extend .row;
+
+  .output-ui {
+    @extend .col-5;
+  }
+
+  .input-form {
+    @extend .col-7;
+  }
+}
