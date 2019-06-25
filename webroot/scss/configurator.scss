@@ -11,6 +11,12 @@ Implementing applications should override as needed.
   .nav-steps {
     @extend .nav;
     @extend .justify-content-center;
+
+    li {
+      a {
+        @extend .nav-link;
+      }
+    }
   }
 
   .configuration {

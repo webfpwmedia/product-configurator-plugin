@@ -12,13 +12,13 @@ $this
 ?>
 
 <div class="arc configurator">
-    <ul class="nav-steps">
+    <ol class="nav-steps">
         <?php foreach ($configurator->steps as $step): ?>
             <li>
                 <a href="#step-<?= $step->id ?>"><?= h($step->name) ?></a>
             </li>
         <?php endforeach; ?>
-    </ul>
+    </ol>
 
     <div class="configuration">
         <div class="output-ui">
