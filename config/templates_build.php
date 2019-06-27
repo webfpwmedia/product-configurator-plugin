@@ -20,7 +20,7 @@ return [
     'inputContainer' => '<div class="input {{type}}{{required}}">{{content}}</div>',
     'inputContainerError' => '<div class="input {{type}}{{required}} error">{{content}}{{error}}</div>',
     'label' => '<label{{attrs}}>{{text}}</label>',
-    'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}<span class="form-label content {{span}}">{{text}}</span></label>',
+    'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
     'legend' => '<legend>{{text}}</legend>',
     'multicheckboxTitle' => '<legend>{{text}}</legend>',
     'multicheckboxWrapper' => '<fieldset{{attrs}}>{{content}}</fieldset>',
