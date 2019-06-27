@@ -24,12 +24,11 @@ $this
 
     <div class="configuration">
         <div class="output-ui">
-            <div id="configuration" class="image-stack"></div>
+            <div class="image-stack"></div>
         </div>
 
         <div class="input-form">
             <?= $this->Form->create(new ConfiguratorContext($this->getRequest(), $configurator->bootstrap), [
-                'id' => 'configurator',
                 'class' => 'garlic-persist',
             ]); ?>
 
