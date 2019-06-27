@@ -76,7 +76,7 @@ $this
                 </div>
             <?php endforeach; ?>
 
-            <?= $this->Form->submit(__(Configure::read('ARC.text.submit'))); ?>
+            <?= $this->Form->submit(__(Configure::read('ARC.ProductConfigurator.text.submit'))); ?>
             <?= $this->Form->end(); ?>
         </div>
     </div>
