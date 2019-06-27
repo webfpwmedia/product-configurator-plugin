@@ -1,6 +1,7 @@
 # Plugin specific files #
 /data/mysql
 /node_modules
+/config/Migrations/schema-dump-configurator.lock
 
 # CakePHP specific files #
 ##########################
