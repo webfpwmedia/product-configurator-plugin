@@ -22,6 +22,11 @@ return [
             'text' => [
                 'submit' => 'Submit',
             ],
+
+            // Form templates to use for the admin pages
+            'adminTemplates' => 'ARC/ProductConfigurator.templates_admin',
+            // Form templates to use for the build page
+            'buildTemplates' => 'ARC/ProductConfigurator.templates_build',
         ],
     ],
 ];
