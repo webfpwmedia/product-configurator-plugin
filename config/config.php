@@ -27,6 +27,9 @@ return [
             'adminTemplates' => 'ARC/ProductConfigurator.templates_admin',
             // Form templates to use for the build page
             'buildTemplates' => 'ARC/ProductConfigurator.templates_build',
+
+            // database connection to use
+            'connection' => 'default',
         ],
     ],
 ];
