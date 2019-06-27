@@ -32,6 +32,6 @@ class Table extends \Cake\ORM\Table
      * @return string
      */
     public static function defaultConnectionName() {
-        return ConnectionManager::get(Configure::read('ARC.ProductConfigurator.connection'));
+        return Configure::read('ARC.ProductConfigurator.connection');
     }
 }
