@@ -1,10 +1,10 @@
 <?php
 
 use Cake\Core\Configure;
-use Cake\Datasource\ConnectionManager;
+use Cake\Utility\Hash;
 
-Configure::load('ARC/ProductConfigurator.config', 'default', true);
-
-ConnectionManager::setConfig('configurator', [
-    'url' => 'mysql://root:root@mysql/configurator?encoding=utf8&timezone=UTC&cacheMetadata=true&quoteIdentifiers=false&persistent=false',
-]);
+// merge user configuration
+$appConfiguration = Configure::read('ARC.ProductConfigurator');
+Configure::load('ARC/ProductConfigurator.config');
+$config = Configure::read('ARC.ProductConfigurator');
+Configure::write('ARC.ProductConfigurator', Hash::merge($config, $appConfiguration));
