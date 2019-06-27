@@ -52,7 +52,7 @@ class AppView extends View
         'inputContainer' => '<div class="form-group {{type}}{{required}} {{classContainer}}"{{attrs}}>{{content}}</div>',
         'inputContainerError' => '<div class="form-group {{type}}{{required}} has-error">{{content}}{{error}}</div>',
         'label' => '<label{{attrs}}>{{text}}</label>{{help}}',
-        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}{{text}}</label>',
+        'nestingLabel' => '{{hidden}}<label{{attrs}}>{{input}}<span class="form-label content {{span}}">{{text}}</span></label>',
         'legend' => '<legend>{{text}}</legend>',
         'multicheckboxTitle' => '<legend>{{text}}</legend>',
         'multicheckboxWrapper' => '<fieldset{{attrs}}>{{content}}</fieldset>',

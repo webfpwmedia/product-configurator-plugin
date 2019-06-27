@@ -1,0 +1,33 @@
+/**
+
+Basic styling to present a user-friendly configurator page for public viewing.
+Implementing applications should override as needed.
+
+ */
+
+@import "../../node_modules/bootstrap/scss/bootstrap";
+
+.arc.configurator {
+  .nav-steps {
+    @extend .nav;
+    @extend .justify-content-center;
+
+    li {
+      a {
+        @extend .nav-link;
+      }
+    }
+  }
+
+  .configuration {
+    @extend .row;
+  }
+
+  .output-ui {
+    @extend .col-5;
+  }
+
+  .input-form {
+    @extend .col-7;
+  }
+}
