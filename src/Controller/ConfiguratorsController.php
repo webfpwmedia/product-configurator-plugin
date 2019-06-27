@@ -1,7 +1,8 @@
 <?php
 namespace ARC\ProductConfigurator\Controller;
 
-use ARC\ProductConfigurator\Form\ConfiguratorForm;
+use Cake\Datasource\ModelAwareTrait;
+use Cake\Log\Log;
 
 /**
  * Configurators Controller
@@ -12,6 +13,22 @@ use ARC\ProductConfigurator\Form\ConfiguratorForm;
  */
 class ConfiguratorsController extends AppController
 {
+    use ModelAwareTrait;
+
+    /** @var \ARC\ProductConfigurator\Model\Table\BuildsTable */
+    public $Builds;
+
+    /**
+     * Initialize hook
+     *
+     * @return void
+     */
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->loadModel('ARC/ProductConfigurator.Builds');
+    }
 
     /**
      * Public configurator builder
@@ -29,12 +46,21 @@ class ConfiguratorsController extends AppController
             ]
         ]);
 
+        $build = $this->Builds->newEntity();
         if ($this->request->is(['post'])) {
-            $form = new ConfiguratorForm();
-            $data = $form->execute($this->request->getData());
+            $build = $this->Builds->patchEntity($build, $this->request->getData());
+            if ($this->request->getData('submit') && $this->Builds->save($build)) {
+                $this->Flash->success(__('Your build has been submitted!'));
 
-            $this->set('data', $data);
-            $this->set('_serialize', ['data']);
+                return $this->redirect(['build']);
+            } elseif ($this->request->getData('submit')) {
+                Log::write(LOG_ALERT, json_encode($this->request->getData()));
+                Log::write(LOG_ALERT, json_encode($build));
+                $this->Flash->error(__('There was a problem submitting your build.'));
+            }
+
+            $this->set('build', $build);
+            $this->set('_serialize', ['build']);
         }
 
         $this->set('configurator', $configurator);

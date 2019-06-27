@@ -76,11 +76,19 @@ $this
                 </div>
             <?php endforeach; ?>
 
-            <?= $this->Form->submit(__(Configure::read('ARC.text.submit'))); ?>
+            <?= $this->Form->submit(__(Configure::read('ARC.text.submit')), [
+                    'name' => 'submit'
+            ]); ?>
             <?= $this->Form->end(); ?>
         </div>
     </div>
 </div>
 
 <?= $this->Html->script('ARC/ProductConfigurator.dist/app.bundle') ?>
+
+<script>
+    const configurator = new Configurator($('.arc.configurator'), {
+        imageBaseUrl: '<?= Configure::read('ARC.ProductConfigurator.imageBaseUrl') ?>'
+    });
+</script>
 
