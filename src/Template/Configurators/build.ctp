@@ -5,10 +5,12 @@
  */
 
 use ARC\ProductConfigurator\Form\ConfiguratorContext;
+use Cake\Core\Configure;
 
 $this
     ->assign('title', h($configurator->name))
     ->assign('subtitle', __('Configurator'));
+
 ?>
 
 <div class="arc configurator">
@@ -22,12 +24,12 @@ $this
 
     <div class="configuration">
         <div class="output-ui">
-            <div id="arc-configurator-image" class="image-stack"></div>
+            <div id="configuration" class="image-stack"></div>
         </div>
 
         <div class="input-form">
             <?= $this->Form->create(new ConfiguratorContext($this->getRequest(), $configurator->bootstrap), [
-                'id' => 'arc-configurator-form',
+                'id' => 'configurator',
                 'class' => 'garlic-persist',
             ]); ?>
 
@@ -74,8 +76,11 @@ $this
                 </div>
             <?php endforeach; ?>
 
-            <?= $this->Form->submit(); ?>
+            <?= $this->Form->submit(__(Configure::read('ARC.text.submit'))); ?>
             <?= $this->Form->end(); ?>
         </div>
     </div>
 </div>
+
+<?= $this->Html->script('ARC/ProductConfigurator.dist/app.bundle') ?>
+

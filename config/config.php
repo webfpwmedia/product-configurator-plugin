@@ -18,6 +18,10 @@ return [
             'meta' => [
                 'description' => 'Arc Point Group product configurator plugin for CakePHP.',
             ],
+
+            'text' => [
+                'submit' => 'Submit',
+            ],
         ],
     ],
 ];

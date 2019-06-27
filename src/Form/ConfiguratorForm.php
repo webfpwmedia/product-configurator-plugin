@@ -33,8 +33,8 @@ class ConfiguratorForm extends Form
     {
         parent::__construct($eventManager);
 
-        $this->loadModel('Components');
-        $this->loadModel('Images');
+        $this->loadModel('ARC/ProductConfigurator.Components');
+        $this->loadModel('ARC/ProductConfigurator.Images');
     }
 
     /**
