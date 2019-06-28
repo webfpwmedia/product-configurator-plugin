@@ -14,7 +14,9 @@ window.Configurator = function Configurator($element, options) {
         imageBaseUrl: '/',
         formSelector: 'form',
         configurationSelector: '.image-stack',
-        stateSelector: 'button.toggle-state'
+        stateSelector: 'button.toggle-state',
+        // optional query string to append to images (without preceding `?`)
+        imageQueryString: null
     }, options);
 
     this.options = options;
@@ -35,8 +37,8 @@ window.Configurator = function Configurator($element, options) {
     this.toggleState = function () {
         toggleState.call(c);
     };
-    this.buildImageStack = function () {
-        buildImageStack.call(c);
+    this.buildImageStack = function (response) {
+        buildImageStack.call(c, response);
     };
 
     getConfiguration(c);
@@ -65,15 +67,21 @@ function buildImageStack(response) {
 
     let $html = $('<div></div>');
 
+    let c = this;
     response.build.images.forEach(function (componentImages) {
-        if (!componentImages.hasOwnProperty(this.state)) {
+        if (!componentImages.hasOwnProperty(c.state)) {
             return;
         }
 
+        let src = c.options.imageBaseUrl + componentImages[c.state]['path'];
+        if (c.options.imageQueryString !== '') {
+            src += '?' + c.options.imageQueryString;
+        }
+
         let $img = $('<img>')
-            .prop('src', this.options.imageBaseUrl + componentImages[this.state]['path'])
+            .prop('src', src)
             .css({
-                zIndex: componentImages[this.state]['layer']
+                zIndex: componentImages[c.state]['layer']
             });
 
         $html.append($img);
@@ -97,6 +105,6 @@ function getConfiguration(Configurator) {
 
     request.done(function (response) {
         Configurator.lastResponse = response;
-        buildImageStack(response);
+        Configurator.buildImageStack(response);
     });
 }
