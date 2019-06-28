@@ -1,6 +1,9 @@
 <?php
 namespace ARC\ProductConfigurator\ORM;
 
+use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
+
 /**
  * Class Table.
  *
@@ -29,6 +32,6 @@ class Table extends \Cake\ORM\Table
      * @return string
      */
     public static function defaultConnectionName() {
-        return 'configurator';
+        return Configure::read('ARC.ProductConfigurator.connection');
     }
 }

@@ -10,61 +10,54 @@ $this
 
 ?>
 
-<div class="row">
+<div class="row mb-4">
     <div class="col">
-        <div class="card card-small mb-4">
-            <div class="card-header border-bottom">
-                <div class="row no-gutters">
-                    <div class="col">
-                        <h6 class="m-0">
-                            <?= __('Images') ?>
-                        </h6>
-                    </div>
+        <h6 class="m-0">
+            <?= __('{0} images in all configurators.', count($images)) ?>
+        </h6>
+    </div>
 
-                    <div class="col text-right">
-                        <?= $this->Html->link(__('S3 Image Inventory'), ['action' => 'listBucket']) ?>
-                    </div>
+    <div class="col text-right">
+        <?= $this->Html->link(__('S3 Image Inventory'), ['action' => 'listBucket']) ?>
+    </div>
+</div>
+
+<div class="row">
+    <?php foreach ($images as $image): ?>
+        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+            <div class="card mb-3">
+                <?= $this->Html->image($image->name, [
+                    'size' => 'md',
+                    'class' => 'img-fluid card-img-top',
+                    'url' => ['action' => 'edit', $image->id],
+                ]) ?>
+
+                <div class="card-body p-0 px-3 pb-3">
+                    <p class="lead mb-0">
+                        <?= h($image->mask) ?>
+                    </p>
+
+                    <span class="badge badge-outline-secondary small text-uppercase mb-2">
+                        <?= __('{0} Layer {1}', h($image->position), $image->layer) ?>
+                    </span>
+
+                    <p class="small text-muted"><?= h($image->name) ?></p>
+
+                    <?= $this->Html->link(__('Edit'), [
+                        'action' => 'edit',
+                        $image->id
+                    ], [
+                        'class' => 'btn btn-primary btn-block',
+                    ]) ?>
                 </div>
-            </div>
 
-            <div class="card-body p-0 pb-3">
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead class="bg-light">
-                            <tr>
-                                <th scope="col" class="border-0"><?= __(ucfirst('name')) ?></th>
-                                <th scope="col" class="border-0"><?= __(ucfirst('mask')) ?></th>
-                                <th scope="col" class="border-0"><?= __(ucfirst('position')) ?></th>
-                                <th scope="col" class="border-0"><?= __(ucfirst('layer')) ?></th>
-                                <th scope="col" class="border-0"><?= __(ucfirst('created')) ?></th>
-                                <th scope="col" class="border-0"><?= __(ucfirst('modified')) ?></th>
-                                <th scope="col" class="border-0"></th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <?php foreach ($images as $image): ?>
-                                <tr>
-                                    <td><?= h($image->name) ?></td>
-                                    <td><?= h($image->mask) ?></td>
-                                    <td><?= h($image->position) ?></td>
-                                    <td><?= h($image->layer) ?></td>
-                                    <td><?= h($image->created) ?></td>
-                                    <td><?= h($image->modified) ?></td>
-                                    <td>
-                                        <?= $this->Html->link(__('Edit'), [
-                                            'action' => 'edit',
-                                            $image->id
-                                        ], [
-                                            'class' => 'btn btn-primary',
-                                        ]) ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <?= __('Last Modified') ?>
+                        <?= h($image->modified) ?>
+                    </small>
                 </div>
             </div>
         </div>
-    </div>
+    <?php endforeach; ?>
 </div>
