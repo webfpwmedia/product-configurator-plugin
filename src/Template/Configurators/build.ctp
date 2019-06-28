@@ -86,8 +86,11 @@ $this
 <?= $this->Html->script('ARC/ProductConfigurator.dist/app.bundle') ?>
 
 <script>
-    const configurator = new Configurator($('.arc.configurator'), {
-        imageBaseUrl: '<?= Configure::read('ARC.ProductConfigurator.imageBaseUrl') ?>'
+    $(document).ready(function () {
+        const configurator = new Configurator($('.arc.configurator'), {
+            imageBaseUrl: '<?= Configure::read('ARC.ProductConfigurator.imageBaseUrl') ?>',
+            imageQueryString: '<?= http_build_query(Configure::read('ARC.ProductConfigurator.imgix.md')) ?>'
+        });
     });
 </script>
 
