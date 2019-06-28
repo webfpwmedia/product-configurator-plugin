@@ -9,7 +9,6 @@ use Cake\Event\EventManager;
 use Cake\Form\Form;
 use Cake\Utility\Hash;
 use Cake\View\StringTemplate;
-use function http_build_query;
 
 class ConfiguratorForm extends Form
 {
