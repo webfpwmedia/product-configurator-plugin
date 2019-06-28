@@ -5,5 +5,6 @@ use Cake\Routing\Router;
 use Cake\Routing\RouteBuilder;
 
 Router::plugin('ARC/ProductConfigurator', ['path' => '/arc-product-configurator'], function (RouteBuilder $routes) {
+    $routes->setExtensions(['json']);
     $routes->fallbacks(DashedRoute::class);
 });
