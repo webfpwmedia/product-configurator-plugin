@@ -61,31 +61,33 @@ function toggleState() {
  * @return void
  */
 function buildImageStack(response) {
-    if (!response.hasOwnProperty('build') || !response.build.hasOwnProperty('images')) {
+    if (!response.hasOwnProperty('build')) {
         return;
     }
 
     let $html = $('<div></div>');
 
-    let c = this;
-    response.build.images.forEach(function (componentImages) {
-        if (!componentImages.hasOwnProperty(c.state)) {
-            return;
-        }
+    if (response.build.hasOwnProperty('images')) {
+        let c = this;
+        response.build.images.forEach(function (componentImages) {
+            if (!componentImages.hasOwnProperty(c.state)) {
+                return;
+            }
 
-        let src = c.options.imageBaseUrl + componentImages[c.state]['path'];
-        if (c.options.imageQueryString !== '') {
-            src += '?' + c.options.imageQueryString;
-        }
+            let src = c.options.imageBaseUrl + componentImages[c.state]['path'];
+            if (c.options.imageQueryString !== '') {
+                src += '?' + c.options.imageQueryString;
+            }
 
-        let $img = $('<img>')
-            .prop('src', src)
-            .css({
-                zIndex: componentImages[c.state]['layer']
-            });
+            let $img = $('<img>')
+                .prop('src', src)
+                .css({
+                    zIndex: componentImages[c.state]['layer']
+                });
 
-        $html.append($img);
-    });
+            $html.append($img);
+        });
+    }
 
     this.$configuration.html($html);
 }
