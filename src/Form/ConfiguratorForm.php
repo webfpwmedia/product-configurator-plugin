@@ -9,6 +9,7 @@ use Cake\Event\EventManager;
 use Cake\Form\Form;
 use Cake\Utility\Hash;
 use Cake\View\StringTemplate;
+use function http_build_query;
 
 class ConfiguratorForm extends Form
 {
@@ -68,8 +69,15 @@ class ConfiguratorForm extends Form
                 ->enableHydration(false)
                 ->groupBy('position')
                 ->map(function ($imagesByPosition) use ($imgBaseUrl) {
+                    $path = [
+                        $imgBaseUrl,
+                        $imagesByPosition[0]['name'],
+                        '?',
+                        http_build_query(Configure::read('ARC.ProductConfigurator.imgix.md')),
+                    ];
+
                     return [
-                        'path' => $imgBaseUrl . $imagesByPosition[0]['name'],
+                        'path' => join(null, $path),
                         'layer' => $imagesByPosition[0]['layer'],
                     ];
                 })
