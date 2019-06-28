@@ -3,6 +3,7 @@ namespace ARC\ProductConfigurator\Model\Table;
 
 use ARC\ProductConfigurator\ORM\Table;
 use ArrayObject;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
@@ -114,7 +115,7 @@ class BuildsTable extends Table
                     'layer',
                 ])
                 ->where([
-                    'mask' => $stringTemplate->format('mask', $selection)
+                    '"' . $stringTemplate->format('mask', $selection) . '" REGEXP' => new IdentifierExpression('mask'),
                 ])
                 ->enableHydration(false)
                 ->groupBy('position')
