@@ -34,7 +34,7 @@ class ConfiguratorsController extends AppController
      * Public configurator builder
      *
      * @param int|null $id
-     * @return \Cake\Http\Response|void
+     * @return \Cake\Http\Response|null
      */
     public function build($id = null)
     {
@@ -49,10 +49,10 @@ class ConfiguratorsController extends AppController
         $build = $this->Builds->newEntity();
         if ($this->request->is(['post'])) {
             $build = $this->Builds->patchEntity($build, $this->request->getData());
-            if ($this->request->getData('submit') && $this->Builds->save($build)) {
+            if ($this->request->getData('save') && $this->Builds->save($build)) {
                 $this->Flash->success(__('Your build has been submitted!'));
 
-                return $this->redirect(['build']);
+                return $this->redirect(['action' => 'build', $id]);
             } elseif ($this->request->getData('submit')) {
                 Log::write(LOG_ALERT, json_encode($this->request->getData()));
                 Log::write(LOG_ALERT, json_encode($build));

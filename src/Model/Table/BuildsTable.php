@@ -7,6 +7,7 @@ use Cake\Database\Expression\IdentifierExpression;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Cake\View\StringTemplate;
 
@@ -77,7 +78,11 @@ class BuildsTable extends Table
      */
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
-        $selections = $data->getArrayCopy();
+        $selections = collection($data->getArrayCopy())
+            ->filter(function ($value, $key) {
+                return Validation::uuid($key) && is_array($value);
+            })
+            ->toArray();
         $selections = collection($selections)
             ->map(function ($componentSelections) use ($selections) {
                 return $this->__withInheritance($selections, $componentSelections);
