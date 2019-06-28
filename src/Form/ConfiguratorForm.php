@@ -68,8 +68,15 @@ class ConfiguratorForm extends Form
                 ->enableHydration(false)
                 ->groupBy('position')
                 ->map(function ($imagesByPosition) use ($imgBaseUrl) {
+                    $path = [
+                        $imgBaseUrl,
+                        $imagesByPosition[0]['name'],
+                        '?',
+                        http_build_query(Configure::read('ARC.ProductConfigurator.imgix.md')),
+                    ];
+
                     return [
-                        'path' => $imgBaseUrl . $imagesByPosition[0]['name'],
+                        'path' => join(null, $path),
                         'layer' => $imagesByPosition[0]['layer'],
                     ];
                 })

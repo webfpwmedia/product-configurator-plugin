@@ -43,10 +43,10 @@ $this
                         <?php foreach ($allFiles as $file): ?>
                             <tr>
                                 <td>
-                                    <div style="width: 100px; height: 100px;">
+                                    <div>
                                         <?= $this->Html->image($file['path'], [
-                                            's3' => true,
-                                            'style' => 'max-width: 100%',
+                                            'size' => 'sm',
+                                            'class' => 'img-fluid',
                                         ]) ?>
                                     </div>
                                 </td>
