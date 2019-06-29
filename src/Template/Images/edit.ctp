@@ -23,7 +23,11 @@ $this
     <div class="col-lg-6">
         <div class="card card-small mb-4">
             <div class="card-body">
-                <?= $this->Form->create($image) ?>
+                <?= $this->Form->create($image, [
+                    'templates' => [
+                         'submitContainer' => '{{content}}'
+                    ]
+                ]) ?>
 
                 <?= $this->Form->control('name', [
                     'readonly' => true,
@@ -46,6 +50,13 @@ $this
                 <?= $this->Form->control('layer') ?>
 
                 <?= $this->Form->submit(__('Save')) ?>
+                <?= $this->Form->postLink(__('Delete'), [
+                    'action' => 'delete', $image->id
+                ], [
+                    'class' => 'btn btn-danger',
+                    'confirm' => __('Click OK to remove this image from the index.\n\nNote the image will not be removed from the S3 source location. However, any configurators using the image may break when this image is deleted from the index.'),
+                    'block' => 'imagePostLink',
+                ]) ?>
                 <?= $this->Form->end() ?>
             </div>
         </div>
@@ -57,3 +68,5 @@ $this
         </a>
     </div>
 </div>
+
+<?= $this->fetch('imagePostLink') ?>
