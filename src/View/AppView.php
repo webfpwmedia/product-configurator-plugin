@@ -1,7 +1,7 @@
 <?php
 namespace ARC\ProductConfigurator\View;
 
-use ARC\ProductConfigurator\View\Helper\HtmlHelper;
+use ARC\ProductConfigurator\View\Helper\UrlHelper;
 use ARC\ProductConfigurator\View\Widget\JsonWidget;
 use Cake\Core\Configure;
 use Cake\View\View;
@@ -9,7 +9,7 @@ use Cake\View\View;
 /**
  * Plugin default view class.
  *
- * @property HtmlHelper $Html
+ * @property UrlHelper $Url
  */
 class AppView extends View
 {
@@ -31,8 +31,8 @@ class AppView extends View
             $templates = 'buildTemplates';
         }
 
-        $this->loadHelper('Html', [
-            'className' => 'ARC/ProductConfigurator.Html',
+        $this->loadHelper('Url', [
+            'className' => UrlHelper::class,
         ]);
 
         $this->loadHelper('Form', [
