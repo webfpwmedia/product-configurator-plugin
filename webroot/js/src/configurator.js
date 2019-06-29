@@ -4,6 +4,8 @@
 
 import $ from 'jquery';
 
+let preloaded = [];
+
 /**
  * @param {jQuery} $element
  * @param {object} options
@@ -74,17 +76,20 @@ function buildImageStack(response) {
     if (response.build.hasOwnProperty('images')) {
         let c = this;
         response.build.images.forEach(function (componentImages) {
+            // preload images
+            if (componentImages.hasOwnProperty('front')) {
+                preloadImage(getImageSrc(componentImages['front']['path'], c.options));
+            }
+            if (componentImages.hasOwnProperty('back')) {
+                preloadImage(getImageSrc(componentImages['back']['path'], c.options));
+            }
+
             if (!componentImages.hasOwnProperty(c.state)) {
                 return;
             }
 
-            let src = c.options.imageBaseUrl + componentImages[c.state]['path'];
-            if (c.options.imageQueryString !== '') {
-                src += '?' + c.options.imageQueryString;
-            }
-
             let $img = $('<img>')
-                .prop('src', src)
+                .prop('src', getImageSrc(componentImages[c.state]['path'], c.options))
                 .css({
                     zIndex: componentImages[c.state]['layer']
                 });
@@ -94,6 +99,38 @@ function buildImageStack(response) {
     }
 
     this.$configuration.html($html);
+}
+
+/**
+ * Gets an image src from a path and options
+ *
+ * @param {string} path
+ * @param {object} options
+ * @returns {string}
+ */
+function getImageSrc(path, options) {
+    let src = options.imageBaseUrl + path;
+    if (options.imageQueryString !== '') {
+        src += '?' + options.imageQueryString;
+    }
+
+    return src;
+}
+
+/**
+ * Preloads an image
+ *
+ * @param {string} src
+ * @return void
+ */
+function preloadImage(src) {
+    if (preloaded.indexOf(src) !== -1) {
+        // image was already preloaded during this session
+        return;
+    }
+    let img = new Image();
+    img.src = src;
+    preloaded.push(src);
 }
 
 /**
