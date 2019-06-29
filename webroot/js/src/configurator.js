@@ -4,6 +4,8 @@
 
 import $ from 'jquery';
 
+let preloaded = [];
+
 /**
  * @param {jQuery} $element
  * @param {object} options
@@ -16,7 +18,9 @@ window.Configurator = function Configurator($element, options) {
         configurationSelector: '.image-stack',
         stateSelector: 'button.toggle-state',
         // optional query string to append to images (without preceding `?`)
-        imageQueryString: null
+        imageQueryString: null,
+        frontLabel: 'Front',
+        backLabel: 'Back'
     }, options);
 
     this.options = options;
@@ -31,27 +35,29 @@ window.Configurator = function Configurator($element, options) {
         getConfiguration(c);
     });
     this.$stateToggle.on('click', function () {
-        toggleState.call(c);
+        c.toggleState();
     });
-
     this.toggleState = function () {
-        toggleState.call(c);
+        c.state = c.state === 'front' ? 'back' : 'front';
+        setState(c);
     };
     this.buildImageStack = function (response) {
         buildImageStack.call(c, response);
     };
 
     getConfiguration(c);
+    setState(c);
 }
 
 /**
- * Toggles state using the last response
+ * Sets image state and changes state toggle label
  *
+ * @param {Object<Configurator>} Configurator
  * @return void
  */
-function toggleState() {
-    this.state = this.state === 'front' ? 'back' : 'front';
-    this.buildImageStack(this.lastResponse)
+function setState(Configurator) {
+    Configurator.buildImageStack(Configurator.lastResponse);
+    Configurator.$stateToggle.html(Configurator.state === 'front' ? Configurator.options.backLabel : Configurator.options.frontLabel);
 }
 
 /**
@@ -70,17 +76,20 @@ function buildImageStack(response) {
     if (response.build.hasOwnProperty('images')) {
         let c = this;
         response.build.images.forEach(function (componentImages) {
+            // preload images
+            if (componentImages.hasOwnProperty('front')) {
+                preloadImage(getImageSrc(componentImages['front']['path'], c.options));
+            }
+            if (componentImages.hasOwnProperty('back')) {
+                preloadImage(getImageSrc(componentImages['back']['path'], c.options));
+            }
+
             if (!componentImages.hasOwnProperty(c.state)) {
                 return;
             }
 
-            let src = c.options.imageBaseUrl + componentImages[c.state]['path'];
-            if (c.options.imageQueryString !== '') {
-                src += '?' + c.options.imageQueryString;
-            }
-
             let $img = $('<img>')
-                .prop('src', src)
+                .prop('src', getImageSrc(componentImages[c.state]['path'], c.options))
                 .css({
                     zIndex: componentImages[c.state]['layer']
                 });
@@ -90,6 +99,38 @@ function buildImageStack(response) {
     }
 
     this.$configuration.html($html);
+}
+
+/**
+ * Gets an image src from a path and options
+ *
+ * @param {string} path
+ * @param {object} options
+ * @returns {string}
+ */
+function getImageSrc(path, options) {
+    let src = options.imageBaseUrl + path;
+    if (options.imageQueryString !== '') {
+        src += '?' + options.imageQueryString;
+    }
+
+    return src;
+}
+
+/**
+ * Preloads an image
+ *
+ * @param {string} src
+ * @return void
+ */
+function preloadImage(src) {
+    if (preloaded.indexOf(src) !== -1) {
+        // image was already preloaded during this session
+        return;
+    }
+    let img = new Image();
+    img.src = src;
+    preloaded.push(src);
 }
 
 /**

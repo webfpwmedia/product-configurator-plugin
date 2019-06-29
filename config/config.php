@@ -44,6 +44,8 @@ return [
 
             'text' => [
                 'submit' => 'Submit',
+                'front' => 'Front',
+                'back' => 'Back',
             ],
 
             // Form templates to use for the admin pages

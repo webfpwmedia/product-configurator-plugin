@@ -25,6 +25,11 @@ $this
     <div class="configuration">
         <div class="output-ui">
             <div class="image-stack"></div>
+            <?= $this->Form->button(Configure::read('ARC.ProductConfigurator.text.back'), [
+                'templateVars' => [
+                    'class' => 'toggle-state'
+                ]
+            ]) ?>
         </div>
 
         <div class="input-form">
@@ -89,7 +94,9 @@ $this
     $(document).ready(function () {
         const configurator = new Configurator($('.arc.configurator'), {
             imageBaseUrl: '<?= Configure::read('ARC.ProductConfigurator.imageBaseUrl') ?>',
-            imageQueryString: '<?= http_build_query(Configure::read('ARC.ProductConfigurator.imgix.md')) ?>'
+            imageQueryString: '<?= http_build_query(Configure::read('ARC.ProductConfigurator.imgix.md')) ?>',
+            frontLabel: '<?= h(Configure::read('ARC.ProductConfigurator.text.front')) ?>',
+            backLabel: '<?= h(Configure::read('ARC.ProductConfigurator.text.back')) ?>'
         });
     });
 </script>
