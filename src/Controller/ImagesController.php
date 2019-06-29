@@ -106,4 +106,22 @@ class ImagesController extends AppController
 
         $this->set('image', $image);
     }
+
+    /**
+     * @param int|null $id
+     * @return \Cake\Http\Response
+     */
+    public function delete($id = null)
+    {
+        $this->request->allowMethod(['post', 'delete']);
+        $image = $this->Images->get($id);
+
+        if ($this->Images->delete($image)) {
+            $this->Flash->success(__('The image has been removed from the index.'));
+        } else {
+            $this->Flash->error(__('The image could not be removed from the index. Please, try again.'));
+        }
+
+        return $this->redirect(['action' => 'index']);
+    }
 }
