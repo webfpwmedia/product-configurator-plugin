@@ -16,7 +16,9 @@ window.Configurator = function Configurator($element, options) {
         configurationSelector: '.image-stack',
         stateSelector: 'button.toggle-state',
         // optional query string to append to images (without preceding `?`)
-        imageQueryString: null
+        imageQueryString: null,
+        frontLabel: 'Front',
+        backLabel: 'Back'
     }, options);
 
     this.options = options;
@@ -31,27 +33,29 @@ window.Configurator = function Configurator($element, options) {
         getConfiguration(c);
     });
     this.$stateToggle.on('click', function () {
-        toggleState.call(c);
+        c.toggleState();
     });
-
     this.toggleState = function () {
-        toggleState.call(c);
+        c.state = c.state === 'front' ? 'back' : 'front';
+        setState(c);
     };
     this.buildImageStack = function (response) {
         buildImageStack.call(c, response);
     };
 
     getConfiguration(c);
+    setState(c);
 }
 
 /**
- * Toggles state using the last response
+ * Sets image state and changes state toggle label
  *
+ * @param {Object<Configurator>} Configurator
  * @return void
  */
-function toggleState() {
-    this.state = this.state === 'front' ? 'back' : 'front';
-    this.buildImageStack(this.lastResponse)
+function setState(Configurator) {
+    Configurator.buildImageStack(Configurator.lastResponse);
+    Configurator.$stateToggle.html(Configurator.state === 'front' ? Configurator.options.backLabel : Configurator.options.frontLabel);
 }
 
 /**
