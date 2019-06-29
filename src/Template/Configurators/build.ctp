@@ -55,11 +55,21 @@ $this
                                     'type' => 'radio',
                                     'options' => collection($componentOptions['options'])
                                         ->map(function ($option) {
-                                            return [
+                                            $radioOptions = [
                                                 'value' => $option['code'],
                                                 'text' => $option['name'],
-                                                'data-swatch' => $option['swatch'] ?? null,
+                                                'label' => []
                                             ];
+
+                                            if (isset($option['swatch'])) {
+                                                $radioOptions['text'] = '';
+                                                $radioOptions['label'] += [
+                                                    'class' => 'swatch',
+                                                    'style' => "background-image:url('" . $this->Url->image($option['swatch'], ['size' => 'swatch']) . "')",
+                                                ];
+                                            }
+
+                                            return $radioOptions;
                                         })
                                         ->toList()
                                 ]);

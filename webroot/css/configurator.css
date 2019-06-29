@@ -7042,4 +7042,14 @@ a.text-dark:hover, a.text-dark:focus {
     color: inherit;
     border-color: #dee2e6; } }
 
+.arc.configurator label.swatch {
+  margin-bottom: 10px;
+  margin-right: 10px;
+  width: 60px;
+  height: 60px;
+  background-size: cover;
+  background-repeat: no-repeat; }
+  .arc.configurator label.swatch input {
+    display: none; }
+
 /*# sourceMappingURL=configurator.css.map */

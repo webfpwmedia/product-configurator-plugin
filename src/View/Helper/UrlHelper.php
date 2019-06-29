@@ -2,26 +2,18 @@
 namespace ARC\ProductConfigurator\View\Helper;
 
 use Cake\Core\Configure;
-use Cake\View\Helper\HtmlHelper as BaseHtmlHelper;
-use function http_build_query;
+use Cake\View\Helper\UrlHelper as BaseUrlHelper;
 
-/**
- * Class HtmlHelper.
- *
- * @package App\View\Helper
- */
-class HtmlHelper extends BaseHtmlHelper
+class UrlHelper extends BaseUrlHelper
 {
 
     /**
      * Adds ImgIx query string arguments per `$options['size']` key.
      *
-     * @link https://docs.imgix.com/apis/url
-     *
      * @param array|string $path
      * @param array $options
-     *
      * @return string
+     * @link https://docs.imgix.com/apis/url
      */
     public function image($path, array $options = [])
     {
