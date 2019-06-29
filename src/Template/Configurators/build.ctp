@@ -60,7 +60,7 @@ $this
                                                 $radioOptions['text'] = '';
                                                 $radioOptions['label'] += [
                                                     'class' => 'swatch',
-                                                    'style' => "background-image:url('" . $this->Url->image($option['swatch']) . "')",
+                                                    'style' => "background-image:url('" . $this->Url->image($option['swatch'], ['size' => 'swatch']) . "')",
                                                 ];
                                             }
 
