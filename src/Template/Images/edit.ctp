@@ -54,7 +54,7 @@ $this
                     'action' => 'delete', $image->id
                 ], [
                     'class' => 'btn btn-danger',
-                    'confirm' => __('Are you sure you want to remove this image from the index?'),
+                    'confirm' => __('Click OK to remove this image from the index.\n\nNote the image will not be removed from the S3 source location. However, any configurators using the image may break when this image is deleted from the index.'),
                     'block' => 'imagePostLink',
                 ]) ?>
                 <?= $this->Form->end() ?>
