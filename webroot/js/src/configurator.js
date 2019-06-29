@@ -4,45 +4,109 @@
 
 import $ from 'jquery';
 
-let $configuration = $('#configuration');
-let $form = $('form#configurator');
-let state = 'front';
+/**
+ * @param {jQuery} $element
+ * @param {object} options
+ * @constructor
+ */
+window.Configurator = function Configurator($element, options) {
+    options = $.extend({
+        imageBaseUrl: '/',
+        formSelector: 'form',
+        configurationSelector: '.image-stack',
+        stateSelector: 'button.toggle-state',
+        // optional query string to append to images (without preceding `?`)
+        imageQueryString: null
+    }, options);
 
-$form.find(':input').on('change', function () {
-    showConfiguration();
-});
+    this.options = options;
+    this.state = 'front';
+    this.lastResponse = {};
+    this.$configuration = $element.find(options.configurationSelector);
+    this.$form = $element.find(options.formSelector);
+    this.$stateToggle = $element.find(options.stateSelector);
 
-function showConfiguration() {
-    let request = $.ajax({
-        url: $form.prop('action'),
-        data: $form.serialize(),
-        type: $form.prop('method'),
-        dataType: 'json'
+    let c = this;
+    this.$form.find(':input').on('change', function () {
+        getConfiguration(c);
+    });
+    this.$stateToggle.on('click', function () {
+        toggleState.call(c);
     });
 
-    request.done(function (response) {
-        let $html = $('<div></div>');
+    this.toggleState = function () {
+        toggleState.call(c);
+    };
+    this.buildImageStack = function (response) {
+        buildImageStack.call(c, response);
+    };
 
-        response.data.forEach(function (componentImages) {
-            if (!componentImages.hasOwnProperty(state)) {
+    getConfiguration(c);
+}
+
+/**
+ * Toggles state using the last response
+ *
+ * @return void
+ */
+function toggleState() {
+    this.state = this.state === 'front' ? 'back' : 'front';
+    this.buildImageStack(this.lastResponse)
+}
+
+/**
+ * Builds image stack from a response and places it in the $configuration element
+ *
+ * @param {object} response
+ * @return void
+ */
+function buildImageStack(response) {
+    if (!response.hasOwnProperty('build')) {
+        return;
+    }
+
+    let $html = $('<div></div>');
+
+    if (response.build.hasOwnProperty('images')) {
+        let c = this;
+        response.build.images.forEach(function (componentImages) {
+            if (!componentImages.hasOwnProperty(c.state)) {
                 return;
             }
 
+            let src = c.options.imageBaseUrl + componentImages[c.state]['path'];
+            if (c.options.imageQueryString !== '') {
+                src += '?' + c.options.imageQueryString;
+            }
+
             let $img = $('<img>')
-                .prop('src', componentImages[state]['path'])
+                .prop('src', src)
                 .css({
-                    zIndex: componentImages[state]['layer']
+                    zIndex: componentImages[c.state]['layer']
                 });
 
             $html.append($img);
         });
+    }
 
-        $configuration.html($html);
-    });
+    this.$configuration.html($html);
 }
 
-if ($form.length) {
-    $(document).ready(function () {
-        showConfiguration();
+/**
+ * Triggers ajax request to fetch configuration response from selected options
+ *
+ * @param {Object<Configurator>} Configurator
+ */
+function getConfiguration(Configurator) {
+    let request = $.ajax({
+        url: Configurator.$form.prop('action'),
+        data: Configurator.$form.serialize(),
+        type: Configurator.$form.prop('method'),
+        dataType: 'json'
+    });
+
+    request.done(function (response) {
+        Configurator.lastResponse = response;
+        Configurator.buildImageStack(response);
     });
 }

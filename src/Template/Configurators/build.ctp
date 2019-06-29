@@ -24,12 +24,11 @@ $this
 
     <div class="configuration">
         <div class="output-ui">
-            <div id="configuration" class="image-stack"></div>
+            <div class="image-stack"></div>
         </div>
 
         <div class="input-form">
             <?= $this->Form->create(new ConfiguratorContext($this->getRequest(), $configurator->bootstrap), [
-                'id' => 'configurator',
                 'class' => 'garlic-persist',
             ]); ?>
 
@@ -76,11 +75,22 @@ $this
                 </div>
             <?php endforeach; ?>
 
-            <?= $this->Form->submit(__(Configure::read('ARC.ProductConfigurator.text.submit'))); ?>
+            <?= $this->Form->submit(__(Configure::read('ARC.ProductConfigurator.text.submit')), [
+                'name' => 'save'
+            ]); ?>
             <?= $this->Form->end(); ?>
         </div>
     </div>
 </div>
 
 <?= $this->Html->script('ARC/ProductConfigurator.dist/app.bundle') ?>
+
+<script>
+    $(document).ready(function () {
+        const configurator = new Configurator($('.arc.configurator'), {
+            imageBaseUrl: '<?= Configure::read('ARC.ProductConfigurator.imageBaseUrl') ?>',
+            imageQueryString: '<?= http_build_query(Configure::read('ARC.ProductConfigurator.imgix.md')) ?>'
+        });
+    });
+</script>
 
