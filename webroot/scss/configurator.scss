@@ -30,4 +30,17 @@ Implementing applications should override as needed.
   .input-form {
     @extend .col-7;
   }
+
+  label.swatch {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    width: 60px;
+    height: 60px;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    input {
+      display: none;
+    }
+  }
 }

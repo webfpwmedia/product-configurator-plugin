@@ -3,6 +3,7 @@ namespace ARC\ProductConfigurator\View;
 
 use ARC\ProductConfigurator\View\Helper\UrlHelper;
 use ARC\ProductConfigurator\View\Widget\JsonWidget;
+use ARC\ProductConfigurator\View\Widget\RadioWidget;
 use Cake\Core\Configure;
 use Cake\View\View;
 
@@ -39,6 +40,7 @@ class AppView extends View
             'templates' => Configure::read("ARC.ProductConfigurator.$templates"),
             'widgets' => [
                 'json' => [JsonWidget::class],
+                'radio' => [RadioWidget::class, 'nestingLabel'],
             ],
         ]);
 
