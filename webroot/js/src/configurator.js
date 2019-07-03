@@ -45,6 +45,30 @@ window.Configurator = function Configurator($element, options) {
         buildImageStack.call(c, response);
     };
 
+    this.$form.find('[data-requires]').each(function () {
+        const $this = $(this);
+        const requires = $this.data('requires').split(':');
+        $this.hide();
+
+        const $requirement = $this
+            .siblings('[data-component="' + requires[0] + '"][data-token="' + requires[1] + '"]')
+            .find(':input');
+
+        $requirement.change(function () {
+            const $required = $(this);
+            $required.val() ? $this.show() : $this.hide();
+
+            if ($this.is(':hidden')) {
+                const $thisInput = $this.find(':input');
+                $thisInput.prop('checked', false);
+                $thisInput.garlic('destroy');
+                $thisInput.change();
+            }
+        });
+
+        $requirement.filter(':checked').change();
+    });
+
     getConfiguration(c);
     setState(c);
 }

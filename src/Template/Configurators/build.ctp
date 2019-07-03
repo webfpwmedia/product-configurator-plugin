@@ -44,9 +44,19 @@ $this
                     <div class="step-body">
                         <?php foreach ($step->config as $componentOptions) : ?>
                             <?php
-                            $controlName = $componentOptions['component'] . '.' . str_replace(['{', '}'], '', $componentOptions['token']);
+                            $tokenName = str_replace(['{', '}'], '', $componentOptions['token']);
+                            $controlName = $componentOptions['component'] . '.' . $tokenName;
+                            $requires = null;
+                            if (isset($componentOptions['requires'])) {
+                                $requires = sprintf(
+                                    'data-requires="%s:%s"',
+                                    $componentOptions['requires']['component'],
+                                    str_replace(['{', '}'], '', $componentOptions['requires']['token'])
+                                );
+                            }
                             ?>
                             <?php if (isset($componentOptions['options'])) : ?>
+                            <fieldset data-component="<?= $componentOptions['component'] ?>" data-token="<?= $tokenName ?>" <?php if ($requires) { echo $requires; } ?>>
                                 <legend><?= h($componentOptions['name']) ?></legend>
 
                                 <?=
@@ -74,6 +84,7 @@ $this
                                         ->toList()
                                 ]);
                                 ?>
+                            </fieldset>
                             <?php elseif (isset($componentOptions['inherits'])): ?>
                                 <?=
                                 $this->Form->hidden($controlName, [
