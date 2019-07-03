@@ -11,6 +11,8 @@ use Cake\ORM\Entity;
  * @property array $bootstrap
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
+ * @property int $width
+ * @property int $height
  *
  * @property \ARC\ProductConfigurator\Model\Entity\Component[] $components
  * @property \ARC\ProductConfigurator\Model\Entity\Step[] $steps
@@ -32,6 +34,8 @@ class Configurator extends Entity
         'created' => true,
         'modified' => true,
         'components' => true,
-        'steps' => true
+        'steps' => true,
+        'width' => true,
+        'height' => true,
     ];
 }

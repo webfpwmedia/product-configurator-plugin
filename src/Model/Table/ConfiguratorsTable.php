@@ -74,6 +74,14 @@ class ConfiguratorsTable extends Table
             ->requirePresence('bootstrap', 'create')
             ->allowEmptyString('bootstrap', false);
 
+        $validator
+            ->requirePresence('width', 'create')
+            ->greaterThan('width', 0);
+
+        $validator
+            ->requirePresence('height', 'create')
+            ->greaterThan('height', 0);
+
         return $validator;
     }
 }
