@@ -2,6 +2,7 @@
 /**
  * @var \ARC\ProductConfigurator\View\AppView $this
  * @var \ARC\ProductConfigurator\Model\Entity\Configurator $configurator
+ * @var array $context
  */
 
 use ARC\ProductConfigurator\Form\ConfiguratorContext;
@@ -33,7 +34,7 @@ $this
         </div>
 
         <div class="input-form">
-            <?= $this->Form->create(new ConfiguratorContext($this->getRequest(), $configurator->bootstrap), [
+            <?= $this->Form->create(new ConfiguratorContext($this->getRequest(), $context), [
                 'class' => 'garlic-persist',
             ]); ?>
 

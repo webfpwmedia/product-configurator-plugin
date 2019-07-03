@@ -36,9 +36,10 @@ class ConfiguratorsController extends AppController
      * Public configurator builder
      *
      * @param int|null $id
+     * @param int|null $buildId
      * @return \Cake\Http\Response|null
      */
-    public function build($id = null)
+    public function build($id = null, $buildId = null)
     {
         $configurator = $this->Configurators->get($id, [
             'contain' => [
@@ -47,6 +48,11 @@ class ConfiguratorsController extends AppController
                 ],
             ]
         ]);
+        $context = $configurator->bootstrap;
+        if ($buildId) {
+            $build = $this->Builds->get($buildId);
+            $context = $build->components;
+        }
 
         $build = $this->Builds->newEntity();
         if ($this->request->is(['post'])) {
@@ -69,6 +75,7 @@ class ConfiguratorsController extends AppController
             $this->set('_serialize', ['build']);
         }
 
+        $this->set('context', $context);
         $this->set('configurator', $configurator);
     }
 
