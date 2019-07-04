@@ -56,7 +56,7 @@ $this
                             }
                             ?>
                             <?php if (isset($componentOptions['options'])) : ?>
-                            <fieldset data-component="<?= $componentOptions['component'] ?>" data-token="<?= $tokenName ?>" <?php if ($requires) { echo $requires; } ?>>
+                            <fieldset data-component="<?= $componentOptions['component'] ?>" data-token="<?= $tokenName ?>" <?= $requires ?>>
                                 <legend><?= h($componentOptions['name']) ?></legend>
 
                                 <?=
