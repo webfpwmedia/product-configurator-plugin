@@ -29,6 +29,8 @@ class BuildsTable extends Table
 {
     use LocatorAwareTrait;
 
+    const CUSTOM_TEXT_INPUT = '__customtext';
+
     /**
      * Initialize method
      *

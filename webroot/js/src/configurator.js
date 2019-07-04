@@ -4,6 +4,7 @@
 
 import $ from 'jquery';
 
+const CUSTOM_TEXT_INPUT = '__customtext';
 let preloaded = [];
 
 /**
@@ -67,6 +68,22 @@ window.Configurator = function Configurator($element, options) {
         });
 
         $requirement.filter(':checked').change();
+    });
+
+    this.$form.find('[data-custom]').each(function () {
+        const $this = $(this);
+        const $fieldset = $this.closest('fieldset');
+        const component = $fieldset.data('component');
+        const customVal = $this.find('input').val();
+        const $radios = $fieldset.find('input');
+        const $customInput = $fieldset.find('input[name="' + component + '[' + CUSTOM_TEXT_INPUT + ']"]');
+
+        $radios.change(function () {
+            const $selected = $radios.filter(':checked');
+            $selected.val() === customVal ? $customInput.show() : $customInput.hide();
+        });
+
+        $radios.filter(':checked').change();
     });
 
     getConfiguration(c);

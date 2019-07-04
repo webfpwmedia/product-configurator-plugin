@@ -6,6 +6,7 @@
  */
 
 use ARC\ProductConfigurator\Form\ConfiguratorContext;
+use ARC\ProductConfigurator\Model\Table\BuildsTable;
 use Cake\Core\Configure;
 
 $this
@@ -60,33 +61,56 @@ $this
                             <fieldset data-component="<?= $componentOptions['component'] ?>" data-token="<?= $tokenName ?>" <?= $requires ?>>
                                 <legend><?= h($componentOptions['name']) ?></legend>
 
-                                <?=
-                                $this->Form->control($controlName, [
+                                <?php
+                                $options = collection($componentOptions['options'])
+                                    ->map(function ($option) use ($componentOptions) {
+                                        $radioOptions = [
+                                            'value' => $option['code'],
+                                            'text' => $option['name'],
+                                            'label' => []
+                                        ];
+
+                                        if (isset($option['swatch'])) {
+                                            $radioOptions['text'] = '';
+                                            $radioOptions['label'] += [
+                                                'class' => 'swatch',
+                                                'style' => "background-image:url('" . $this->Url->image($option['swatch'], ['size' => 'swatch']) . "')",
+                                            ];
+                                        }
+
+                                        return $radioOptions;
+                                    })
+                                    ->toList();
+
+                                if (isset($componentOptions['text'])) {
+                                    $options[] = [
+                                        'value' => $componentOptions['text']['code'],
+                                        'text' => 'Custom',
+                                        'label' => [
+                                            'data-custom' => true,
+                                        ],
+                                    ];
+                                }
+
+                                echo $this->Form->control($controlName, [
                                     'label' => false,
                                     'type' => 'radio',
-                                    'options' => collection($componentOptions['options'])
-                                        ->map(function ($option) {
-                                            $radioOptions = [
-                                                'value' => $option['code'],
-                                                'text' => $option['name'],
-                                                'label' => []
-                                            ];
-
-                                            if (isset($option['swatch'])) {
-                                                $radioOptions['text'] = '';
-                                                $radioOptions['label'] += [
-                                                    'class' => 'swatch',
-                                                    'style' => "background-image:url('" . $this->Url->image($option['swatch'], ['size' => 'swatch']) . "')",
-                                                ];
-                                            }
-
-                                            return $radioOptions;
-                                        })
-                                        ->toList()
+                                    'options' => $options,
+                                    'escape' => false,
                                 ]);
+
+                                if (isset($componentOptions['text'])) {
+                                    echo $this->Form->control($componentOptions['component'] . '.' . BuildsTable::CUSTOM_TEXT_INPUT, [
+                                        'label' => false,
+                                        'style' => 'display: none',
+                                        'default' => $componentOptions['text']['default'],
+                                        'maxlength' => 25,
+                                    ]);
+                                }
                                 ?>
                             </fieldset>
-                            <?php elseif (isset($componentOptions['inherits'])): ?>
+                            <?php endif; ?>
+                            <?php if (isset($componentOptions['inherits'])): ?>
                                 <?=
                                 $this->Form->hidden($controlName, [
                                     'value' => sprintf(
