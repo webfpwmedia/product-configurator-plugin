@@ -20,7 +20,7 @@ class JsonWidget extends TextareaWidget
     {
         $data['type'] = 'textarea';
 
-        if (isset($data['val']) && $data['val'] !== '[]') {
+        if (isset($data['val']) && !is_string($data['val'])) {
             $data['val'] = json_encode($data['val'], JSON_PRETTY_PRINT);
         }
 
