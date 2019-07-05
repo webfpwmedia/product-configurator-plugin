@@ -84,10 +84,13 @@ class BuildsTable extends Table
             })
             ->toArray();
         $selections = collection($selections)
-            ->map(function ($componentSelections) use ($selections) {
-                return $this->__withInheritance($selections, $componentSelections);
+            ->map(function ($componentSelections, $componentId) use ($selections) {
+                return [
+                    'component' => $componentId,
+                    'selections' => $this->__withInheritance($selections, $componentSelections)
+                ];
             })
-            ->toArray();
+            ->toList();
 
         $data['images'] = $this->__generateImageJson($selections);
         $data['components'] = $selections;
@@ -96,7 +99,7 @@ class BuildsTable extends Table
     /**
      * Returns array of images that match selected options
      *
-     * @param array $selections Selections by component ID
+     * @param array $selections Selections
      * @return array
      */
     private function __generateImageJson(array $selections) : array
@@ -107,8 +110,8 @@ class BuildsTable extends Table
         $ComponentsTable = $this->getTableLocator()->get('ARC/ProductConfigurator.Components');
 
         $return = [];
-        foreach ($selections as $componentId => $selection) {
-            $component = $ComponentsTable->get($componentId);
+        foreach ($selections as $componentSelections) {
+            $component = $ComponentsTable->get($componentSelections['component']);
 
             $stringTemplate = new StringTemplate(['mask' => $component->image_mask]);
 
@@ -120,7 +123,7 @@ class BuildsTable extends Table
                     'layer',
                 ])
                 ->where([
-                    '"' . $stringTemplate->format('mask', $selection) . '" REGEXP' => new IdentifierExpression('mask'),
+                    '"' . $stringTemplate->format('mask', $componentSelections['selections']) . '" REGEXP' => new IdentifierExpression('mask'),
                 ])
                 ->enableHydration(false)
                 ->groupBy('position')
