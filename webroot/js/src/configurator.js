@@ -3,6 +3,7 @@
  */
 
 import $ from 'jquery';
+import Text from './text';
 
 const CUSTOM_TEXT_INPUT = '__customtext';
 let preloaded = [];
@@ -21,7 +22,8 @@ window.Configurator = function Configurator($element, options) {
         // optional query string to append to images (without preceding `?`)
         imageQueryString: null,
         frontLabel: 'Front',
-        backLabel: 'Back'
+        backLabel: 'Back',
+        customTextMap: {}
     }, options);
 
     this.options = options;
@@ -137,17 +139,59 @@ function buildImageStack(response) {
                 return;
             }
 
-            let $img = $('<img>')
-                .prop('src', getImageSrc(componentImages[c.state]['path'], c.options))
+            const image = componentImages[c.state];
+
+            const $img = $('<img>')
+                .prop('src', getImageSrc(image['path'], c.options))
                 .css({
-                    zIndex: componentImages[c.state]['layer']
+                    zIndex: image['layer']
                 });
 
             $html.append($img);
+
+            if (c.options.customTextMap.hasOwnProperty(image['component'])) {
+                const map = c.options.customTextMap[image['component']];
+                for (let token in map) {
+                    const $fieldset = c.$form.find('fieldset[data-component="' + image['component'] + '"][data-token="' + token + '"]');
+                    const $radios = $fieldset.find('input:radio');
+                    const $selected = $radios.filter(':checked');
+                    const $selectedLabel = $selected.closest('label');
+                    const $customInput = $fieldset.find('input[name="' + image['component'] + '[' + CUSTOM_TEXT_INPUT + ']"]');
+                    let text = $selectedLabel.text();
+                    if ($selectedLabel.data('custom')) {
+                        text = $customInput.val();
+                    }
+
+                    const SVGText = new Text(getComponent(image['component'], response).selections, map[token]);
+                    const $svg = $(SVGText.render(text))
+                        .css({
+                            zIndex: parseInt(image['layer']) + 1
+                        });
+
+                    $html.append($svg);
+                }
+            }
         });
     }
 
     this.$configuration.html($html);
+}
+
+/**
+ * Extracts a component item from a build response
+ *
+ * @param {string} component
+ * @param {object} response
+ * @returns {object}
+ */
+function getComponent(component, response) {
+    return response.build.components.reduce(function (carry, item) {
+        if (item.component === component) {
+            carry = item;
+        }
+
+        return carry;
+    }, {});
 }
 
 /**

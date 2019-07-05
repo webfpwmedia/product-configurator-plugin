@@ -13,6 +13,7 @@ $this
     ->assign('title', h($configurator->name))
     ->assign('subtitle', __('Configurator'));
 
+$customTextMap = [];
 ?>
 
 <div class="arc configurator">
@@ -90,6 +91,8 @@ $this
                                             'data-custom' => true,
                                         ],
                                     ];
+
+                                    $customTextMap[$componentOptions['component']] = [$tokenName => $componentOptions['text']['map']];
                                 }
 
                                 echo $this->Form->control($controlName, [
@@ -144,7 +147,8 @@ $this
             imageBaseUrl: '<?= Configure::read('ARC.ProductConfigurator.imageBaseUrl') ?>',
             imageQueryString: '<?= http_build_query(Configure::read('ARC.ProductConfigurator.imgix.md')) ?>',
             frontLabel: '<?= h(Configure::read('ARC.ProductConfigurator.text.front')) ?>',
-            backLabel: '<?= h(Configure::read('ARC.ProductConfigurator.text.back')) ?>'
+            backLabel: '<?= h(Configure::read('ARC.ProductConfigurator.text.back')) ?>',
+            customTextMap: <?= json_encode($customTextMap) ?>
         });
     });
 </script>

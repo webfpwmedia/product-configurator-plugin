@@ -139,8 +139,9 @@ class BuildsTable extends Table
                 ])
                 ->enableHydration(false)
                 ->groupBy('position')
-                ->map(function ($imagesByPosition) {
+                ->map(function ($imagesByPosition) use ($component) {
                     return [
+                        'component' => $component->id,
                         'path' => $imagesByPosition[0]['name'],
                         'layer' => $imagesByPosition[0]['layer'],
                     ];
