@@ -157,6 +157,7 @@ function buildImageStack(response) {
                     const $selected = $radios.filter(':checked');
                     const $selectedLabel = $selected.closest('label');
                     const $customInput = $fieldset.find('input[name="' + image['component'] + '[' + CUSTOM_TEXT_INPUT + ']"]');
+
                     let text = $selectedLabel.text();
                     if ($selectedLabel.data('custom')) {
                         text = $customInput.val();
@@ -167,6 +168,14 @@ function buildImageStack(response) {
                         .css({
                             zIndex: parseInt(image['layer']) + 1
                         });
+
+                    const customInputChange = function () {
+                        $svg.find('.text').text($(this).val());
+                    };
+                    $customInput.off('keyup', customInputChange);
+                    if ($selectedLabel.data('custom')) {
+                        $customInput.on('keyup', customInputChange);
+                    }
 
                     $html.append($svg);
                 }
