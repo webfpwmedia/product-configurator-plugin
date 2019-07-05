@@ -15,6 +15,7 @@ let preloaded = [];
  */
 window.Configurator = function Configurator($element, options) {
     options = $.extend({
+        originalImageSize: {},
         imageBaseUrl: '/',
         formSelector: 'form',
         configurationSelector: '.image-stack',
@@ -150,35 +151,44 @@ function buildImageStack(response) {
             $html.append($img);
 
             if (c.options.customTextMap.hasOwnProperty(image['component'])) {
-                const map = c.options.customTextMap[image['component']];
-                for (let token in map) {
-                    const $fieldset = c.$form.find('fieldset[data-component="' + image['component'] + '"][data-token="' + token + '"]');
-                    const $radios = $fieldset.find('input:radio');
-                    const $selected = $radios.filter(':checked');
-                    const $selectedLabel = $selected.closest('label');
-                    const $customInput = $fieldset.find('input[name="' + image['component'] + '[' + CUSTOM_TEXT_INPUT + ']"]');
+                $img.on('load', function () {
+                    const map = c.options.customTextMap[image['component']];
+                    for (let token in map) {
+                        const $fieldset = c.$form.find('fieldset[data-component="' + image['component'] + '"][data-token="' + token + '"]');
+                        const $radios = $fieldset.find('input:radio');
+                        const $selected = $radios.filter(':checked');
+                        const $selectedLabel = $selected.closest('label');
+                        const $customInput = $fieldset.find('input[name="' + image['component'] + '[' + CUSTOM_TEXT_INPUT + ']"]');
 
-                    let text = $selectedLabel.text();
-                    if ($selectedLabel.data('custom')) {
-                        text = $customInput.val();
+                        let text = $selectedLabel.text();
+                        if ($selectedLabel.data('custom')) {
+                            text = $customInput.val();
+                        }
+
+                        const vScale = $img.height() / c.options.originalImageSize.height;
+                        const hScale = $img.width() / c.options.originalImageSize.width;
+                        const SVGText = new Text(getComponent(image['component'], response).selections, map[token]);
+
+                        const $svg = $(SVGText.render(text))
+                            .css({
+                                zIndex: parseInt(image['layer']) + 1,
+                                top: vScale * SVGText.getOptions().y,
+                                left: hScale * SVGText.getOptions().x,
+                                height: vScale * SVGText.getOptions().h,
+                                width: hScale * SVGText.getOptions().w
+                            });
+
+                        const customInputChange = function () {
+                            $svg.find('.text').text($(this).val());
+                        };
+                        $customInput.off('keyup', customInputChange);
+                        if ($selectedLabel.data('custom')) {
+                            $customInput.on('keyup', customInputChange);
+                        }
+
+                        $html.append($svg);
                     }
-
-                    const SVGText = new Text(getComponent(image['component'], response).selections, map[token]);
-                    const $svg = $(SVGText.render(text))
-                        .css({
-                            zIndex: parseInt(image['layer']) + 1
-                        });
-
-                    const customInputChange = function () {
-                        $svg.find('.text').text($(this).val());
-                    };
-                    $customInput.off('keyup', customInputChange);
-                    if ($selectedLabel.data('custom')) {
-                        $customInput.on('keyup', customInputChange);
-                    }
-
-                    $html.append($svg);
-                }
+                });
             }
         });
     }

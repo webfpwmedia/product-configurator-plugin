@@ -23,6 +23,15 @@ const Text = function Text(selections, map) {
     }
 
     /**
+     * Returns merged options
+     *
+     * @returns {object}
+     */
+    this.getOptions = function () {
+        return options;
+    };
+
+    /**
      * Renders the text SVG
      *
      * @param {string} text
@@ -34,7 +43,7 @@ const Text = function Text(selections, map) {
                 <style>
                     .text {
                         fill: ${options.color || '#000'};
-                        font: regular ${options.size || '12'}px sans-serif;
+                        font: ${options.size || '12'}px sans-serif;
                     }
                 </style>
                 <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="text">${text}</text>
