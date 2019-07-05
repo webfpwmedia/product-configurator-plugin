@@ -8,10 +8,27 @@ import './configurator';
 window.$ = $;
 
 $(document).ready(function () {
+    // storage value for empty selections
+    const NONE = '[empty]';
+
     $('form.garlic-persist').garlic({
         conflictManager: {
             enabled: true,
             garlicPriority: true
+        },
+        prePersist: function ($element, value) {
+            if (value === '') {
+                return NONE;
+            }
+
+            return value;
+        },
+        preRetrieve: function ($element, currentValue, storedValue) {
+            if (storedValue === NONE) {
+                return '';
+            }
+
+            return storedValue;
         }
     });
 });
