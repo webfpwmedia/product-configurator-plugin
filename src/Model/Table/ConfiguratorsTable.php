@@ -76,11 +76,11 @@ class ConfiguratorsTable extends Table
 
         $validator
             ->requirePresence('width', 'create')
-            ->greaterThan('width', 0);
+            ->greaterThan('width', 0, __('Must be greater than 0.'));
 
         $validator
             ->requirePresence('height', 'create')
-            ->greaterThan('height', 0);
+            ->greaterThan('height', 0, __('Must be greater than 0.'));
 
         return $validator;
     }

@@ -30,15 +30,17 @@ $this
                                   '</p>',
                     ],
                 ]) ?>
+
                 <div class="row">
-                    <p class="text-muted small col-12"><?= __('Original image size (in pixels).') ?></p>
                     <div class="col-6">
-                        <?= $this->Form->control('width') ?>
+                        <?= $this->Form->control('width', ['label' => __('(W) Native pixel width of original image.')]) ?>
                     </div>
+
                     <div class="col-6">
-                        <?= $this->Form->control('height') ?>
+                        <?= $this->Form->control('height', ['label' => __('(H) Native pixel height of original image.')]) ?>
                     </div>
                 </div>
+
                 <?= $this->Form->submit(__('Save')) ?>
                 <?= $this->Form->end() ?>
             </div>
