@@ -80,7 +80,15 @@ window.Configurator = function Configurator($element, options) {
 
         $radios.change(function () {
             const $selected = $radios.filter(':checked');
-            $selected.val() === customVal ? $customInput.show() : $customInput.hide();
+            if ($selected.val() === customVal) {
+                $customInput
+                    .prop('hidden', false)
+                    .prop('disabled', false);
+            } else {
+                $customInput
+                    .prop('hidden', true)
+                    .prop('disabled', true);
+            }
         });
 
         $radios.filter(':checked').change();

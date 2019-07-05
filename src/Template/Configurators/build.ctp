@@ -100,9 +100,11 @@ $this
                                 ]);
 
                                 if (isset($componentOptions['text'])) {
+                                    $this->Form->unlockField($componentOptions['component'] . '.' . BuildsTable::CUSTOM_TEXT_INPUT);
                                     echo $this->Form->control($componentOptions['component'] . '.' . BuildsTable::CUSTOM_TEXT_INPUT, [
                                         'label' => false,
-                                        'style' => 'display: none',
+                                        'hidden' => true,
+                                        'disabled' => true,
                                         'default' => $componentOptions['text']['default'],
                                         'maxlength' => 25,
                                     ]);

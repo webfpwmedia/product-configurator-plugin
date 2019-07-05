@@ -29,6 +29,9 @@ class BuildsTable extends Table
 {
     use LocatorAwareTrait;
 
+    /**
+     * Name of input holding custom user text
+     */
     const CUSTOM_TEXT_INPUT = '__customtext';
 
     /**
@@ -87,10 +90,17 @@ class BuildsTable extends Table
             ->toArray();
         $selections = collection($selections)
             ->map(function ($componentSelections, $componentId) use ($selections) {
-                return [
+                $return = [
                     'component' => $componentId,
                     'selections' => $this->__withInheritance($selections, $componentSelections)
                 ];
+
+                // check for custom text label
+                if (!empty($componentSelections[self::CUSTOM_TEXT_INPUT])) {
+                    $return['text'] = $componentSelections[self::CUSTOM_TEXT_INPUT];
+                }
+
+                return $return;
             })
             ->toList();
 
@@ -155,6 +165,12 @@ class BuildsTable extends Table
     private function __withInheritance($data, $selections)
     {
         foreach ($selections as $token => $selection) {
+            if ($token === self::CUSTOM_TEXT_INPUT) {
+                unset($selections[$token]);
+
+                continue;
+            }
+
             if (stripos($selection, 'inherits:') === false) {
                 continue;
             }
