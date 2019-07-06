@@ -81,6 +81,12 @@ window.Configurator = function Configurator($element, options) {
         const $radios = $fieldset.find('input');
         const $customInput = $fieldset.find('input[name="' + component + '[' + CUSTOM_TEXT_INPUT + ']"]');
 
+        $customInput.on('keydown', function (event) {
+            if (event.which === 13) {
+                event.preventDefault();
+            }
+        });
+
         $radios.change(function () {
             const $selected = $radios.filter(':checked');
             if ($selected.val() === customVal) {
