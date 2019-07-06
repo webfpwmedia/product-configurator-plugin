@@ -109,7 +109,7 @@ $customTextMap = [];
                                         'hidden' => true,
                                         'disabled' => true,
                                         'default' => $componentOptions['text']['default'],
-                                        'maxlength' => 25,
+                                        'maxlength' => $componentOptions['text']['maxLength'] ?? 25,
                                     ]);
                                 }
                                 ?>
