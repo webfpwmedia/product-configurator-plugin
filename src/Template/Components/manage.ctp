@@ -36,7 +36,7 @@ if (!$component->isNew()) {
 
                 <?= $this->Form->control('name', [
                     'templateVars' => [
-                        'help' => '<p class="text-muted small">' . __('For internal use only.') . '</p>',
+                        'help' => '<p class="text-muted small">' . __('Used on generated output (i.e. PDF)') . '</p>',
                     ],
                 ]) ?>
 
