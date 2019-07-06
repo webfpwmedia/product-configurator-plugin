@@ -3,7 +3,9 @@
  */
 
 import $ from 'jquery';
+import Text from './text';
 
+const CUSTOM_TEXT_INPUT = '__customtext';
 let preloaded = [];
 
 /**
@@ -13,6 +15,7 @@ let preloaded = [];
  */
 window.Configurator = function Configurator($element, options) {
     options = $.extend({
+        originalImageSize: {},
         imageBaseUrl: '/',
         formSelector: 'form',
         configurationSelector: '.image-stack',
@@ -20,7 +23,8 @@ window.Configurator = function Configurator($element, options) {
         // optional query string to append to images (without preceding `?`)
         imageQueryString: null,
         frontLabel: 'Front',
-        backLabel: 'Back'
+        backLabel: 'Back',
+        customTextMap: {}
     }, options);
 
     this.options = options;
@@ -69,6 +73,36 @@ window.Configurator = function Configurator($element, options) {
         $requirement.filter(':checked').change();
     });
 
+    this.$form.find('[data-custom]').each(function () {
+        const $this = $(this);
+        const $fieldset = $this.closest('fieldset');
+        const component = $fieldset.data('component');
+        const customVal = $this.find('input').val();
+        const $radios = $fieldset.find('input');
+        const $customInput = $fieldset.find('input[name="' + component + '[' + CUSTOM_TEXT_INPUT + ']"]');
+
+        $customInput.on('keydown', function (event) {
+            if (event.which === 13) {
+                event.preventDefault();
+            }
+        });
+
+        $radios.change(function () {
+            const $selected = $radios.filter(':checked');
+            if ($selected.val() === customVal) {
+                $customInput
+                    .prop('hidden', false)
+                    .prop('disabled', false);
+            } else {
+                $customInput
+                    .prop('hidden', true)
+                    .prop('disabled', true);
+            }
+        });
+
+        $radios.filter(':checked').change();
+    });
+
     getConfiguration(c);
     setState(c);
 }
@@ -112,17 +146,77 @@ function buildImageStack(response) {
                 return;
             }
 
-            let $img = $('<img>')
-                .prop('src', getImageSrc(componentImages[c.state]['path'], c.options))
+            const image = componentImages[c.state];
+
+            const $img = $('<img>')
+                .prop('src', getImageSrc(image['path'], c.options))
                 .css({
-                    zIndex: componentImages[c.state]['layer']
+                    zIndex: image['layer']
                 });
 
             $html.append($img);
+
+            if (c.options.customTextMap.hasOwnProperty(image['component'])) {
+                $img.on('load', function () {
+                    const map = c.options.customTextMap[image['component']];
+                    for (let token in map) {
+                        const $fieldset = c.$form.find('fieldset[data-component="' + image['component'] + '"][data-token="' + token + '"]');
+                        const $radios = $fieldset.find('input:radio');
+                        const $selected = $radios.filter(':checked');
+                        const $selectedLabel = $selected.closest('label');
+                        const $customInput = $fieldset.find('input[name="' + image['component'] + '[' + CUSTOM_TEXT_INPUT + ']"]');
+
+                        let text = $selectedLabel.text();
+                        if ($selectedLabel.data('custom')) {
+                            text = $customInput.val();
+                        }
+
+                        const vScale = $img.height() / c.options.originalImageSize.height;
+                        const hScale = $img.width() / c.options.originalImageSize.width;
+                        const SVGText = new Text(getComponent(image['component'], response).selections, map[token]);
+
+                        const $svg = $(SVGText.render(text))
+                            .css({
+                                zIndex: parseInt(image['layer']) + 1,
+                                top: vScale * SVGText.getOptions().y,
+                                left: hScale * SVGText.getOptions().x,
+                                height: vScale * SVGText.getOptions().h,
+                                width: hScale * SVGText.getOptions().w
+                            });
+
+                        const customInputChange = function () {
+                            $svg.find('.text').text($(this).val());
+                        };
+                        $customInput.off('keyup', customInputChange);
+                        if ($selectedLabel.data('custom')) {
+                            $customInput.on('keyup', customInputChange);
+                        }
+
+                        $html.append($svg);
+                    }
+                });
+            }
         });
     }
 
     this.$configuration.html($html);
+}
+
+/**
+ * Extracts a component item from a build response
+ *
+ * @param {string} component
+ * @param {object} response
+ * @returns {object}
+ */
+function getComponent(component, response) {
+    return response.build.components.reduce(function (carry, item) {
+        if (item.component === component) {
+            carry = item;
+        }
+
+        return carry;
+    }, {});
 }
 
 /**

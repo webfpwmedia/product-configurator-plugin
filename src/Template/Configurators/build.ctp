@@ -6,12 +6,14 @@
  */
 
 use ARC\ProductConfigurator\Form\ConfiguratorContext;
+use ARC\ProductConfigurator\Model\Table\BuildsTable;
 use Cake\Core\Configure;
 
 $this
     ->assign('title', h($configurator->name))
     ->assign('subtitle', __('Configurator'));
 
+$customTextMap = [];
 ?>
 
 <div class="arc configurator">
@@ -60,33 +62,60 @@ $this
                             <fieldset data-component="<?= $componentOptions['component'] ?>" data-token="<?= $tokenName ?>" <?= $requires ?>>
                                 <legend><?= h($componentOptions['name']) ?></legend>
 
-                                <?=
-                                $this->Form->control($controlName, [
+                                <?php
+                                $options = collection($componentOptions['options'])
+                                    ->map(function ($option) use ($componentOptions) {
+                                        $radioOptions = [
+                                            'value' => $option['code'],
+                                            'text' => $option['name'],
+                                            'label' => []
+                                        ];
+
+                                        if (isset($option['swatch'])) {
+                                            $radioOptions['text'] = '';
+                                            $radioOptions['label'] += [
+                                                'class' => 'swatch',
+                                                'style' => "background-image:url('" . $this->Url->image($option['swatch'], ['size' => 'swatch']) . "')",
+                                            ];
+                                        }
+
+                                        return $radioOptions;
+                                    })
+                                    ->toList();
+
+                                if (isset($componentOptions['text'])) {
+                                    $options[] = [
+                                        'value' => $componentOptions['text']['code'],
+                                        'text' => 'Custom',
+                                        'label' => [
+                                            'data-custom' => true,
+                                        ],
+                                    ];
+
+                                    $customTextMap[$componentOptions['component']] = [$tokenName => $componentOptions['text']['map']];
+                                }
+
+                                echo $this->Form->control($controlName, [
                                     'label' => false,
                                     'type' => 'radio',
-                                    'options' => collection($componentOptions['options'])
-                                        ->map(function ($option) {
-                                            $radioOptions = [
-                                                'value' => $option['code'],
-                                                'text' => $option['name'],
-                                                'label' => []
-                                            ];
-
-                                            if (isset($option['swatch'])) {
-                                                $radioOptions['text'] = '';
-                                                $radioOptions['label'] += [
-                                                    'class' => 'swatch',
-                                                    'style' => "background-image:url('" . $this->Url->image($option['swatch'], ['size' => 'swatch']) . "')",
-                                                ];
-                                            }
-
-                                            return $radioOptions;
-                                        })
-                                        ->toList()
+                                    'options' => $options,
+                                    'escape' => false,
                                 ]);
+
+                                if (isset($componentOptions['text'])) {
+                                    $this->Form->unlockField($componentOptions['component'] . '.' . BuildsTable::CUSTOM_TEXT_INPUT);
+                                    echo $this->Form->control($componentOptions['component'] . '.' . BuildsTable::CUSTOM_TEXT_INPUT, [
+                                        'label' => false,
+                                        'hidden' => true,
+                                        'disabled' => true,
+                                        'default' => $componentOptions['text']['default'],
+                                        'maxlength' => $componentOptions['text']['maxLength'] ?? 25,
+                                    ]);
+                                }
                                 ?>
                             </fieldset>
-                            <?php elseif (isset($componentOptions['inherits'])): ?>
+                            <?php endif; ?>
+                            <?php if (isset($componentOptions['inherits'])): ?>
                                 <?=
                                 $this->Form->hidden($controlName, [
                                     'value' => sprintf(
@@ -115,10 +144,15 @@ $this
 <script>
     $(document).ready(function () {
         const configurator = new Configurator($('.arc.configurator'), {
+            originalImageSize: {
+                width: <?= $configurator->width ?>,
+                height: <?= $configurator->height ?>,
+            },
             imageBaseUrl: '<?= Configure::read('ARC.ProductConfigurator.imageBaseUrl') ?>',
             imageQueryString: '<?= http_build_query(Configure::read('ARC.ProductConfigurator.imgix.md')) ?>',
             frontLabel: '<?= h(Configure::read('ARC.ProductConfigurator.text.front')) ?>',
-            backLabel: '<?= h(Configure::read('ARC.ProductConfigurator.text.back')) ?>'
+            backLabel: '<?= h(Configure::read('ARC.ProductConfigurator.text.back')) ?>',
+            customTextMap: <?= json_encode($customTextMap) ?>
         });
     });
 </script>

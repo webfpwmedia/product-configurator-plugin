@@ -19,6 +19,16 @@ Implementing applications should override as needed.
     }
   }
 
+  .image-stack {
+    position: relative;
+
+    img, svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
   .configuration {
     @extend .row;
   }
