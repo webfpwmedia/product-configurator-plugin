@@ -132,7 +132,7 @@ $customTextMap = [];
             <?php endforeach; ?>
 
             <?= $this->Form->submit(__(Configure::read('ARC.ProductConfigurator.text.submit')), [
-                'name' => 'save'
+                'name' => 'extra[save]'
             ]); ?>
             <?= $this->Form->end(); ?>
         </div>

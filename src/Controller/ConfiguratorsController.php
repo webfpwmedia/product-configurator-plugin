@@ -58,7 +58,7 @@ class ConfiguratorsController extends AppController
         $build = $this->Builds->newEntity();
         if ($this->request->is(['post'])) {
             $build = $this->Builds->patchEntity($build, $this->request->getData());
-            if ($this->request->getData('save') && $this->Builds->save($build)) {
+            if ($this->request->getData('extra.save') && $this->Builds->save($build)) {
                 $this->Flash->success(__('Your build has been submitted!'));
                 $result = EventManager::instance()->dispatch(new Event('ARC.ProductConfigurator.build', null, [
                     'id' => $build->id,
