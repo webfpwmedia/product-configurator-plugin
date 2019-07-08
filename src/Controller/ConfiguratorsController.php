@@ -4,6 +4,7 @@ namespace ARC\ProductConfigurator\Controller;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
+use Cake\Http\Response;
 use Cake\Log\Log;
 
 /**
@@ -59,10 +60,14 @@ class ConfiguratorsController extends AppController
             $build = $this->Builds->patchEntity($build, $this->request->getData());
             if ($this->request->getData('save') && $this->Builds->save($build)) {
                 $this->Flash->success(__('Your build has been submitted!'));
-                EventManager::instance()->dispatch(new Event('ARC.ProductConfigurator.build', null, [
+                $result = EventManager::instance()->dispatch(new Event('ARC.ProductConfigurator.build', null, [
                     'id' => $build->id,
                     'data' => $this->request->getData()
                 ]));
+
+                if ($result->result instanceof Response) {
+                    return $result->result;
+                }
 
                 return $this->redirect(['action' => 'build', $id]);
             } elseif ($this->request->getData('submit')) {
