@@ -49,6 +49,10 @@ class ConfiguratorsController extends AppController
             ]
         ]);
         $context = $configurator->bootstrap;
+        if ($this->request->getSession()->read('build')) {
+            $build = $this->request->getSession()->read('build');
+            $context = $build->components;
+        }
         if ($buildId) {
             $build = $this->Builds->get($buildId);
             $context = $build->components;
@@ -57,6 +61,7 @@ class ConfiguratorsController extends AppController
         $build = $this->Builds->newEntity();
         if ($this->request->is(['post'])) {
             $build = $this->Builds->patchEntity($build, $this->request->getData());
+            $this->request->getSession()->write('build', $build);
             if ($this->request->getData('save') && $this->Builds->save($build)) {
                 $this->Flash->success(__('Your build has been submitted!'));
                 EventManager::instance()->dispatch(new Event('ARC.ProductConfigurator.build', null, [
