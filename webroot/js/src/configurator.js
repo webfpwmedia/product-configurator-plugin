@@ -103,7 +103,9 @@ window.Configurator = function Configurator($element, options) {
         $radios.filter(':checked').change();
     });
 
-    getConfiguration(c);
+    if (this.$form.length) {
+        getConfiguration(c);
+    }
     setState(c);
 }
 
