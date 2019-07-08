@@ -65,7 +65,6 @@ window.Configurator = function Configurator($element, options) {
             if ($this.is(':hidden')) {
                 const $thisInput = $this.find(':input');
                 $thisInput.prop('checked', false);
-                $thisInput.garlic('destroy');
                 $thisInput.change();
             }
         });
