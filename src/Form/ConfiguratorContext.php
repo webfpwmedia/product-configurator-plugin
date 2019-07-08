@@ -1,6 +1,7 @@
 <?php
 namespace ARC\ProductConfigurator\Form;
 
+use ARC\ProductConfigurator\Model\Table\BuildsTable;
 use Cake\Http\ServerRequest;
 use Cake\View\Form\ContextInterface;
 
@@ -78,6 +79,10 @@ class ConfiguratorContext implements ContextInterface
 
         if (!$selected) {
             return null;
+        }
+
+        if ($mask === BuildsTable::CUSTOM_TEXT_INPUT) {
+            return $selected['text'] ?? null;
         }
 
         return $selected['selections'][$mask];
