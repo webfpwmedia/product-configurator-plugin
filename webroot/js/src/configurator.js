@@ -45,8 +45,8 @@ window.Configurator = function Configurator($element, options) {
         c.state = c.state === 'front' ? 'back' : 'front';
         setState(c);
     };
-    this.buildImageStack = function (response) {
-        buildImageStack.call(c, response);
+    this.buildImageStack = function () {
+        buildImageStack.apply(c, arguments);
     };
 
     this.$form.find('[data-requires]').each(function () {
@@ -103,7 +103,9 @@ window.Configurator = function Configurator($element, options) {
         $radios.filter(':checked').change();
     });
 
-    getConfiguration(c);
+    if (this.$form.length) {
+        getConfiguration(c);
+    }
     setState(c);
 }
 
@@ -122,9 +124,10 @@ function setState(Configurator) {
  * Builds image stack from a response and places it in the $configuration element
  *
  * @param {object} response
+ * @param {jQuery} $element
  * @return void
  */
-function buildImageStack(response) {
+function buildImageStack(response, $element) {
     if (!response.hasOwnProperty('build')) {
         return;
     }
@@ -199,7 +202,11 @@ function buildImageStack(response) {
         });
     }
 
-    this.$configuration.html($html);
+    if (typeof $element === 'undefined') {
+        $element = this.$configuration;
+    }
+
+    $element.html($html);
 }
 
 /**
