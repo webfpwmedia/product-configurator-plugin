@@ -59,6 +59,9 @@ return [
 
             // database connection to use
             'connection' => 'default',
+
+            // name of an element to use to inject extra form controls (must be prefixed with "extra" to be saved)
+            'extraFormElement' => false,
         ],
     ],
 ];

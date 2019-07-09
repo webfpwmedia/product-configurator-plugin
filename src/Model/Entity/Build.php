@@ -11,6 +11,7 @@ use Cake\ORM\Entity;
  * @property array $components
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
+ * @property array $extra
  */
 class Build extends Entity
 {
@@ -27,6 +28,7 @@ class Build extends Entity
         'images' => true,
         'components' => true,
         'created' => true,
-        'modified' => true
+        'modified' => true,
+        'extra' => true,
     ];
 }

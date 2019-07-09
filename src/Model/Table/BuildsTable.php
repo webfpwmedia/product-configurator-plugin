@@ -71,6 +71,11 @@ class BuildsTable extends Table
             ->isArray('components')
             ->allowEmptyArray('components', false);
 
+        $validator
+            ->requirePresence('extra', 'create')
+            ->isArray('extra')
+            ->allowEmptyArray('extra', true);
+
         return $validator;
     }
 
