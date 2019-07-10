@@ -14,7 +14,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
  *
- * @property ARC\ProductConfigurator\Model\Entity\Configurator $configurator
+ * @property \ARC\ProductConfigurator\Model\Entity\Configurator $configurator
  */
 class Component extends Entity
 {
