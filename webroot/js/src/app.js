@@ -3,6 +3,7 @@ import 'bootstrap';
 import './ajaxForm';
 import './configurator';
 import JSONEditor from 'jsoneditor';
+import NSResizer from "./nsresizer";
 
 // make jQuery available outside of modules
 window.$ = $;
@@ -34,5 +35,10 @@ $(document).ready(function () {
                 }
             }
         }, JSON.parse($this.val()));
+
+        new NSResizer($editorContainer, '.jsoneditor-statusbar', function () {
+            // hack to trigger editor refresh, editor.refresh() doesn't work
+            window.dispatchEvent(new Event('resize'));
+        });
     });
 });
