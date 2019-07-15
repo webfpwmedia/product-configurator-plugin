@@ -1,5 +1,7 @@
 <?php
 
+use ARC\ProductConfigurator\View\AppView;
+
 return [
     'ARC' => [
         'ProductConfigurator' => [
@@ -13,7 +15,13 @@ return [
                 'default' => 'F j, Y g:ia',
             ],
 
+            /**
+             * Optionally inject content into specific template locations.
+             *
+             * @see AppView::elementHook()
+             */
             'elementHook' => [
+                'buildFormPost' => null,
                 'layoutNavPre' => null,
                 'layoutNavPost' => null,
                 'layoutNavTop' => null,
@@ -65,9 +73,6 @@ return [
 
             // database connection to use
             'connection' => 'default',
-
-            // name of an element to use to inject extra form controls (must be prefixed with "extra" to be saved)
-            'extraFormElement' => false,
         ],
     ],
 ];
