@@ -46,9 +46,9 @@ use Cake\Core\Configure;
                 <aside class="main-sidebar col-12 col-md-3 col-lg-2 px-0">
                     <div class="main-navbar">
                         <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
-                            <a class="navbar-brand w-100 mr-0" href="#" style="line-height: 25px;">
+                            <a class="navbar-brand w-100 mr-0" href="<?= $this->Url->build('/') ?>" style="line-height: 25px;">
                                 <div class="d-table m-auto">
-                                    <span class="d-none d-md-inline ml-1">
+                                    <span class="d-md-inline ml-1">
                                         <?= __(Configure::read('ARC.ProductConfigurator.common.name')) ?>
                                     </span>
                                 </div>
@@ -60,6 +60,8 @@ use Cake\Core\Configure;
                     </div>
 
                     <div class="nav-wrapper">
+                        <?= $this->elementHook('layoutNavPre') ?>
+
                         <ul class="nav flex-column">
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= $this->Url->build(['controller' => 'Configurators', 'action' => 'index']) ?>">
@@ -82,6 +84,8 @@ use Cake\Core\Configure;
                                 </a>
                             </li>
                         </ul>
+
+                        <?= $this->elementHook('layoutNavPost') ?>
                     </div>
                 </aside>
                 <!-- End Main Sidebar -->
@@ -89,16 +93,18 @@ use Cake\Core\Configure;
                 <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
                     <div class="main-navbar sticky-top bg-white">
                         <!-- Main Navbar -->
-                        <nav class="navbar navbar-light flex-md-nowrap p-0 justify-content-md-end">
+                        <nav class="navbar align-items-stretch navbar-light flex-md-nowrap p-0 flex-row-reverse">
+                            <?= $this->elementHook('layoutNavTop') ?>
+
                             <nav class="nav">
-                                <a href="#" class="nav-link nav-link-icon toggle-sidebar d-md-inline d-lg-none text-center border-left" data-toggle="collapse" data-target=".header-navbar" aria-expanded="false" aria-controls="header-navbar">
+                                <a href="#" class="nav-link nav-link-icon toggle-sidebar d-inline d-md-none text-center border-left" data-toggle="collapse" data-target=".header-navbar" aria-expanded="false" aria-controls="header-navbar">
                                     <i class="material-icons"></i>
                                 </a>
                             </nav>
                         </nav>
-
-                        <?= $this->Flash->render() ?>
                     </div>
+
+                    <?= $this->Flash->render() ?>
 
                     <div class="main-content-container container-fluid px-4">
                         <div class="page-header row no-gutters py-4">

@@ -134,9 +134,7 @@ $customTextMap = [];
                 </div>
             <?php endforeach; ?>
 
-            <?php if (Configure::read('ARC.ProductConfigurator.extraFormElement')): ?>
-            <?= $this->element(Configure::read('ARC.ProductConfigurator.extraFormElement')); ?>
-            <?php endif; ?>
+            <?= $this->elementHook('buildFormPost') ?>
 
             <?= $this->Form->submit(__(Configure::read('ARC.ProductConfigurator.text.submit')), [
                 'name' => 'extra[save]'
