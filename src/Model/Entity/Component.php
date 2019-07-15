@@ -12,6 +12,7 @@ use Cake\ORM\Entity;
  * @property string $image_mask
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
+ * @property array $options
  */
 class Component extends Entity
 {
@@ -30,5 +31,6 @@ class Component extends Entity
         'image_mask' => true,
         'created' => true,
         'modified' => true,
+        'options' => true,
     ];
 }

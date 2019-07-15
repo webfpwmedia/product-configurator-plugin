@@ -55,6 +55,16 @@ $this
                     ],
                 ]) ?>
 
+                <?= $this->Form->control('options', [
+                    'type' => 'json',
+                    'label' => __('options.json'),
+                    'templateVars' => [
+                        'help' => '<p class="text-muted small">' .
+                            __('Defines user-selectable options and associated values for this component.') .
+                            '</p>',
+                    ],
+                ]) ?>
+
                 <?= $this->Form->submit(__('Save')) ?>
                 <?= $this->Form->end() ?>
             </div>
