@@ -6,6 +6,7 @@
  */
 
 use ARC\ProductConfigurator\Form\ConfiguratorContext;
+use ARC\ProductConfigurator\Model\Json\Bootstrap;
 use ARC\ProductConfigurator\Model\Table\BuildsTable;
 use Cake\Core\Configure;
 
@@ -36,7 +37,7 @@ $customTextMap = [];
         </div>
 
         <div class="input-form">
-            <?= $this->Form->create(new ConfiguratorContext($this->getRequest(), $context), [
+            <?= $this->Form->create(new ConfiguratorContext($this->getRequest(), Bootstrap::fromArray($context)), [
                 'class' => 'garlic-persist',
             ]); ?>
 

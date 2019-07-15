@@ -1,28 +1,13 @@
 <?php
 namespace ARC\ProductConfigurator\Form;
 
+use ARC\ProductConfigurator\Model\Json\Bootstrap;
 use ARC\ProductConfigurator\Model\Table\BuildsTable;
 use Cake\Http\ServerRequest;
 use Cake\View\Form\ContextInterface;
 
 /**
  * ConfiguratorContext
- *
- * Context should be an array of arrays formatted like so:
- * ```
- * [
- *   {
- *     "qty": 1,
- *     "component": "1ca6664c-68d1-427e-90e1-addf1eca0019",
- *     "selections": {
- *       "size": "sm",
- *       "color": "RR",
- *       "length": "long",
- *       "closure": "T"
- *     }
- *   }
- * ]
- * ```
  *
  * Fields created in a configurator form should be named as:
  *
@@ -38,9 +23,9 @@ class ConfiguratorContext implements ContextInterface
     protected $_request;
 
     /**
-     * Context data for this object.
+     * Context
      *
-     * @var array
+     * @var Bootstrap
      */
     protected $_context;
 
@@ -48,17 +33,11 @@ class ConfiguratorContext implements ContextInterface
      * Constructor.
      *
      * @param ServerRequest $request The request object.
-     * @param array $context Context info.
+     * @param Bootstrap $context Context
      */
-    public function __construct(ServerRequest $request, array $context)
+    public function __construct(ServerRequest $request, Bootstrap $context)
     {
         $this->_request = $request;
-        $context += [
-            'schema' => [],
-            'required' => [],
-            'defaults' => [],
-            'errors' => [],
-        ];
         $this->_context = $context;
     }
 
@@ -72,20 +51,17 @@ class ConfiguratorContext implements ContextInterface
     {
         list($componentId, $mask) = explode('.', $field);
 
-        $selected = collection($this->_context)
-            ->firstMatch([
-                'component' => $componentId
-            ]);
+        $component = $this->_context->getComponents($componentId);
 
-        if (!$selected) {
+        if (!$component) {
             return null;
         }
 
         if ($mask === BuildsTable::CUSTOM_TEXT_INPUT) {
-            return $selected['text'] ?? null;
+            return $component->getText();
         }
 
-        return $selected['selections'][$mask];
+        return $component->getSelection($mask);
     }
 
     /**
