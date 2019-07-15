@@ -27,6 +27,10 @@ Implementing applications should override as needed.
       top: 0;
       left: 0;
     }
+
+    img:first-child {
+      position: relative;
+    }
   }
 
   .configuration {

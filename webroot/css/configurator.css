@@ -7048,6 +7048,8 @@ a.text-dark:hover, a.text-dark:focus {
     position: absolute;
     top: 0;
     left: 0; }
+  .arc.configurator .image-stack img:first-child {
+    position: relative; }
 
 .arc.configurator label.swatch {
   margin-bottom: 10px;
