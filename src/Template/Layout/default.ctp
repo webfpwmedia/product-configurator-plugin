@@ -64,21 +64,27 @@ use Cake\Core\Configure;
 
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= $this->Url->build(['controller' => 'Configurators', 'action' => 'index']) ?>">
+                                <a class="nav-link" href="<?= $this->Url->build(
+                                        ['plugin' => 'ARC/ProductConfigurator', 'controller' => 'Configurators', 'action' => 'index']) ?>">
+
                                     <i class="material-icons">settings</i>
                                     <span><?= __('Configurators') ?></span>
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= $this->Url->build(['controller' => 'Components', 'action' => 'index']) ?>">
+                                <a class="nav-link" href="<?= $this->Url->build(
+                                        ['plugin' => 'ARC/ProductConfigurator', 'controller' => 'Components', 'action' => 'index']) ?>">
+
                                     <i class="material-icons">extension</i>
                                     <span><?= __('Components') ?></span>
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= $this->Url->build(['controller' => 'Images', 'action' => 'index']) ?>">
+                                <a class="nav-link" href="<?= $this->Url->build(
+                                        ['plugin' => 'ARC/ProductConfigurator', 'controller' => 'Images', 'action' => 'index']) ?>">
+
                                     <i class="material-icons">image</i>
                                     <span><?= __('Image Index') ?></span>
                                 </a>
