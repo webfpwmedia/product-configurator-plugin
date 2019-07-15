@@ -12,21 +12,27 @@ class ComponentsController extends AppController
 {
 
     /**
+     * Index
+     *
+     * @return void
+     */
+    public function index()
+    {
+        $components = $this->Components->find();
+        $this->set('components', $this->Paginator->paginate($components));
+    }
+
+    /**
      * Add method
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
-        $configurator = $this->Components->Configurators->get($this->getRequest()->getQuery('configurator_id'));
-
         $component = $this->Components->newEntity();
 
         if ($this->getRequest()->is('post')) {
-            $data = $this->getRequest()->getData();
-            $data['configurator_id'] = $configurator->id;
-
-            $component = $this->Components->patchEntity($component, $data);
+            $component = $this->Components->patchEntity($component, $this->getRequest()->getData());
 
             if ($this->Components->save($component)) {
                 $this->Flash->success(__('The component has been saved.'));
@@ -38,7 +44,7 @@ class ComponentsController extends AppController
         }
 
         $this
-            ->set(compact('component', 'configurator'))
+            ->set(compact('component'))
             ->viewBuilder()
             ->setTemplate('manage');
     }
@@ -52,7 +58,7 @@ class ComponentsController extends AppController
      */
     public function edit($id = null)
     {
-        $component = $this->Components->get($id, ['contain' => ['Configurators']]);
+        $component = $this->Components->get($id);
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $component = $this->Components->patchEntity($component, $this->request->getData());
@@ -90,6 +96,6 @@ class ComponentsController extends AppController
             $this->Flash->error(__('The component could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['controller' => 'Configurators', 'action' => 'edit', $component->configurator_id]);
+        return $this->redirect(['controller' => 'Components', 'action' => 'index']);
     }
 }

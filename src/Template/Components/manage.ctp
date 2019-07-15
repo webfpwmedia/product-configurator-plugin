@@ -2,18 +2,11 @@
 /**
  * @var ARC\ProductConfigurator\View\AppView $this
  * @var ARC\ProductConfigurator\Model\Entity\Component $component
- * @var ARC\ProductConfigurator\Model\Entity\Configurator $configurator
  */
 
 $this
     ->assign('title', h($component->name ?? __('Add')))
     ->assign('subtitle', __('Component'));
-
-# Extant records are using `contain`.
-if (!$component->isNew()) {
-    $configurator = $component->configurator;
-}
-
 ?>
 
 <div class="row">
@@ -76,25 +69,6 @@ if (!$component->isNew()) {
                         ]) ?>
                 </div>
             <?php endif; ?>
-        </div>
-    </div>
-
-    <div class="col-lg-4">
-        <div class="card card-small mb-4">
-            <div class="card-header border-bottom">
-                <h6 class="m-0">
-                    <?= __('Configurator') ?>
-                </h6>
-            </div>
-
-            <div class="card-body">
-                <ul>
-                    <li>
-                        <?= $this->Html->link(__($configurator->name),
-                            ['controller' => 'Configurators', 'action' => 'edit', $configurator->id]) ?>
-                    </li>
-                </ul>
-            </div>
         </div>
     </div>
 </div>

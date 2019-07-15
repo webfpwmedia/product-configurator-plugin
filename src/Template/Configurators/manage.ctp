@@ -87,38 +87,6 @@ $this
                         <?php endforeach; ?>
                     </ol>
                 </div>
-
-                <div class="card-header border-bottom">
-                    <h6 class="m-0 d-flex justify-content-between">
-                        <?= __('Components') ?>
-
-                        <small>
-                            <?= $this->Html->link(__('+ Add Component'),
-                                ['controller' => 'Components', 'action' => 'add', '?' => [
-                                    'configurator_id' => $configurator->id,
-                                ]]) ?>
-                        </small>
-                    </h6>
-
-                    <p class="text-muted small mt-1 mb-0">
-                        <?= __('Abstract definitions that tell the configurator what part numbers it is responsible for managing.') ?>
-                    </p>
-                </div>
-
-                <div class="card-body">
-                    <ul>
-                        <?php foreach ($configurator->components as $component): ?>
-                            <li>
-                                <?= $this->Html->link(__($component->name),
-                                    ['controller' => 'Components', 'action' => 'edit', $component->id]) ?>
-
-                                <p class="text-muted small">
-                                    <?= $component->id ?>
-                                </p>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
             </div>
         </div>
 

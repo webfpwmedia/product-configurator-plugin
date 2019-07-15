@@ -139,9 +139,6 @@ class ConfiguratorsController extends AppController
     {
         $configurator = $this->Configurators->get($id, [
             'contain' => [
-                'Components' => [
-                    'sort' => ['Components.name' => 'asc'],
-                ],
                 'Steps' => [
                     'sort' => ['Steps.sort' => 'asc'],
                 ],
