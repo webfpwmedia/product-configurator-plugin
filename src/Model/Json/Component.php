@@ -98,6 +98,22 @@ class Component implements JsonSerializable
     }
 
     /**
+     * Gets options
+     *
+     * @return OptionSet[]
+     */
+    public function getOptions() : array
+    {
+        $options = [];
+
+        foreach ($this->getComponentEntity()->options as $data) {
+            $options[] = OptionSet::fromArray($data);
+        }
+
+        return $options;
+    }
+
+    /**
      * Gets the selection for a particular token
      *
      * @param string $token
@@ -136,11 +152,7 @@ class Component implements JsonSerializable
      */
     public function getImageTemplate() : string
     {
-        if (!$this->component instanceof ComponentEntity) {
-            $this->component = $this->getTableLocator()->get('ARC/ProductConfigurator.Components')->get($this->id);
-        }
-
-        $stringTemplate = new StringTemplate(['mask' => $this->component->image_mask]);
+        $stringTemplate = new StringTemplate(['mask' => $this->getComponentEntity()->image_mask]);
 
         return $stringTemplate->format('mask', $this->data['selections']);
     }
@@ -153,5 +165,19 @@ class Component implements JsonSerializable
         return [
             $this->id => $this->data
         ];
+    }
+
+    /**
+     * Lazy loads the DB component entity
+     *
+     * @return ComponentEntity
+     */
+    private function getComponentEntity() : ComponentEntity
+    {
+        if (!$this->component instanceof ComponentEntity) {
+            $this->component = $this->getTableLocator()->get('ARC/ProductConfigurator.Components')->get($this->id);
+        }
+
+        return $this->component;
     }
 }

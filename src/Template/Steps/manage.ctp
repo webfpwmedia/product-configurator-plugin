@@ -35,7 +35,7 @@ if (!$step->isNew()) {
                     'label' => __('config.json'),
                     'templateVars' => [
                         'help' => '<p class="text-muted small">' .
-                                  __('Defines user-selectable options and associated values for this step of the configurator. ') .
+                                  __('Defines components included in this step.') .
                                   $this->Html->link(__('Documentation'), '#') .
                                   '</p>',
                     ],

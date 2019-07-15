@@ -7,6 +7,7 @@
 
 use ARC\ProductConfigurator\Form\ConfiguratorContext;
 use ARC\ProductConfigurator\Model\Json\Bootstrap;
+use ARC\ProductConfigurator\Model\Json\Step;
 use ARC\ProductConfigurator\Model\Table\BuildsTable;
 use Cake\Core\Configure;
 
@@ -44,87 +45,51 @@ $customTextMap = [];
                     <h2 class="step-header"><?= h($step->name) ?></h2>
 
                     <div class="step-body">
-                        <?php foreach ($step->config as $componentOptions) : ?>
-                            <?php
-                            $tokenName = str_replace(['{', '}'], '', $componentOptions['token']);
-                            $controlName = $componentOptions['component'] . '.' . $tokenName;
-                            $requires = null;
-                            if (isset($componentOptions['requires'])) {
-                                $requires = sprintf(
-                                    'data-requires="%s:%s"',
-                                    $componentOptions['requires']['component'],
-                                    str_replace(['{', '}'], '', $componentOptions['requires']['token'])
-                                );
-                            }
-                            ?>
-                            <?php if (isset($componentOptions['options'])) : ?>
-                            <fieldset data-component="<?= $componentOptions['component'] ?>" data-token="<?= $tokenName ?>" <?= $requires ?>>
-                                <legend><?= h($componentOptions['name']) ?></legend>
+                        <?php
+                        $step = Step::fromArray($step->config);
+                        ?>
 
+                        <?php foreach ($step->getComponents() as $component) : ?>
+                            <?php foreach ($component->getOptions() as $optionSet) : ?>
                                 <?php
-                                $options = collection($componentOptions['options'])
-                                    ->map(function ($option) use ($componentOptions) {
-                                        $radioOptions = [
-                                            'value' => $option['code'],
-                                            'text' => $option['name'],
-                                            'label' => []
-                                        ];
-
-                                        if (isset($option['swatch'])) {
-                                            $radioOptions['text'] = '';
-                                            $radioOptions['label'] += [
-                                                'class' => 'swatch',
-                                                'style' => "background-image:url('" . $this->Url->image($option['swatch'], ['size' => 'swatch']) . "')",
-                                            ];
-                                        }
-
-                                        return $radioOptions;
-                                    })
-                                    ->toList();
-
-                                if (isset($componentOptions['text'])) {
-                                    $options[] = [
-                                        'value' => $componentOptions['text']['code'],
-                                        'text' => 'Custom',
-                                        'label' => [
-                                            'data-custom' => true,
-                                        ],
-                                    ];
-
-                                    $customTextMap[$componentOptions['component']] = [$tokenName => $componentOptions['text']['map']];
+                                $controlName = $component->getId() . '.' . $optionSet->getToken();
+                                $requires = $optionSet->getRequires();
+                                if ($requires) {
+                                    $requires = sprintf('data-requires="%s:%s"', key($requires), current($requires));
                                 }
+                                $inherits = $optionSet->getInherits();
+                                ?>
 
-                                echo $this->Form->control($controlName, [
-                                    'label' => false,
-                                    'type' => 'radio',
-                                    'options' => $options,
-                                    'escape' => false,
-                                ]);
+                                <fieldset data-component="<?= $component->getId() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requires ?>>
+                                    <legend><?= h($optionSet->getLabel()) ?></legend>
 
-                                if (isset($componentOptions['text'])) {
-                                    $this->Form->unlockField($componentOptions['component'] . '.' . BuildsTable::CUSTOM_TEXT_INPUT);
-                                    echo $this->Form->control($componentOptions['component'] . '.' . BuildsTable::CUSTOM_TEXT_INPUT, [
+                                    <?php
+                                    echo $this->Form->control($controlName, [
                                         'label' => false,
-                                        'hidden' => true,
-                                        'disabled' => true,
-                                        'default' => $componentOptions['text']['default'],
-                                        'maxlength' => $componentOptions['text']['maxLength'] ?? 25,
+                                        'type' => 'radio',
+                                        'options' => $optionSet->getOptions(),
+                                        'escape' => false,
                                     ]);
-                                }
-                                ?>
-                            </fieldset>
-                            <?php endif; ?>
-                            <?php if (isset($componentOptions['inherits'])): ?>
-                                <?=
-                                $this->Form->hidden($controlName, [
-                                    'value' => sprintf(
-                                        'inherits:%s:%s',
-                                        $componentOptions['inherits']['component'],
-                                        str_replace(['{', '}'], '', $componentOptions['inherits']['token'])
-                                    )
-                                ]);
-                                ?>
-                            <?php endif; ?>
+
+                                    if ($optionSet->isCustomizable()) {
+                                        $this->Form->unlockField($component->getId() . '.' . BuildsTable::CUSTOM_TEXT_INPUT);
+                                        echo $this->Form->control($component->getId() . '.' . BuildsTable::CUSTOM_TEXT_INPUT, [
+                                            'label' => false,
+                                            'hidden' => true,
+                                            'disabled' => true,
+                                        ] + $optionSet->getTextOptions());
+                                    }
+                                    ?>
+                                </fieldset>
+
+                                <?php if ($inherits): ?>
+                                    <?=
+                                    $this->Form->hidden($controlName, [
+                                        'value' => sprintf('inherits:%s:%s', key($inherits), current($inherits))
+                                    ]);
+                                    ?>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
                         <?php endforeach; ?>
                     </div>
                 </div>
