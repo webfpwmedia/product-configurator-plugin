@@ -46,4 +46,20 @@ class AppView extends View
 
         Configure::write('App.imageBaseUrl', Configure::read('ARC.ProductConfigurator.imageBaseUrl'));
     }
+
+    /**
+     * Loads an element into the template, if defined.
+     *
+     * @param string $hook Element hook name (see config.php).
+     *
+     * @return string
+     */
+    public function elementHook(string $hook)
+    {
+        if (Configure::read('ARC.ProductConfigurator.elementHook.' . $hook)) {
+            return $this->element(Configure::read('ARC.ProductConfigurator.elementHook.' . $hook));
+        }
+
+        return null;
+    }
 }

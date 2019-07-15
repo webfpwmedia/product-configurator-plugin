@@ -60,15 +60,7 @@ use Cake\Core\Configure;
                     </div>
 
                     <div class="nav-wrapper">
-                        <?php
-
-                        try {
-                            echo $this->element('ARC' . DS . 'ProductConfigurator' . DS . 'layout_nav_pre');
-                        } catch (Exception $e) {
-                            # Optional element hook.
-                        }
-
-                        ?>
+                        <?= $this->elementHook('layoutNavPre') ?>
 
                         <ul class="nav flex-column">
                             <li class="nav-item">
@@ -93,15 +85,7 @@ use Cake\Core\Configure;
                             </li>
                         </ul>
 
-                        <?php
-
-                        try {
-                            echo $this->element('ARC' . DS . 'ProductConfigurator' . DS . 'layout_nav_post');
-                        } catch (Exception $e) {
-                            # Optional element hook.
-                        }
-
-                        ?>
+                        <?= $this->elementHook('layoutNavPost') ?>
                     </div>
                 </aside>
                 <!-- End Main Sidebar -->
@@ -110,15 +94,7 @@ use Cake\Core\Configure;
                     <div class="main-navbar sticky-top bg-white">
                         <!-- Main Navbar -->
                         <nav class="navbar align-items-stretch navbar-light flex-md-nowrap p-0 flex-row-reverse">
-                            <?php
-
-                            try {
-                                echo $this->element('ARC' . DS . 'ProductConfigurator' . DS . 'layout_nav_top');
-                            } catch (Exception $e) {
-                                # Optional element hook.
-                            }
-
-                            ?>
+                            <?= $this->elementHook('layoutNavTop') ?>
 
                             <nav class="nav">
                                 <a href="#" class="nav-link nav-link-icon toggle-sidebar d-inline d-md-none text-center border-left" data-toggle="collapse" data-target=".header-navbar" aria-expanded="false" aria-controls="header-navbar">

@@ -13,6 +13,12 @@ return [
                 'default' => 'F j, Y g:ia',
             ],
 
+            'elementHook' => [
+                'layoutNavPre' => null,
+                'layoutNavPost' => null,
+                'layoutNavTop' => null,
+            ],
+
             'imageBaseUrl' => 'img/',
 
             'imgix' => [
