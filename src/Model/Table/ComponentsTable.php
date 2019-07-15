@@ -8,8 +8,6 @@ use Cake\Validation\Validator;
 /**
  * Components Model
  *
- * @property \ARC\ProductConfigurator\Model\Table\ConfiguratorsTable|\Cake\ORM\Association\BelongsTo $Configurators
- *
  * @method \ARC\ProductConfigurator\Model\Entity\Component get($primaryKey, $options = [])
  * @method \ARC\ProductConfigurator\Model\Entity\Component newEntity($data = null, array $options = [])
  * @method \ARC\ProductConfigurator\Model\Entity\Component[] newEntities(array $data, array $options = [])
@@ -36,12 +34,6 @@ class ComponentsTable extends Table
         $this->setTable('components');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
-
-        $this->belongsTo('Configurators', [
-            'foreignKey' => 'configurator_id',
-            'joinType' => 'INNER',
-            'className' => 'ARC/ProductConfigurator.Configurators'
-        ]);
     }
 
     /**
@@ -75,19 +67,5 @@ class ComponentsTable extends Table
             ->allowEmptyString('image_mask', false);
 
         return $validator;
-    }
-
-    /**
-     * Returns a rules checker object that will be used for validating
-     * application integrity.
-     *
-     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
-     * @return \Cake\ORM\RulesChecker
-     */
-    public function buildRules(RulesChecker $rules)
-    {
-        $rules->add($rules->existsIn(['configurator_id'], 'Configurators'));
-
-        return $rules;
     }
 }

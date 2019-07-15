@@ -7,14 +7,11 @@ use Cake\ORM\Entity;
  * Component Entity
  *
  * @property string $id
- * @property string $configurator_id
  * @property string $name
  * @property string $mask
  * @property string $image_mask
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
- *
- * @property \ARC\ProductConfigurator\Model\Entity\Configurator $configurator
  */
 class Component extends Entity
 {
@@ -28,12 +25,10 @@ class Component extends Entity
      * @var array
      */
     protected $_accessible = [
-        'configurator_id' => true,
         'name' => true,
         'mask' => true,
         'image_mask' => true,
         'created' => true,
         'modified' => true,
-        'configurator' => true,
     ];
 }

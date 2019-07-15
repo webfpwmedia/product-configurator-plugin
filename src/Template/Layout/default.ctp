@@ -69,6 +69,13 @@ use Cake\Core\Configure;
                             </li>
 
                             <li class="nav-item">
+                                <a class="nav-link" href="<?= $this->Url->build(['controller' => 'Components', 'action' => 'index']) ?>">
+                                    <i class="material-icons">extension</i>
+                                    <span><?= __('Components') ?></span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a class="nav-link" href="<?= $this->Url->build(['controller' => 'Images', 'action' => 'index']) ?>">
                                     <i class="material-icons">image</i>
                                     <span><?= __('Image Index') ?></span>
