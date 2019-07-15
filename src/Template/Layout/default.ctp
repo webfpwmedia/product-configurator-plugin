@@ -48,7 +48,7 @@ use Cake\Core\Configure;
                         <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
                             <a class="navbar-brand w-100 mr-0" href="<?= $this->Url->build('/') ?>" style="line-height: 25px;">
                                 <div class="d-table m-auto">
-                                    <span class="d-none d-md-inline ml-1">
+                                    <span class="d-md-inline ml-1">
                                         <?= __(Configure::read('ARC.ProductConfigurator.common.name')) ?>
                                     </span>
                                 </div>
@@ -109,16 +109,26 @@ use Cake\Core\Configure;
                 <main class="main-content col-lg-10 col-md-9 col-sm-12 p-0 offset-lg-2 offset-md-3">
                     <div class="main-navbar sticky-top bg-white">
                         <!-- Main Navbar -->
-                        <nav class="navbar navbar-light flex-md-nowrap p-0 justify-content-md-end">
+                        <nav class="navbar align-items-stretch navbar-light flex-md-nowrap p-0 flex-row-reverse">
+                            <?php
+
+                            try {
+                                echo $this->element('ARC' . DS . 'ProductConfigurator' . DS . 'layout_nav_top');
+                            } catch (Exception $e) {
+                                # Optional element hook.
+                            }
+
+                            ?>
+
                             <nav class="nav">
-                                <a href="#" class="nav-link nav-link-icon toggle-sidebar d-md-inline d-lg-none text-center border-left" data-toggle="collapse" data-target=".header-navbar" aria-expanded="false" aria-controls="header-navbar">
+                                <a href="#" class="nav-link nav-link-icon toggle-sidebar d-inline d-md-none text-center border-left" data-toggle="collapse" data-target=".header-navbar" aria-expanded="false" aria-controls="header-navbar">
                                     <i class="material-icons"></i>
                                 </a>
                             </nav>
                         </nav>
-
-                        <?= $this->Flash->render() ?>
                     </div>
+
+                    <?= $this->Flash->render() ?>
 
                     <div class="main-content-container container-fluid px-4">
                         <div class="page-header row no-gutters py-4">

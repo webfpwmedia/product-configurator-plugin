@@ -1,4 +1,5 @@
 import 'shards-ui/dist/js/shards.min';
+import '../../shards/js/shards-dashboards.1.1.0';
 import 'bootstrap';
 import './ajaxForm';
 import './configurator';

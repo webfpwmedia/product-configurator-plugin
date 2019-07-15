@@ -14031,6 +14031,9 @@ div.jsoneditor-navigation-bar {
     margin: 5px 0;
     color: #dc3545; }
 
+.navbar .navbar-nav .nav-item .nav-link {
+  line-height: 3.75rem; }
+
 p {
   margin-bottom: 1rem; }
 
