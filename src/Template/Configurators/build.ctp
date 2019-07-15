@@ -27,12 +27,15 @@ $customTextMap = [];
 
     <div class="configuration">
         <div class="output-ui">
-            <div class="image-stack"></div>
-            <?= $this->Form->button(Configure::read('ARC.ProductConfigurator.text.back'), [
-                'templateVars' => [
-                    'class' => 'toggle-state'
-                ]
-            ]) ?>
+            <div class="stage">
+                <div class="image-stack"></div>
+
+                <?= $this->Form->button(Configure::read('ARC.ProductConfigurator.text.back'), [
+                    'templateVars' => [
+                        'class' => 'toggle-state'
+                    ]
+                ]) ?>
+            </div>
         </div>
 
         <div class="input-form">
