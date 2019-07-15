@@ -37,9 +37,7 @@ $customTextMap = [];
         </div>
 
         <div class="input-form">
-            <?= $this->Form->create(new ConfiguratorContext($this->getRequest(), Bootstrap::fromArray($context)), [
-                'class' => 'garlic-persist',
-            ]); ?>
+            <?= $this->Form->create(new ConfiguratorContext($this->getRequest(), Bootstrap::fromArray($context))); ?>
 
             <?php foreach ($configurator->steps as $step) : ?>
                 <div class="step" id="step-<?= $step->id ?>">
