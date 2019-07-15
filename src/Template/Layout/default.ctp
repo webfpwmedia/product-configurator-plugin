@@ -46,7 +46,7 @@ use Cake\Core\Configure;
                 <aside class="main-sidebar col-12 col-md-3 col-lg-2 px-0">
                     <div class="main-navbar">
                         <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
-                            <a class="navbar-brand w-100 mr-0" href="#" style="line-height: 25px;">
+                            <a class="navbar-brand w-100 mr-0" href="<?= $this->Url->build('/') ?>" style="line-height: 25px;">
                                 <div class="d-table m-auto">
                                     <span class="d-none d-md-inline ml-1">
                                         <?= __(Configure::read('ARC.ProductConfigurator.common.name')) ?>
@@ -60,6 +60,16 @@ use Cake\Core\Configure;
                     </div>
 
                     <div class="nav-wrapper">
+                        <?php
+
+                        try {
+                            echo $this->element('ARC' . DS . 'ProductConfigurator' . DS . 'layout_nav_pre');
+                        } catch (Exception $e) {
+                            # Optional element hook.
+                        }
+
+                        ?>
+
                         <ul class="nav flex-column">
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= $this->Url->build(['controller' => 'Configurators', 'action' => 'index']) ?>">
@@ -82,6 +92,16 @@ use Cake\Core\Configure;
                                 </a>
                             </li>
                         </ul>
+
+                        <?php
+
+                        try {
+                            echo $this->element('ARC' . DS . 'ProductConfigurator' . DS . 'layout_nav_post');
+                        } catch (Exception $e) {
+                            # Optional element hook.
+                        }
+
+                        ?>
                     </div>
                 </aside>
                 <!-- End Main Sidebar -->
