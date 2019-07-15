@@ -7,7 +7,6 @@ use Cake\Validation\Validator;
 /**
  * Configurators Model
  *
- * @property \ARC\ProductConfigurator\Model\Table\ComponentsTable|\Cake\ORM\Association\HasMany $Components
  * @property \ARC\ProductConfigurator\Model\Table\StepsTable|\Cake\ORM\Association\HasMany $Steps
  *
  * @method \ARC\ProductConfigurator\Model\Entity\Configurator get($primaryKey, $options = [])
@@ -42,10 +41,6 @@ class ConfiguratorsTable extends Table
                 'fields' => ['bootstrap'],
             ]);
 
-        $this->hasMany('Components', [
-            'foreignKey' => 'configurator_id',
-            'className' => 'ARC/ProductConfigurator.Components'
-        ]);
         $this->hasMany('Steps', [
             'foreignKey' => 'configurator_id',
             'className' => 'ARC/ProductConfigurator.Steps'
