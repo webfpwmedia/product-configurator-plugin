@@ -28,7 +28,11 @@ class JsonWidget extends TextareaWidget
         $data['type'] = 'textarea';
         $data['templateVars']['class'] .= ' json-editor';
 
-        if (isset($data['val']) && !is_string($data['val'])) {
+        if (!isset($data['val'])) {
+            $data['val'] = '[]';
+        }
+
+        if (!is_string($data['val'])) {
             $data['val'] = json_encode($data['val'], JSON_PRETTY_PRINT);
         }
 

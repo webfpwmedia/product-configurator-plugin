@@ -1,6 +1,7 @@
 <?php
 namespace ARC\ProductConfigurator\Model\Table;
 
+use ARC\ProductConfigurator\Model\Json\Component;
 use ARC\ProductConfigurator\ORM\Table;
 use ArrayObject;
 use Cake\Database\Expression\IdentifierExpression;
@@ -93,45 +94,38 @@ class BuildsTable extends Table
                 return Validation::uuid($key) && is_array($value);
             })
             ->toArray();
-        $selections = collection($selections)
+        $components = collection($selections)
             ->map(function ($componentSelections, $componentId) use ($selections) {
-                $return = [
-                    'component' => $componentId,
-                    'selections' => $this->__withInheritance($selections, $componentSelections)
-                ];
+                $component = new Component();
+                $component->setId($componentId);
+                $component->addSelections($this->__withInheritance($selections, $componentSelections));
 
                 // check for custom text label
                 if (!empty($componentSelections[self::CUSTOM_TEXT_INPUT])) {
-                    $return['text'] = $componentSelections[self::CUSTOM_TEXT_INPUT];
+                    $component->addText($componentSelections[self::CUSTOM_TEXT_INPUT]);
                 }
 
-                return $return;
+                return $component;
             })
             ->toList();
 
-        $data['images'] = $this->__generateImageJson($selections);
-        $data['components'] = $selections;
+        $data['images'] = $this->__generateImageJson($components);
+        $data['components'] = $components;
     }
 
     /**
      * Returns array of images that match selected options
      *
-     * @param array $selections Selections
+     * @param Component[] $components Components
      * @return array
      */
-    private function __generateImageJson(array $selections) : array
+    private function __generateImageJson(array $components) : array
     {
         /** @var ImagesTable $ImagesTable */
         $ImagesTable = $this->getTableLocator()->get('ARC/ProductConfigurator.Images');
-        /** @var ComponentsTable $ComponentsTable */
-        $ComponentsTable = $this->getTableLocator()->get('ARC/ProductConfigurator.Components');
 
         $return = [];
-        foreach ($selections as $componentSelections) {
-            $component = $ComponentsTable->get($componentSelections['component']);
-
-            $stringTemplate = new StringTemplate(['mask' => $component->image_mask]);
-
+        foreach ($components as $component) {
             $images = $ImagesTable
                 ->find()
                 ->select([
@@ -140,13 +134,13 @@ class BuildsTable extends Table
                     'layer',
                 ])
                 ->where([
-                    '"' . $stringTemplate->format('mask', $componentSelections['selections']) . '" REGEXP' => new IdentifierExpression('mask'),
+                    '"' . $component->getImageTemplate() . '" REGEXP' => new IdentifierExpression('mask'),
                 ])
                 ->enableHydration(false)
                 ->groupBy('position')
                 ->map(function ($imagesByPosition) use ($component) {
                     return [
-                        'component' => $component->id,
+                        'component' => $component->getId(),
                         'path' => $imagesByPosition[0]['name'],
                         'layer' => $imagesByPosition[0]['layer'],
                     ];

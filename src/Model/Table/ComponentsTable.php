@@ -34,6 +34,10 @@ class ComponentsTable extends Table
         $this->setTable('components');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
+
+        $this->addBehavior('ARC/ProductConfigurator.Json', [
+            'fields' => ['options'],
+        ]);
     }
 
     /**
@@ -65,6 +69,11 @@ class ComponentsTable extends Table
             ->maxLength('image_mask', 255)
             ->requirePresence('image_mask', 'create')
             ->allowEmptyString('image_mask', false);
+
+        $validator
+            ->isArray('options')
+            ->requirePresence('options', 'create')
+            ->allowEmptyArray('options', true);
 
         return $validator;
     }
