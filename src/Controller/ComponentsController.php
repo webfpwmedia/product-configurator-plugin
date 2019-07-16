@@ -18,7 +18,10 @@ class ComponentsController extends AppController
      */
     public function index()
     {
-        $components = $this->Components->find();
+        $components = $this->Components
+            ->find()
+            ->order(['name' => 'asc', 'mask' => 'asc']);
+
         $this->set('components', $this->Paginator->paginate($components));
     }
 

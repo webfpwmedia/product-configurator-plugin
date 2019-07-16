@@ -22,7 +22,10 @@ class ImagesController extends AppController
      */
     public function index()
     {
-        $images = $this->Images->find();
+        $images = $this->Images
+            ->find()
+            ->order(['mask' => 'asc', 'position' => 'desc', 'layer' => 'asc']);
+
         $this->set('images',  $this->paginate($images));
     }
 
