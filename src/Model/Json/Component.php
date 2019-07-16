@@ -45,8 +45,7 @@ class Component implements JsonSerializable
     public static function fromArray(array $jsonArray) : Component
     {
         $id = key($jsonArray);
-        $component = new self();
-        $component->setId($id);
+        $component = new self($id);
         $component->addSelections($jsonArray[$id]['selections'] ?? []);
         if (isset($jsonArray[$id]['text'])) {
             $component->addText($jsonArray[$id]['text']);
@@ -56,12 +55,11 @@ class Component implements JsonSerializable
     }
 
     /**
-     * Sets the component id
+     * Constructor.
      *
-     * @param string $id
-     * @return void
+     * @param $id
      */
-    public function setId($id) : void
+    public function __construct($id)
     {
         $this->id = $id;
     }

@@ -96,8 +96,7 @@ class BuildsTable extends Table
             ->toArray();
         $components = collection($selections)
             ->map(function ($componentSelections, $componentId) use ($selections) {
-                $component = new Component();
-                $component->setId($componentId);
+                $component = new Component($componentId);
                 $component->addSelections($this->__withInheritance($selections, $componentSelections));
 
                 // check for custom text label
