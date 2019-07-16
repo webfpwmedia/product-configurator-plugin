@@ -51,7 +51,7 @@ class ConfiguratorContext implements ContextInterface
     {
         list($componentId, $mask) = explode('.', $field);
 
-        $component = $this->_context->getComponents($componentId);
+        $component = $this->_context->getComponent($componentId);
 
         if (!$component) {
             return null;

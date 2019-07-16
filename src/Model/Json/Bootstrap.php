@@ -60,7 +60,7 @@ class Bootstrap implements JsonSerializable
      * @param string $id
      * @return Component|null
      */
-    public function getComponents(string $id) : ?Component
+    public function getComponent(string $id) : ?Component
     {
         return collection($this->components)
             ->filter(function (Component $component) use ($id) {
