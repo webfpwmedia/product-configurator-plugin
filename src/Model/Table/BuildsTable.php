@@ -2,6 +2,7 @@
 namespace ARC\ProductConfigurator\Model\Table;
 
 use ARC\ProductConfigurator\Model\Json\Component;
+use ARC\ProductConfigurator\Model\Json\TokensMissingException;
 use ARC\ProductConfigurator\ORM\Table;
 use ArrayObject;
 use Cake\Database\Expression\IdentifierExpression;
@@ -105,6 +106,16 @@ class BuildsTable extends Table
                 }
 
                 return $component;
+            })
+            ->filter(function (Component $component) {
+                try {
+                    $component->getOptionTemplate();
+                } catch (TokensMissingException $exception) {
+                    // don't include this component if tokens are missing from selections
+                    return false;
+                }
+
+                return true;
             })
             ->toList();
 
