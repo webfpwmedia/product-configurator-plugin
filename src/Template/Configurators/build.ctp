@@ -60,34 +60,34 @@ $customTextMap = [];
                                 $inherits = $optionSet->getInherits();
                                 ?>
 
-                                <fieldset data-component="<?= $component->getId() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requires ?>>
-                                    <legend><?= h($optionSet->getLabel()) ?></legend>
-
-                                    <?php
-                                    echo $this->Form->control($controlName, [
-                                        'label' => false,
-                                        'type' => 'radio',
-                                        'options' => $optionSet->getOptions(),
-                                        'escape' => false,
-                                    ]);
-
-                                    if ($optionSet->isCustomizable()) {
-                                        $this->Form->unlockField($component->getId() . '.' . BuildsTable::CUSTOM_TEXT_INPUT);
-                                        echo $this->Form->control($component->getId() . '.' . BuildsTable::CUSTOM_TEXT_INPUT, [
-                                            'label' => false,
-                                            'hidden' => true,
-                                            'disabled' => true,
-                                        ] + $optionSet->getTextOptions());
-                                    }
-                                    ?>
-                                </fieldset>
-
                                 <?php if ($inherits): ?>
                                     <?=
                                     $this->Form->hidden($controlName, [
                                         'value' => sprintf('inherits:%s:%s', key($inherits), current($inherits))
                                     ]);
                                     ?>
+                                <?php else: ?>
+                                    <fieldset data-component="<?= $component->getId() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requires ?>>
+                                        <legend><?= h($optionSet->getLabel()) ?></legend>
+
+                                        <?php
+                                        echo $this->Form->control($controlName, [
+                                            'label' => false,
+                                            'type' => 'radio',
+                                            'options' => $optionSet->getOptions(),
+                                            'escape' => false,
+                                        ]);
+
+                                        if ($optionSet->isCustomizable()) {
+                                            $this->Form->unlockField($component->getId() . '.' . BuildsTable::CUSTOM_TEXT_INPUT);
+                                            echo $this->Form->control($component->getId() . '.' . BuildsTable::CUSTOM_TEXT_INPUT, [
+                                                'label' => false,
+                                                'hidden' => true,
+                                                'disabled' => true,
+                                            ] + $optionSet->getTextOptions());
+                                        }
+                                        ?>
+                                    </fieldset>
                                 <?php endif; ?>
                             <?php endforeach; ?>
                         <?php endforeach; ?>
