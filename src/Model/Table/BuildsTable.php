@@ -10,7 +10,7 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Cake\View\StringTemplate;
+use Exception;
 
 /**
  * Builds Model
@@ -125,6 +125,13 @@ class BuildsTable extends Table
 
         $return = [];
         foreach ($components as $component) {
+            try {
+                $template = $component->getImageTemplate();
+            } catch (Exception $exception) {
+                // don't bother looking for an image for component if the mask is invalid or not all selections are made
+                continue;
+            }
+
             $images = $ImagesTable
                 ->find()
                 ->select([
@@ -133,7 +140,7 @@ class BuildsTable extends Table
                     'layer',
                 ])
                 ->where([
-                    '"' . $component->getImageTemplate() . '" REGEXP' => new IdentifierExpression('mask'),
+                    '"' . $template . '" REGEXP' => new IdentifierExpression('mask'),
                 ])
                 ->enableHydration(false)
                 ->groupBy('position')

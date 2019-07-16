@@ -5,6 +5,7 @@ use ARC\ProductConfigurator\Model\Entity\Component as ComponentEntity;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\View\StringTemplate;
 use JsonSerializable;
+use RuntimeException;
 
 /**
  * Component
@@ -150,7 +151,23 @@ class Component implements JsonSerializable
      */
     public function getImageTemplate() : string
     {
+        $this->checkMaskTokens($this->getComponentEntity()->image_mask);
+
         $stringTemplate = new StringTemplate(['mask' => $this->getComponentEntity()->image_mask]);
+
+        return $stringTemplate->format('mask', $this->data['selections']);
+    }
+
+    /**
+     * Gets the filled option template for the component
+     *
+     * @return string
+     */
+    public function getOptionTemplate() : string
+    {
+        $this->checkMaskTokens($this->getComponentEntity()->mask);
+
+        $stringTemplate = new StringTemplate(['mask' => $this->getComponentEntity()->mask]);
 
         return $stringTemplate->format('mask', $this->data['selections']);
     }
@@ -177,5 +194,34 @@ class Component implements JsonSerializable
         }
 
         return $this->component;
+    }
+
+    /**
+     * Checks a mask to see if all tokens are included in selections and that those tokens are not empty
+     *
+     * @param string $mask Mask to check
+     * @throws RuntimeException When mask doesn't have any tokens
+     * @throws TokensMissingException When mask tokens are missing from selections
+     */
+    private function checkMaskTokens($mask)
+    {
+        preg_match_all('/({{([A-Z]+)}})/i', $mask, $matches);
+
+        if (empty($matches)) {
+            throw new RuntimeException(sprintf('"%s" does not have any tokens.', $mask));
+        }
+
+        $requiredTokens = $matches[2];
+        $selectedTokens = array_keys($this->getSelections());
+
+        if (array_diff($requiredTokens, $selectedTokens)) {
+            throw new TokensMissingException();
+        }
+
+        foreach ($requiredTokens as $token) {
+            if (!$this->getSelection($token)) {
+                throw new TokensMissingException();
+            }
+        }
     }
 }
