@@ -13,6 +13,7 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
  * @property array $options
+ * @property string $alias
  */
 class Component extends Entity
 {
@@ -32,5 +33,6 @@ class Component extends Entity
         'created' => true,
         'modified' => true,
         'options' => true,
+        'alias' => true,
     ];
 }

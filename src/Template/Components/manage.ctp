@@ -33,6 +33,12 @@ $this
                     ],
                 ]) ?>
 
+                <?= $this->Form->control('alias', [
+                    'templateVars' => [
+                        'help' => '<p class="text-muted small">' . __('Used to reference this component from other components.') . '</p>',
+                    ],
+                ]) ?>
+
                 <?= $this->Form->control('mask', [
                     'label' => __('Option Mask'),
                     'templateVars' => [
