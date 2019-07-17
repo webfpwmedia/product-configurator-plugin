@@ -63,6 +63,9 @@ use Cake\View\View;
  */
 class OptionSet
 {
+    /** @var string */
+    const SELF = 'self';
+
     /** @var array */
     private $data;
 
@@ -200,8 +203,10 @@ class OptionSet
             return null;
         }
 
+        $component = $this->data['requires']['component'] ?? self::SELF;
+
         return [
-            $this->data['requires']['component'] => str_replace(['{', '}'], '', $this->data['requires']['token'])
+            $component => str_replace(['{', '}'], '', $this->data['requires']['token'])
         ];
     }
 

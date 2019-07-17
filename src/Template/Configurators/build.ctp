@@ -7,6 +7,7 @@
 
 use ARC\ProductConfigurator\Form\ConfiguratorContext;
 use ARC\ProductConfigurator\Model\Json\Bootstrap;
+use ARC\ProductConfigurator\Model\Json\OptionSet;
 use ARC\ProductConfigurator\Model\Json\Step;
 use ARC\ProductConfigurator\Model\Table\BuildsTable;
 use Cake\Core\Configure;
@@ -58,7 +59,11 @@ $customTextMap = [];
                                 $controlName = $component->getId() . '.' . $optionSet->getToken();
                                 $requires = $optionSet->getRequires();
                                 if ($requires) {
-                                    $requires = sprintf('data-requires="%s:%s"', key($requires), current($requires));
+                                    $requiredComponent = key($requires);
+                                    if ($requiredComponent === OptionSet::SELF) {
+                                        $requiredComponent = $component->getId();
+                                    }
+                                    $requires = sprintf('data-requires="%s:%s"', $requiredComponent, current($requires));
                                 }
                                 $inherits = $optionSet->getInherits();
                                 ?>
