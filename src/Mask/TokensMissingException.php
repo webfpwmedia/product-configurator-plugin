@@ -1,5 +1,5 @@
 <?php
-namespace ARC\ProductConfigurator\Model\Json;
+namespace ARC\ProductConfigurator\Mask;
 
 use LogicException;
 

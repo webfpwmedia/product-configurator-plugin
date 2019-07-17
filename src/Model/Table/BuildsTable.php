@@ -1,8 +1,8 @@
 <?php
 namespace ARC\ProductConfigurator\Model\Table;
 
+use ARC\ProductConfigurator\Mask\TokensMissingException;
 use ARC\ProductConfigurator\Model\Json\Component;
-use ARC\ProductConfigurator\Model\Json\TokensMissingException;
 use ARC\ProductConfigurator\ORM\Table;
 use ArrayObject;
 use Cake\Database\Expression\IdentifierExpression;
