@@ -103,6 +103,15 @@ window.Configurator = function Configurator($element, options) {
         $radios.filter(':checked').change();
     });
 
+    const toggleStepComponent = function () {
+        const $this = $(this);
+        const $stepComponent = $this.closest('.step-body').find('.step-component');
+
+        $this.is(':checked') ? $stepComponent.show() : $stepComponent.hide();
+    };
+    this.$form.find('[data-toggle]').click(toggleStepComponent);
+    toggleStepComponent.call(this.$form.find('[data-toggle]'));
+
     if (this.$form.length) {
         getConfiguration(c);
     }

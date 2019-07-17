@@ -57,60 +57,73 @@ $customTextMap = [];
                     <div class="step-body">
                         <?php foreach ($step->getComponents() as $component) : ?>
 
-                            <?php if ($component->getConfig('showQty')) : ?>
-                                <?= $this->Form->control($component->getId() . '.' . BuildsTable::QTY_INPUT, [
-                                    'label' => 'Quantity',
-                                    'type' => 'number',
-                                ]) ?>
-                            <?php endif; ?>
+                            <?php
+                            if ($component->getConfig('showToggle')) {
+                                echo $this->Form->control($component->getId() . '.' . BuildsTable::TOGGLE_INPUT, [
+                                    'type' => 'checkbox',
+                                    'label' => false,
+                                    'data-toggle' => true,
+                                ]);
+                            }
+                            ?>
 
-                            <?php foreach ($component->getOptions() as $optionSet) : ?>
-                                <?php
-                                $controlName = $component->getId() . '.' . $optionSet->getToken();
-                                $requires = $optionSet->getRequires();
-                                if ($requires) {
-                                    $requiredComponent = key($requires);
-                                    if ($requiredComponent === OptionSet::SELF) {
-                                        $requiredComponent = $component->getId();
-                                    } else {
-                                        $requiredComponent = $steps->getIdFromAlias($requiredComponent);
-                                    }
-                                    $requires = sprintf('data-requires="%s:%s"', $requiredComponent, current($requires));
-                                }
-                                $inherits = $optionSet->getInherits();
-                                ?>
-
-                                <?php if ($inherits): ?>
-                                    <?=
-                                    $this->Form->hidden($controlName, [
-                                        'value' => sprintf('inherits:%s:%s', $steps->getIdFromAlias(key($inherits)), current($inherits))
-                                    ]);
-                                    ?>
-                                <?php else: ?>
-                                    <fieldset data-component="<?= $component->getId() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requires ?>>
-                                        <legend><?= h($optionSet->getLabel()) ?></legend>
-
-                                        <?php
-                                        echo $this->Form->control($controlName, [
-                                            'label' => false,
-                                            'type' => 'radio',
-                                            'options' => $optionSet->getOptions(),
-                                            'escape' => false,
-                                        ]);
-
-                                        if ($optionSet->isCustomizable()) {
-                                            $this->Form->unlockField($component->getId() . '.' . BuildsTable::CUSTOM_TEXT_INPUT);
-                                            echo $this->Form->control($component->getId() . '.' . BuildsTable::CUSTOM_TEXT_INPUT, [
-                                                'label' => false,
-                                                'hidden' => true,
-                                                'disabled' => true,
-                                            ] + $optionSet->getTextOptions());
-                                        }
-                                        ?>
-                                    </fieldset>
+                            <div class="step-component">
+                                <?php if ($component->getConfig('showQty')) : ?>
+                                    <?= $this->Form->control($component->getId() . '.' . BuildsTable::QTY_INPUT, [
+                                        'label' => 'Quantity',
+                                        'type' => 'number',
+                                    ]) ?>
                                 <?php endif; ?>
+
+
+                                <?php foreach ($component->getOptions() as $optionSet) : ?>
+                                    <?php
+                                    $controlName = $component->getId() . '.' . $optionSet->getToken();
+                                    $requires = $optionSet->getRequires();
+                                    if ($requires) {
+                                        $requiredComponent = key($requires);
+                                        if ($requiredComponent === OptionSet::SELF) {
+                                            $requiredComponent = $component->getId();
+                                        } else {
+                                            $requiredComponent = $steps->getIdFromAlias($requiredComponent);
+                                        }
+                                        $requires = sprintf('data-requires="%s:%s"', $requiredComponent, current($requires));
+                                    }
+                                    $inherits = $optionSet->getInherits();
+                                    ?>
+
+                                    <?php if ($inherits): ?>
+                                        <?=
+                                        $this->Form->hidden($controlName, [
+                                            'value' => sprintf('inherits:%s:%s', $steps->getIdFromAlias(key($inherits)), current($inherits))
+                                        ]);
+                                        ?>
+                                    <?php else: ?>
+                                        <fieldset data-component="<?= $component->getId() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requires ?>>
+                                            <legend><?= h($optionSet->getLabel()) ?></legend>
+
+                                            <?php
+                                            echo $this->Form->control($controlName, [
+                                                'label' => false,
+                                                'type' => 'radio',
+                                                'options' => $optionSet->getOptions(),
+                                                'escape' => false,
+                                            ]);
+
+                                            if ($optionSet->isCustomizable()) {
+                                                $this->Form->unlockField($component->getId() . '.' . BuildsTable::CUSTOM_TEXT_INPUT);
+                                                echo $this->Form->control($component->getId() . '.' . BuildsTable::CUSTOM_TEXT_INPUT, [
+                                                    'label' => false,
+                                                    'hidden' => true,
+                                                    'disabled' => true,
+                                                ] + $optionSet->getTextOptions());
+                                            }
+                                            ?>
+                                        </fieldset>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
                             <?php endforeach; ?>
-                        <?php endforeach; ?>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
