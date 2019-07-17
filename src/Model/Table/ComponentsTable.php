@@ -1,6 +1,7 @@
 <?php
 namespace ARC\ProductConfigurator\Model\Table;
 
+use ARC\ProductConfigurator\Model\Json\OptionSet;
 use ARC\ProductConfigurator\ORM\Table;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
@@ -74,6 +75,16 @@ class ComponentsTable extends Table
             ->isArray('options')
             ->requirePresence('options', 'create')
             ->allowEmptyArray('options', true);
+
+        $validator
+            ->scalar('alias')
+            ->add('alias', 'reserved', [
+                'rule' => function ($value, $context) {
+                    return $value !== OptionSet::SELF;
+                },
+                'message' => __('That word is reserved.'),
+            ])
+            ->allowEmptyString('alias', true);
 
         return $validator;
     }

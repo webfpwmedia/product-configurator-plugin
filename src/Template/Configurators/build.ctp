@@ -9,6 +9,7 @@ use ARC\ProductConfigurator\Form\ConfiguratorContext;
 use ARC\ProductConfigurator\Model\Json\Bootstrap;
 use ARC\ProductConfigurator\Model\Json\OptionSet;
 use ARC\ProductConfigurator\Model\Json\Step;
+use ARC\ProductConfigurator\Model\Json\StepCollection;
 use ARC\ProductConfigurator\Model\Table\BuildsTable;
 use Cake\Core\Configure;
 
@@ -44,15 +45,16 @@ $customTextMap = [];
         <div class="input-form">
             <?= $this->Form->create(new ConfiguratorContext($this->getRequest(), Bootstrap::fromArray($context))); ?>
 
-            <?php foreach ($configurator->steps as $step) : ?>
-                <div class="step" id="step-<?= $step->id ?>">
-                    <h2 class="step-header"><?= h($step->name) ?></h2>
+            <?php
+            $steps = new StepCollection($configurator->steps);
+            ?>
+
+            <?php foreach ($steps as $step) : ?>
+                <?php /** @var Step $step */ ?>
+                <div class="step" id="step-<?= $step->getId() ?>">
+                    <h2 class="step-header"><?= h($step->getName()) ?></h2>
 
                     <div class="step-body">
-                        <?php
-                        $step = Step::fromArray($step->config);
-                        ?>
-
                         <?php foreach ($step->getComponents() as $component) : ?>
                             <?php foreach ($component->getOptions() as $optionSet) : ?>
                                 <?php
@@ -62,6 +64,8 @@ $customTextMap = [];
                                     $requiredComponent = key($requires);
                                     if ($requiredComponent === OptionSet::SELF) {
                                         $requiredComponent = $component->getId();
+                                    } else {
+                                        $requiredComponent = $steps->getIdFromAlias($requiredComponent);
                                     }
                                     $requires = sprintf('data-requires="%s:%s"', $requiredComponent, current($requires));
                                 }
@@ -71,7 +75,7 @@ $customTextMap = [];
                                 <?php if ($inherits): ?>
                                     <?=
                                     $this->Form->hidden($controlName, [
-                                        'value' => sprintf('inherits:%s:%s', key($inherits), current($inherits))
+                                        'value' => sprintf('inherits:%s:%s', $steps->getIdFromAlias(key($inherits)), current($inherits))
                                     ]);
                                     ?>
                                 <?php else: ?>

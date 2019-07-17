@@ -32,6 +32,7 @@ $this
                         <thead class="bg-light">
                             <tr>
                                 <th scope="col" class="border-0"><?= __(ucfirst('name')) ?></th>
+                                <th scope="col" class="border-0"><?= __('Alias') ?></th>
                                 <th scope="col" class="border-0"><?= __('Option Mask') ?></th>
                                 <th scope="col" class="border-0"><?= __(ucfirst('created')) ?></th>
                                 <th scope="col" class="border-0"><?= __(ucfirst('modified')) ?></th>
@@ -48,6 +49,7 @@ $this
                                         echo $this->Html->tag('p', $component->id, ['class' => 'text-muted'])
                                         ?>
                                     </td>
+                                    <td><?= h($component->alias) ?></td>
                                     <td><?= h($component->mask) ?></td>
                                     <td><?= h($component->created) ?></td>
                                     <td><?= h($component->modified) ?></td>
