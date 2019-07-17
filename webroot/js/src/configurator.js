@@ -24,7 +24,8 @@ window.Configurator = function Configurator($element, options) {
         imageQueryString: null,
         frontLabel: 'Front',
         backLabel: 'Back',
-        customTextMap: {}
+        customTextMap: {},
+        layerDirection: 'asc'
     }, options);
 
     this.options = options;
@@ -153,7 +154,7 @@ function buildImageStack(response, $element) {
             const $img = $('<img>')
                 .prop('src', getImageSrc(image['path'], c.options))
                 .css({
-                    zIndex: image['layer']
+                    zIndex: image['layer'] * (c.options.layerDirection === 'asc' ? 1 : -1)
                 });
 
             $html.append($img);
