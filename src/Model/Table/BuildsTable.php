@@ -37,6 +37,11 @@ class BuildsTable extends Table
     const CUSTOM_TEXT_INPUT = '__customtext';
 
     /**
+     * Name of input holding qty
+     */
+    const QTY_INPUT = '__qty';
+
+    /**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
@@ -98,6 +103,12 @@ class BuildsTable extends Table
         $components = collection($selections)
             ->map(function ($componentSelections, $componentId) use ($selections) {
                 $component = new Component($componentId);
+
+                if (isset($componentSelections[self::QTY_INPUT])) {
+                    $component->setQty((int)$componentSelections[self::QTY_INPUT]);
+                    unset($componentSelections[self::QTY_INPUT]);
+                }
+
                 $component->addSelections($this->__withInheritance($selections, $componentSelections));
 
                 // check for custom text label

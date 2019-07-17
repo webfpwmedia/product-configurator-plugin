@@ -61,6 +61,10 @@ class ConfiguratorContext implements ContextInterface
             return $component->getText();
         }
 
+        if ($mask === BuildsTable::QTY_INPUT) {
+            return $component->getQty();
+        }
+
         return $component->getSelection($mask);
     }
 
