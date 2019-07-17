@@ -172,7 +172,7 @@ class Component implements JsonSerializable
      *
      * @return ComponentEntity
      */
-    private function getComponentEntity() : ComponentEntity
+    public function getComponentEntity() : ComponentEntity
     {
         if (!$this->component instanceof ComponentEntity) {
             $this->component = $this->getTableLocator()->get('ARC/ProductConfigurator.Components')->get($this->id);

@@ -1,6 +1,8 @@
 <?php
 namespace ARC\ProductConfigurator\Model\Json;
 
+use ARC\ProductConfigurator\Model\Entity\Step as StepEntity;
+
 /**
  * Step
  *
@@ -26,20 +28,21 @@ class Step
     /** @var Component[] */
     private $components = [];
 
-    /**
-     * Creates a step from an array
-     *
-     * @param array $jsonArray
-     * @return Step
-     */
-    public static function fromArray(array $jsonArray) : Step
-    {
-        $step = new self();
-        foreach ($jsonArray as $data) {
-            $step->addComponent(Component::fromArray($data));
-        }
+    /** @var StepEntity */
+    private $step;
 
-        return $step;
+    /**
+     * Constructor.
+     *
+     * @param StepEntity $step
+     */
+    public function __construct(StepEntity $step)
+    {
+        $this->step = $step;
+
+        foreach ($this->step->config as $data) {
+            $this->addComponent(Component::fromArray($data));
+        }
     }
 
     /**
@@ -61,5 +64,25 @@ class Step
     public function getComponents() : array
     {
         return $this->components;
+    }
+
+    /**
+     * Gets step entity id
+     *
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->step->id;
+    }
+
+    /**
+     * Gets step entity name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->step->name;
     }
 }
