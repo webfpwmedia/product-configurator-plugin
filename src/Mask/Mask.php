@@ -43,7 +43,15 @@ class Mask
 
         preg_match_all(self::TOKEN_MATCHER, $this->mask, $matches);
 
-        return str_replace($matches[1], $values, $this->mask);
+        $orderedValues = collection($matches[2])
+            ->map(function ($token) use ($values) {
+                return $values[$token];
+            })
+            ->toList();
+
+        $template = str_replace($matches[1], '%s', $this->mask);
+
+        return vsprintf($template, $orderedValues);
     }
 
     /**
