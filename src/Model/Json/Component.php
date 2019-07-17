@@ -2,6 +2,7 @@
 namespace ARC\ProductConfigurator\Model\Json;
 
 use ARC\ProductConfigurator\Model\Entity\Component as ComponentEntity;
+use Cake\Core\InstanceConfigTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\View\StringTemplate;
 use JsonSerializable;
@@ -23,10 +24,24 @@ use JsonSerializable;
  */
 class Component implements JsonSerializable
 {
+    use InstanceConfigTrait;
     use LocatorAwareTrait;
+
+    /**
+     * Default config
+     *
+     * ### Configuration:
+     * - bool $showQty: Whether to show a qty field or not
+     *
+     * @var array
+     */
+    protected $_defaultConfig = [
+        'showQty' => false,
+    ];
 
     /** @var array */
     private $data = [
+        'qty' => 1,
         'selections' => []
     ];
 
@@ -51,6 +66,15 @@ class Component implements JsonSerializable
         if (isset($jsonArray[$id]['text'])) {
             $component->addText($jsonArray[$id]['text']);
         }
+        if (isset($jsonArray[$id]['qty'])) {
+            $component->setQty((int)$jsonArray[$id]['qty']);
+        }
+
+        unset($jsonArray[$id]['selections']);
+        unset($jsonArray[$id]['text']);
+        unset($jsonArray[$id]['qty']);
+
+        $component->setConfig($jsonArray[$id]);
 
         return $component;
     }
@@ -143,6 +167,27 @@ class Component implements JsonSerializable
     public function getText() : ?string
     {
         return $this->data['text'] ?? null;
+    }
+
+    /**
+     * Sets the quantity
+     *
+     * @param int $qty
+     * @param void
+     */
+    public function setQty(int $qty) : void
+    {
+        $this->data['qty'] = $qty;
+    }
+
+    /**
+     * Gets the quantity
+     *
+     * @return int
+     */
+    public function getQty() : int
+    {
+        return $this->data['qty'];
     }
 
     /**

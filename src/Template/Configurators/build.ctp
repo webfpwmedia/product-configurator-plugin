@@ -56,6 +56,14 @@ $customTextMap = [];
 
                     <div class="step-body">
                         <?php foreach ($step->getComponents() as $component) : ?>
+
+                            <?php if ($component->getConfig('showQty')) : ?>
+                                <?= $this->Form->control($component->getId() . '.' . BuildsTable::QTY_INPUT, [
+                                    'label' => 'Quantity',
+                                    'type' => 'number',
+                                ]) ?>
+                            <?php endif; ?>
+
                             <?php foreach ($component->getOptions() as $optionSet) : ?>
                                 <?php
                                 $controlName = $component->getId() . '.' . $optionSet->getToken();
