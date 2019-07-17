@@ -39,6 +39,7 @@ class Component implements JsonSerializable
      */
     protected $_defaultConfig = [
         'showQty' => false,
+        'showToggle' => false,
     ];
 
     /** @var array */
@@ -52,6 +53,13 @@ class Component implements JsonSerializable
 
     /** @var ComponentEntity */
     private $component;
+
+    /**
+     * Visible state
+     *
+     * @var bool
+     */
+    public $toggle = true;
 
     /**
      * Creates a component from an array
@@ -70,10 +78,14 @@ class Component implements JsonSerializable
         if (isset($jsonArray[$id]['qty'])) {
             $component->setQty((int)$jsonArray[$id]['qty']);
         }
+        if (isset($jsonArray[$id]['toggle'])) {
+            $component->toggle = $jsonArray[$id]['toggle'];
+        }
 
         unset($jsonArray[$id]['selections']);
         unset($jsonArray[$id]['text']);
         unset($jsonArray[$id]['qty']);
+        unset($jsonArray[$id]['toggle']);
 
         $component->setConfig($jsonArray[$id]);
 

@@ -42,6 +42,11 @@ class BuildsTable extends Table
     const QTY_INPUT = '__qty';
 
     /**
+     * Name of toggle checkbox
+     */
+    const TOGGLE_INPUT = '__toggle';
+
+    /**
      * Initialize method
      *
      * @param array $config The configuration for the Table.
@@ -101,6 +106,9 @@ class BuildsTable extends Table
             })
             ->toArray();
         $components = collection($selections)
+            ->filter(function ($componentSelections) {
+                return !isset($componentSelections[self::TOGGLE_INPUT]) || $componentSelections[self::TOGGLE_INPUT];
+            })
             ->map(function ($componentSelections, $componentId) use ($selections) {
                 $component = new Component($componentId);
 
@@ -109,6 +117,7 @@ class BuildsTable extends Table
                     unset($componentSelections[self::QTY_INPUT]);
                 }
 
+                unset($componentSelections[self::TOGGLE_INPUT]);
                 $component->addSelections($this->__withInheritance($selections, $componentSelections));
 
                 // check for custom text label
