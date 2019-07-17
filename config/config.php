@@ -71,6 +71,9 @@ return [
             // Form templates to use for the build page
             'buildTemplates' => 'ARC/ProductConfigurator.templates_build',
 
+            // determines if layers should be sorted asc or desc
+            'layerDirection' => 'asc',
+
             // database connection to use
             'connection' => 'default',
         ],
