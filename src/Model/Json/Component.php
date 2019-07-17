@@ -1,10 +1,12 @@
 <?php
 namespace ARC\ProductConfigurator\Model\Json;
 
+use ARC\ProductConfigurator\Mask\Mask;
 use ARC\ProductConfigurator\Model\Entity\Component as ComponentEntity;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\View\StringTemplate;
 use JsonSerializable;
+use RuntimeException;
 
 /**
  * Component
@@ -45,8 +47,7 @@ class Component implements JsonSerializable
     public static function fromArray(array $jsonArray) : Component
     {
         $id = key($jsonArray);
-        $component = new self();
-        $component->setId($id);
+        $component = new self($id);
         $component->addSelections($jsonArray[$id]['selections'] ?? []);
         if (isset($jsonArray[$id]['text'])) {
             $component->addText($jsonArray[$id]['text']);
@@ -56,12 +57,11 @@ class Component implements JsonSerializable
     }
 
     /**
-     * Sets the component id
+     * Constructor.
      *
-     * @param string $id
-     * @return void
+     * @param $id
      */
-    public function setId($id) : void
+    public function __construct($id)
     {
         $this->id = $id;
     }
@@ -152,9 +152,17 @@ class Component implements JsonSerializable
      */
     public function getImageTemplate() : string
     {
-        $stringTemplate = new StringTemplate(['mask' => $this->getComponentEntity()->image_mask]);
+        return (new Mask($this->getComponentEntity()->image_mask))->format($this->data['selections']);
+    }
 
-        return $stringTemplate->format('mask', $this->data['selections']);
+    /**
+     * Gets the filled option template for the component
+     *
+     * @return string
+     */
+    public function getOptionTemplate() : string
+    {
+        return (new Mask($this->getComponentEntity()->mask))->format($this->data['selections']);
     }
 
     /**
