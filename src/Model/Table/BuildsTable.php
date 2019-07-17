@@ -1,6 +1,7 @@
 <?php
 namespace ARC\ProductConfigurator\Model\Table;
 
+use ARC\ProductConfigurator\Mask\TokensMissingException;
 use ARC\ProductConfigurator\Model\Json\Component;
 use ARC\ProductConfigurator\ORM\Table;
 use ArrayObject;
@@ -10,7 +11,7 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Cake\View\StringTemplate;
+use Exception;
 
 /**
  * Builds Model
@@ -101,8 +102,7 @@ class BuildsTable extends Table
             ->toArray();
         $components = collection($selections)
             ->map(function ($componentSelections, $componentId) use ($selections) {
-                $component = new Component();
-                $component->setId($componentId);
+                $component = new Component($componentId);
 
                 if (isset($componentSelections[self::QTY_INPUT])) {
                     $component->setQty((int)$componentSelections[self::QTY_INPUT]);
@@ -117,6 +117,16 @@ class BuildsTable extends Table
                 }
 
                 return $component;
+            })
+            ->filter(function (Component $component) {
+                try {
+                    $component->getOptionTemplate();
+                } catch (TokensMissingException $exception) {
+                    // don't include this component if tokens are missing from selections
+                    return false;
+                }
+
+                return true;
             })
             ->toList();
 
@@ -137,6 +147,13 @@ class BuildsTable extends Table
 
         $return = [];
         foreach ($components as $component) {
+            try {
+                $template = $component->getImageTemplate();
+            } catch (Exception $exception) {
+                // don't bother looking for an image for component if the mask is invalid or not all selections are made
+                continue;
+            }
+
             $images = $ImagesTable
                 ->find()
                 ->select([
@@ -145,7 +162,7 @@ class BuildsTable extends Table
                     'layer',
                 ])
                 ->where([
-                    '"' . $component->getImageTemplate() . '" REGEXP' => new IdentifierExpression('mask'),
+                    '"' . $template . '" REGEXP' => new IdentifierExpression('mask'),
                 ])
                 ->enableHydration(false)
                 ->groupBy('position')
