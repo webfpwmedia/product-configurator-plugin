@@ -2,6 +2,7 @@
 namespace ARC\ProductConfigurator\Model\Table;
 
 use ARC\ProductConfigurator\ORM\Table;
+use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 
 /**
@@ -71,5 +72,14 @@ class ImagesTable extends Table
             ->allowEmptyString('layer', false);
 
         return $validator;
+    }
+
+    /**
+     * @param RulesChecker $rules
+     * @return RulesChecker
+     */
+    public function buildRules(RulesChecker $rules)
+    {
+        return $rules->add($rules->isUnique(['mask', 'position'], __('That image is already indexed.')));
     }
 }
