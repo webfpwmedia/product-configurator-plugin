@@ -90,16 +90,20 @@ $customTextMap = [];
                                         $requires = sprintf('data-requires="%s:%s"', $requiredComponent, current($requires));
                                     }
                                     $inherits = $optionSet->getInherits();
+                                    if ($inherits) {
+                                        $inherits = sprintf('data-inherits="%s:%s"', $steps->getIdFromAlias(key($inherits)), current($inherits));
+                                    }
                                     ?>
 
-                                    <?php if ($inherits): ?>
-                                        <?=
-                                        $this->Form->hidden($controlName, [
-                                            'value' => sprintf('inherits:%s:%s', $steps->getIdFromAlias(key($inherits)), current($inherits))
-                                        ]);
-                                        ?>
-                                    <?php else: ?>
                                     <fieldset data-token="<?= $optionSet->getToken() ?>" <?= $requires ?> <?= $inherits ?>>
+                                        <?php if ($inherits): ?>
+                                            <?=
+                                            $this->Form->control($controlName, [
+                                                'label' => false,
+                                                'hidden' => true,
+                                            ]);
+                                            ?>
+                                        <?php else: ?>
                                             <legend><?= h($optionSet->getLabel()) ?></legend>
 
                                             <?php
@@ -119,11 +123,11 @@ $customTextMap = [];
                                                 ] + $optionSet->getTextOptions());
                                             }
                                             ?>
-                                        </fieldset>
-                                    <?php endif; ?>
+                                        <?php endif; ?>
+                                    </fieldset>
                                 <?php endforeach; ?>
-                            <?php endforeach; ?>
-                        </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             <?php endforeach; ?>

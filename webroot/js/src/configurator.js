@@ -107,6 +107,24 @@ window.Configurator = function Configurator($element, options) {
         $requirement.filter(':checked').change();
     });
 
+    this.$form.find('fieldset[data-inherits]').each(function () {
+        const $this = $(this);
+        const $thisInput = $this.find(':input');
+        const inherits = $this.data('inherits').split(':');
+
+        const $inherited = getInput(inherits[0], inherits[1]);
+
+        $inherited.change(function () {
+            const $inherit = $(this);
+            if ($inherit.is(':radio') && !$inherit.is(':checked')) {
+                return;
+            }
+            $thisInput.val($inherit.val());
+        });
+
+        $inherited.filter(':checked').change();
+    });
+
     this.$form.find('[data-custom]').each(function () {
         const $this = $(this);
         const $fieldset = $this.closest('fieldset');
