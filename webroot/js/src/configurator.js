@@ -7,6 +7,7 @@ import Text from './text';
 
 const CUSTOM_TEXT_INPUT = '__customtext';
 let preloaded = [];
+let changes = [];
 
 /**
  * @param {jQuery} $element
@@ -37,7 +38,15 @@ window.Configurator = function Configurator($element, options) {
 
     let c = this;
     this.$form.find(':input').on('change', function () {
-        getConfiguration(c);
+        if (changes.length === 0) {
+            Promise.all(changes).then(function () {
+                changes = [];
+                getConfiguration(c);
+            });
+        }
+        changes.push(new Promise(function (resolve, reject) {
+            resolve();
+        }));
     });
     this.$stateToggle.on('click', function () {
         c.toggleState();
@@ -113,7 +122,7 @@ window.Configurator = function Configurator($element, options) {
     toggleStepComponent.call(this.$form.find('[data-toggle]'));
 
     if (this.$form.length) {
-        getConfiguration(c);
+        this.$form.change();
     }
     setState(c);
 }
