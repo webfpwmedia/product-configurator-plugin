@@ -26,7 +26,7 @@ class ImagesController extends AppController
             ->find()
             ->order(['mask' => 'asc', 'position' => 'desc', 'layer' => 'asc']);
 
-        $this->set('images',  $this->paginate($images));
+        $this->set('images',  $images);
     }
 
     /**
