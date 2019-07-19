@@ -144,7 +144,7 @@ use Cake\Core\Configure;
 
         echo $this->fetch('jsPreApp');
 
-        echo $this->Html->script('ARC/ProductConfigurator.dist/app.bundle');
+        echo $this->Html->script('ARC/ProductConfigurator.dist/arc-product-configurator.bundle');
 
         echo $this->fetch('jsPostApp');
 
