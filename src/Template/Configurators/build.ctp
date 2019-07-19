@@ -138,7 +138,7 @@ $customTextMap = [];
     </div>
 </div>
 
-<?= $this->Html->script('ARC/ProductConfigurator.dist/app.bundle') ?>
+<?= $this->Html->script('ARC/ProductConfigurator.dist/arc-product-configurator.bundle') ?>
 
 <script>
     $(document).ready(function () {
