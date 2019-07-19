@@ -67,7 +67,7 @@ $customTextMap = [];
                             }
                             ?>
 
-                            <div class="step-component">
+                            <div class="step-component" data-component="<?= $component->getId() ?>">
                                 <?php if ($component->getConfig('showQty')) : ?>
                                     <?= $this->Form->control($component->getId() . '.' . BuildsTable::QTY_INPUT, [
                                         'label' => 'Quantity',
@@ -99,7 +99,7 @@ $customTextMap = [];
                                         ]);
                                         ?>
                                     <?php else: ?>
-                                        <fieldset data-component="<?= $component->getId() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requires ?>>
+                                    <fieldset data-token="<?= $optionSet->getToken() ?>" <?= $requires ?> <?= $inherits ?>>
                                             <legend><?= h($optionSet->getLabel()) ?></legend>
 
                                             <?php

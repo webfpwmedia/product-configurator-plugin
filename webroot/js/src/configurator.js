@@ -59,21 +59,46 @@ window.Configurator = function Configurator($element, options) {
         buildImageStack.apply(c, arguments);
     };
 
-    this.$form.find('[data-requires]').each(function () {
+    /**
+     * Gets the input for a component/token
+     *
+     * @param {string} component
+     * @param {string} token
+     * @returns {jQuery}
+     */
+    const getInput = function (component, token) {
+        return getFieldset(component, token).find(':input');
+    };
+
+    /**
+     * Gets the fieldset for a component/token
+     *
+     * @param {string} component
+     * @param {string} token
+     * @returns {jQuery}
+     */
+    const getFieldset = function (component, token) {
+        return c.$form
+            .find('[data-component="' + component + '"]')
+            .find('fieldset[data-token="' + token + '"]');
+    };
+
+    this.$form.find('fieldset[data-requires]').each(function () {
         const $this = $(this);
+        const $thisInput = $this.find(':input');
         const requires = $this.data('requires').split(':');
         $this.hide();
 
-        const $requirement = $this
-            .siblings('[data-component="' + requires[0] + '"][data-token="' + requires[1] + '"]')
-            .find(':input');
+        const $requirement = getInput(requires[0], requires[1]);
 
         $requirement.change(function () {
             const $required = $(this);
+            if ($required.is(':radio') && !$required.is(':checked')) {
+                return;
+            }
             $required.val() ? $this.show() : $this.hide();
 
             if ($this.is(':hidden')) {
-                const $thisInput = $this.find(':input');
                 $thisInput.prop('checked', false);
                 $thisInput.change();
             }
