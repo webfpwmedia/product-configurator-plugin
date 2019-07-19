@@ -225,4 +225,24 @@ class OptionSet
             $this->data['inherits']['component'] => str_replace(['{', '}'], '', $this->data['inherits']['token'])
         ];
     }
+
+    /**
+     * Gets inherits options
+     *
+     * @return array
+     */
+    public function getInheritsOptions() : array
+    {
+        if (!isset($this->data['inherits'])) {
+            return [];
+        }
+
+        $options = $this->data['inherits'];
+        unset($options['component']);
+        unset($options['token']);
+
+        return $options + [
+            'showOptions' => false
+        ];
+    }
 }

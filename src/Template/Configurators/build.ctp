@@ -80,6 +80,7 @@ $customTextMap = [];
                                     <?php
                                     $controlName = $component->getId() . '.' . $optionSet->getToken();
                                     $requires = $optionSet->getRequires();
+                                    $requiresData = null;
                                     if ($requires) {
                                         $requiredComponent = key($requires);
                                         if ($requiredComponent === OptionSet::SELF) {
@@ -87,22 +88,37 @@ $customTextMap = [];
                                         } else {
                                             $requiredComponent = $steps->getIdFromAlias($requiredComponent);
                                         }
-                                        $requires = sprintf('data-requires="%s:%s"', $requiredComponent, current($requires));
+                                        $requiresData = sprintf('data-requires="%s:%s"', $requiredComponent, current($requires));
                                     }
                                     $inherits = $optionSet->getInherits();
+                                    $inheritsData = null;
                                     if ($inherits) {
-                                        $inherits = sprintf('data-inherits="%s:%s"', $steps->getIdFromAlias(key($inherits)), current($inherits));
+                                        $inheritsData = sprintf('data-inherits="%s:%s"', $steps->getIdFromAlias(key($inherits)), current($inherits));
                                     }
                                     ?>
 
-                                    <fieldset data-token="<?= $optionSet->getToken() ?>" <?= $requires ?> <?= $inherits ?>>
+                                    <fieldset data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?>>
                                         <?php if ($inherits): ?>
-                                            <?=
-                                            $this->Form->control($controlName, [
-                                                'label' => false,
-                                                'hidden' => true,
-                                            ]);
-                                            ?>
+                                            <?php
+                                            $inheritsOptions = $optionSet->getInheritsOptions();
+
+                                            if ($inheritsOptions['showOptions']) : ?>
+                                                <?php
+                                                $inheritedOptionSet = $steps->getComponentTokenOptionSet($steps->getIdFromAlias(key($inherits)), current($inherits));
+                                                echo $this->Form->control($controlName, [
+                                                    'label' => false,
+                                                    'type' => 'radio',
+                                                    'options' => $inheritedOptionSet->getOptions(),
+                                                    'escape' => false,
+                                                ]);
+                                                ?>
+                                            <?php else: ?>
+                                                <?= $this->Form->control($controlName, [
+                                                    'label' => false,
+                                                    'hidden' => true,
+                                                ]);
+                                                ?>
+                                            <?php endif; ?>
                                         <?php else: ?>
                                             <legend><?= h($optionSet->getLabel()) ?></legend>
 

@@ -5,9 +5,7 @@ use ARC\ProductConfigurator\Mask\Mask;
 use ARC\ProductConfigurator\Model\Entity\Component as ComponentEntity;
 use Cake\Core\InstanceConfigTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\View\StringTemplate;
 use JsonSerializable;
-use RuntimeException;
 
 /**
  * Component
@@ -147,6 +145,23 @@ class Component implements JsonSerializable
         }
 
         return $options;
+    }
+
+    /**
+     * Gets the option set for a token
+     *
+     * @param string $token
+     * @return OptionSet|null
+     */
+    public function getOptionSet($token) : ?OptionSet
+    {
+        foreach ($this->getOptions() as $optionSet) {
+            if ($optionSet->getToken() === $token) {
+                return $optionSet;
+            }
+        }
+
+        return null;
     }
 
     /**

@@ -85,7 +85,7 @@ window.Configurator = function Configurator($element, options) {
 
     this.$form.find('fieldset[data-requires]').each(function () {
         const $this = $(this);
-        const $thisInput = $this.find(':input');
+        const $thisInput = $this.find(':input').not('[type=hidden]');
         const requires = $this.data('requires').split(':');
         $this.hide();
 
@@ -109,7 +109,7 @@ window.Configurator = function Configurator($element, options) {
 
     this.$form.find('fieldset[data-inherits]').each(function () {
         const $this = $(this);
-        const $thisInput = $this.find(':input');
+        const $thisInput = $this.find(':input').not('[type=hidden]');
         const inherits = $this.data('inherits').split(':');
 
         const $inherited = getInput(inherits[0], inherits[1]);
@@ -119,7 +119,23 @@ window.Configurator = function Configurator($element, options) {
             if ($inherit.is(':radio') && !$inherit.is(':checked')) {
                 return;
             }
-            $thisInput.val($inherit.val());
+
+            if ($thisInput.parent().is(':hidden')) {
+                if ($thisInput.is(':radio')) {
+                    $thisInput
+                        .closest('fieldset')
+                        .find(':radio')
+                        .filter(function () {
+                            return $(this).val() === $inherit.val()
+                        })
+                        .prop('checked', true)
+                        .change();
+                } else {
+                    $thisInput
+                        .val($inherit.val())
+                        .change();
+                }
+            }
         });
 
         $inherited.filter(':checked').change();
