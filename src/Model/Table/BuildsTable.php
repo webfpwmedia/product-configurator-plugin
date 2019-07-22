@@ -124,6 +124,7 @@ class BuildsTable extends Table
                 // check for custom text label
                 if (!empty($componentSelections[self::CUSTOM_TEXT_INPUT])) {
                     $component->addText($componentSelections[self::CUSTOM_TEXT_INPUT]);
+                    unset($componentSelections[self::CUSTOM_TEXT_INPUT]);
                 }
 
                 return $component;
