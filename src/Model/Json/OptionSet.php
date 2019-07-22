@@ -69,29 +69,39 @@ class OptionSet
     /** @var array */
     private $data;
 
+    /** @var Component */
+    private $component;
+
     /** @var UrlHelper */
     private $Url;
 
     /**
-     * Constructor.
-     *
-     * @param array $data
-     */
-    public function __construct($data)
-    {
-        $this->data = $data;
-        $this->Url = new UrlHelper(new View());
-    }
-
-    /**
      * Creates an OptionSet from an array
      *
+     * @param Component $component
      * @param array $jsonArray
      * @return OptionSet
      */
-    public static function fromArray(array $jsonArray) : OptionSet
+    public static function fromArray(Component $component, array $jsonArray) : OptionSet
     {
-        return new self($jsonArray);
+        return new self($component, $jsonArray);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param Component $component
+     * @param array $data
+     */
+    public function __construct(Component $component, array $data)
+    {
+        $this->component = $component;
+        $this->data = $data + [
+            'name' => null,
+            'token' => null,
+            'options' => [],
+        ];
+        $this->Url = new UrlHelper(new View());
     }
 
     /**

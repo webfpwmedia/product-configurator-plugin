@@ -22,10 +22,11 @@ use JsonSerializable;
  * ]
  * ```
  */
-class Bootstrap implements JsonSerializable
+class Bootstrap
 {
-    /** @var array */
-    private $components = [];
+
+    /** @var ComponentCollection */
+    private $componentCollection;
 
     /**
      * Creates a bootstrap from an array
@@ -35,47 +36,31 @@ class Bootstrap implements JsonSerializable
      */
     public static function fromArray($jsonArray) : Bootstrap
     {
-        $bootstrap = new self();
+        $componentCollection = new ComponentCollection();
         foreach ($jsonArray as $data) {
-            $bootstrap->addComponent(Component::fromArray($data));
+            $componentCollection->addComponent(Component::fromArray($componentCollection, $data));
         }
 
-        return $bootstrap;
+        return new self($componentCollection);
     }
 
     /**
-     * Adds a component to the bootstrap
+     * Constructor.
      *
-     * @param Component $component
-     * @return void
+     * @param ComponentCollection $componentCollection
      */
-    public function addComponent(Component $component) : void
+    public function __construct(ComponentCollection $componentCollection)
     {
-        $this->components[] = $component;
+        $this->componentCollection = $componentCollection;
     }
 
     /**
-     * Gets the component if it exists
+     * Gets the ComponentCollection
      *
-     * @param string $id
-     * @return Component|null
+     * @return ComponentCollection
      */
-    public function getComponent(string $id) : ?Component
+    public function getComponentCollection() : ComponentCollection
     {
-        return collection($this->components)
-            ->filter(function (Component $component) use ($id) {
-                return $component->getId() === $id;
-            })
-            ->first();
-    }
-
-    /**
-     * @return array|\Cake\Collection\CollectionTrait|mixed
-     */
-    public function jsonSerialize() : array
-    {
-        return collection($this->components)
-            ->indexBy('getId')
-            ->toArray();
+        return $this->componentCollection;
     }
 }

@@ -84,16 +84,16 @@ $customTextMap = [];
                                     if ($requires) {
                                         $requiredComponent = key($requires);
                                         if ($requiredComponent === OptionSet::SELF) {
-                                            $requiredComponent = $component->getId();
+                                            $requiredComponent = $component;
                                         } else {
-                                            $requiredComponent = $steps->getIdFromAlias($requiredComponent);
+                                            $requiredComponent = $step->getStepCollection()->getComponentCollection()->getComponent($requiredComponent);
                                         }
-                                        $requiresData = sprintf('data-requires="%s:%s"', $requiredComponent, current($requires));
+                                        $requiresData = sprintf('data-requires="%s:%s"', $requiredComponent->getId(), current($requires));
                                     }
                                     $inherits = $optionSet->getInherits();
                                     $inheritsData = null;
                                     if ($inherits) {
-                                        $inheritsData = sprintf('data-inherits="%s:%s"', $steps->getIdFromAlias(key($inherits)), current($inherits));
+                                        $inheritsData = sprintf('data-inherits="%s:%s"', $step->getStepCollection()->getComponentCollection()->getComponent(key($inherits))->getId(), current($inherits));
                                     }
                                     ?>
 

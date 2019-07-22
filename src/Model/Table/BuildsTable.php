@@ -3,6 +3,7 @@ namespace ARC\ProductConfigurator\Model\Table;
 
 use ARC\ProductConfigurator\Mask\TokensMissingException;
 use ARC\ProductConfigurator\Model\Json\Component;
+use ARC\ProductConfigurator\Model\Json\ComponentCollection;
 use ARC\ProductConfigurator\ORM\Table;
 use ArrayObject;
 use Cake\Database\Expression\IdentifierExpression;
@@ -110,7 +111,7 @@ class BuildsTable extends Table
                 return !isset($componentSelections[self::TOGGLE_INPUT]) || $componentSelections[self::TOGGLE_INPUT];
             })
             ->map(function ($componentSelections, $componentId) {
-                $component = new Component($componentId);
+                $component = new Component(new ComponentCollection(), $componentId);
 
                 if (isset($componentSelections[self::QTY_INPUT])) {
                     $component->setQty((int)$componentSelections[self::QTY_INPUT]);
