@@ -115,6 +115,33 @@ class OptionSet
     }
 
     /**
+     * Gets human readable labels for all options. If this option set is customizable, the custom code
+     * label will be set to the component's text value
+     *
+     * @return array
+     */
+    public function getOptionLabels() : array
+    {
+        $inherits = $this->getInherits();
+        if ($inherits) {
+            $inheritedComponent = $this->component
+                ->getComponentCollection()
+                ->getComponent(key($inherits));
+
+            return $inheritedComponent
+                ->getOptionSet(current($inherits))
+                ->getOptionLabels();
+        }
+
+        $options = collection($this->data['options'])->combine('code', 'name');
+        if ($this->isCustomizable()) {
+            $options = $options->appendItem($this->component->getText(), $this->data['text']['code']);
+        }
+
+        return $options->toArray();
+    }
+
+    /**
      * Gets the radio options for this option set
      *
      * @return array
