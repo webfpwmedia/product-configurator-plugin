@@ -121,6 +121,22 @@ class OptionSet
      */
     public function getOptions() : array
     {
+        $inherits = $this->getInherits();
+        if ($inherits) {
+            $inheritOptions = $this->getInheritsOptions();
+            if ($inheritOptions['showOptions']) {
+                $inheritedComponent = $this->component
+                    ->getComponentCollection()
+                    ->getComponent(key($inherits));
+
+                return $inheritedComponent
+                    ->getOptionSet(current($inherits))
+                    ->getOptions();
+            } else {
+                return [];
+            }
+        }
+
         $options = collection($this->data['options'])
             ->map(function (array $option) {
                 $radioOptions = [

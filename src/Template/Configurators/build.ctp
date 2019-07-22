@@ -98,27 +98,12 @@ $customTextMap = [];
                                     ?>
 
                                     <fieldset data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?>>
-                                        <?php if ($inherits): ?>
-                                            <?php
-                                            $inheritsOptions = $optionSet->getInheritsOptions();
-
-                                            if ($inheritsOptions['showOptions']) : ?>
-                                                <?php
-                                                $inheritedOptionSet = $steps->getComponentTokenOptionSet($steps->getIdFromAlias(key($inherits)), current($inherits));
-                                                echo $this->Form->control($controlName, [
-                                                    'label' => false,
-                                                    'type' => 'radio',
-                                                    'options' => $inheritedOptionSet->getOptions(),
-                                                    'escape' => false,
-                                                ]);
-                                                ?>
-                                            <?php else: ?>
-                                                <?= $this->Form->control($controlName, [
-                                                    'label' => false,
-                                                    'hidden' => true,
-                                                ]);
-                                                ?>
-                                            <?php endif; ?>
+                                        <?php if ($inherits && !$optionSet->getOptions()): ?>
+                                            <?= $this->Form->control($controlName, [
+                                                'label' => false,
+                                                'hidden' => true,
+                                            ]);
+                                            ?>
                                         <?php else: ?>
                                             <legend><?= h($optionSet->getLabel()) ?></legend>
 
