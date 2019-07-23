@@ -109,7 +109,7 @@ window.Configurator = function Configurator($element, options) {
 
     this.$form.find('fieldset[data-inherits]').each(function () {
         const $this = $(this);
-        const $thisInput = $this.find(':input').not('[type=hidden]');
+        const $thisInput = $this.find(':input');
         const inherits = $this.data('inherits').split(':');
 
         const $inherited = getInput(inherits[0], inherits[1]);
@@ -120,8 +120,8 @@ window.Configurator = function Configurator($element, options) {
                 return;
             }
 
-            if ($thisInput.parent().is(':hidden')) {
-                if ($thisInput.is(':radio')) {
+            if ($thisInput.is(':radio')) {
+                if ($thisInput.parent().is(':hidden')) {
                     $thisInput
                         .closest('fieldset')
                         .find(':radio')
@@ -130,11 +130,11 @@ window.Configurator = function Configurator($element, options) {
                         })
                         .prop('checked', true)
                         .change();
-                } else {
-                    $thisInput
-                        .val($inherit.val())
-                        .change();
                 }
+            } else {
+                $thisInput
+                    .val($inherit.val())
+                    .change();
             }
         });
 
