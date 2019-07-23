@@ -5,9 +5,7 @@ use ARC\ProductConfigurator\Mask\Mask;
 use ARC\ProductConfigurator\Model\Entity\Component as ComponentEntity;
 use Cake\Core\InstanceConfigTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\View\StringTemplate;
 use JsonSerializable;
-use RuntimeException;
 
 /**
  * Component
@@ -54,6 +52,9 @@ class Component implements JsonSerializable
     /** @var ComponentEntity */
     private $component;
 
+    /** @var ComponentCollection */
+    private $componentCollection;
+
     /**
      * Visible state
      *
@@ -64,13 +65,14 @@ class Component implements JsonSerializable
     /**
      * Creates a component from an array
      *
+     * @param ComponentCollection $componentCollection
      * @param array $jsonArray
      * @return Component
      */
-    public static function fromArray(array $jsonArray) : Component
+    public static function fromArray(ComponentCollection $componentCollection, array $jsonArray) : Component
     {
         $id = key($jsonArray);
-        $component = new self($id);
+        $component = new self($componentCollection, $id);
         $component->addSelections($jsonArray[$id]['selections'] ?? []);
         if (isset($jsonArray[$id]['text'])) {
             $component->addText($jsonArray[$id]['text']);
@@ -95,10 +97,12 @@ class Component implements JsonSerializable
     /**
      * Constructor.
      *
-     * @param $id
+     * @param ComponentCollection $componentCollection
+     * @param string $id
      */
-    public function __construct($id)
+    public function __construct(ComponentCollection $componentCollection, string $id)
     {
+        $this->componentCollection = $componentCollection;
         $this->id = $id;
     }
 
@@ -143,10 +147,27 @@ class Component implements JsonSerializable
         $options = [];
 
         foreach ($this->getComponentEntity()->options as $data) {
-            $options[] = OptionSet::fromArray($data);
+            $options[] = OptionSet::fromArray($this, $data);
         }
 
         return $options;
+    }
+
+    /**
+     * Gets the option set for a token
+     *
+     * @param string $token
+     * @return OptionSet|null
+     */
+    public function getOptionSet($token) : ?OptionSet
+    {
+        foreach ($this->getOptions() as $optionSet) {
+            if ($optionSet->getToken() === $token) {
+                return $optionSet;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -220,6 +241,16 @@ class Component implements JsonSerializable
     public function getOptionTemplate() : string
     {
         return (new Mask($this->getComponentEntity()->mask))->format($this->data['selections']);
+    }
+
+    /**
+     * Gets the component collection
+     *
+     * @return ComponentCollection
+     */
+    public function getComponentCollection() : ComponentCollection
+    {
+        return $this->componentCollection;
     }
 
     /**

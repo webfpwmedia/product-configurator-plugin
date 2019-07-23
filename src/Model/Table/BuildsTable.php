@@ -3,6 +3,7 @@ namespace ARC\ProductConfigurator\Model\Table;
 
 use ARC\ProductConfigurator\Mask\TokensMissingException;
 use ARC\ProductConfigurator\Model\Json\Component;
+use ARC\ProductConfigurator\Model\Json\ComponentCollection;
 use ARC\ProductConfigurator\ORM\Table;
 use ArrayObject;
 use Cake\Database\Expression\IdentifierExpression;
@@ -109,8 +110,8 @@ class BuildsTable extends Table
             ->filter(function ($componentSelections) {
                 return !isset($componentSelections[self::TOGGLE_INPUT]) || $componentSelections[self::TOGGLE_INPUT];
             })
-            ->map(function ($componentSelections, $componentId) use ($selections) {
-                $component = new Component($componentId);
+            ->map(function ($componentSelections, $componentId) {
+                $component = new Component(new ComponentCollection(), $componentId);
 
                 if (isset($componentSelections[self::QTY_INPUT])) {
                     $component->setQty((int)$componentSelections[self::QTY_INPUT]);
@@ -118,11 +119,12 @@ class BuildsTable extends Table
                 }
 
                 unset($componentSelections[self::TOGGLE_INPUT]);
-                $component->addSelections($this->__withInheritance($selections, $componentSelections));
+                $component->addSelections($componentSelections);
 
                 // check for custom text label
                 if (!empty($componentSelections[self::CUSTOM_TEXT_INPUT])) {
                     $component->addText($componentSelections[self::CUSTOM_TEXT_INPUT]);
+                    unset($componentSelections[self::CUSTOM_TEXT_INPUT]);
                 }
 
                 return $component;
@@ -190,33 +192,5 @@ class BuildsTable extends Table
         }
 
         return $return;
-    }
-
-    /**
-     * Replaces inherited attributes with their submitted values
-     *
-     * @param array $data Full submitted data for all components
-     * @param array $selections User selections for this component
-     * @return array
-     */
-    private function __withInheritance($data, $selections)
-    {
-        foreach ($selections as $token => $selection) {
-            if ($token === self::CUSTOM_TEXT_INPUT) {
-                unset($selections[$token]);
-
-                continue;
-            }
-
-            if (stripos($selection, 'inherits:') === false) {
-                continue;
-            }
-
-            list(, $inheritableComponentId, $inheritableToken) = explode(':', $selection);
-
-            $selections[$token] = Hash::get($data, "$inheritableComponentId.$inheritableToken");
-        }
-
-        return $selections;
     }
 }

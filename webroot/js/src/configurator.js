@@ -7,6 +7,7 @@ import Text from './text';
 
 const CUSTOM_TEXT_INPUT = '__customtext';
 let preloaded = [];
+let changes = [];
 
 /**
  * @param {jQuery} $element
@@ -37,7 +38,15 @@ window.Configurator = function Configurator($element, options) {
 
     let c = this;
     this.$form.find(':input').on('change', function () {
-        getConfiguration(c);
+        if (changes.length === 0) {
+            Promise.all(changes).then(function () {
+                changes = [];
+                getConfiguration(c);
+            });
+        }
+        changes.push(new Promise(function (resolve, reject) {
+            resolve();
+        }));
     });
     this.$stateToggle.on('click', function () {
         c.toggleState();
@@ -50,21 +59,46 @@ window.Configurator = function Configurator($element, options) {
         buildImageStack.apply(c, arguments);
     };
 
-    this.$form.find('[data-requires]').each(function () {
+    /**
+     * Gets the input for a component/token
+     *
+     * @param {string} component
+     * @param {string} token
+     * @returns {jQuery}
+     */
+    const getInput = function (component, token) {
+        return getFieldset(component, token).find(':input');
+    };
+
+    /**
+     * Gets the fieldset for a component/token
+     *
+     * @param {string} component
+     * @param {string} token
+     * @returns {jQuery}
+     */
+    const getFieldset = function (component, token) {
+        return c.$form
+            .find('[data-component="' + component + '"]')
+            .find('fieldset[data-token="' + token + '"]');
+    };
+
+    this.$form.find('fieldset[data-requires]').each(function () {
         const $this = $(this);
+        const $thisInput = $this.find(':input').not('[type=hidden]');
         const requires = $this.data('requires').split(':');
         $this.hide();
 
-        const $requirement = $this
-            .siblings('[data-component="' + requires[0] + '"][data-token="' + requires[1] + '"]')
-            .find(':input');
+        const $requirement = getInput(requires[0], requires[1]);
 
         $requirement.change(function () {
             const $required = $(this);
+            if ($required.is(':radio') && !$required.is(':checked')) {
+                return;
+            }
             $required.val() ? $this.show() : $this.hide();
 
             if ($this.is(':hidden')) {
-                const $thisInput = $this.find(':input');
                 $thisInput.prop('checked', false);
                 $thisInput.change();
             }
@@ -73,10 +107,44 @@ window.Configurator = function Configurator($element, options) {
         $requirement.filter(':checked').change();
     });
 
+    this.$form.find('fieldset[data-inherits]').each(function () {
+        const $this = $(this);
+        const $thisInput = $this.find(':input');
+        const inherits = $this.data('inherits').split(':');
+
+        const $inherited = getInput(inherits[0], inherits[1]);
+
+        $inherited.change(function () {
+            const $inherit = $(this);
+            if ($inherit.is(':radio') && !$inherit.is(':checked')) {
+                return;
+            }
+
+            if ($thisInput.is(':radio')) {
+                if ($thisInput.parent().is(':hidden')) {
+                    $thisInput
+                        .closest('fieldset')
+                        .find(':radio')
+                        .filter(function () {
+                            return $(this).val() === $inherit.val()
+                        })
+                        .prop('checked', true)
+                        .change();
+                }
+            } else {
+                $thisInput
+                    .val($inherit.val())
+                    .change();
+            }
+        });
+
+        $inherited.filter(':checked').change();
+    });
+
     this.$form.find('[data-custom]').each(function () {
         const $this = $(this);
         const $fieldset = $this.closest('fieldset');
-        const component = $fieldset.data('component');
+        const component = $fieldset.closest('.step-component').data('component');
         const customVal = $this.find('input').val();
         const $radios = $fieldset.find('input');
         const $customInput = $fieldset.find('input[name="' + component + '[' + CUSTOM_TEXT_INPUT + ']"]');
@@ -113,7 +181,7 @@ window.Configurator = function Configurator($element, options) {
     toggleStepComponent.call(this.$form.find('[data-toggle]'));
 
     if (this.$form.length) {
-        getConfiguration(c);
+        this.$form.change();
     }
     setState(c);
 }

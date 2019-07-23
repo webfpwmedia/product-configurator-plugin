@@ -69,29 +69,39 @@ class OptionSet
     /** @var array */
     private $data;
 
+    /** @var Component */
+    private $component;
+
     /** @var UrlHelper */
     private $Url;
 
     /**
-     * Constructor.
-     *
-     * @param array $data
-     */
-    public function __construct($data)
-    {
-        $this->data = $data;
-        $this->Url = new UrlHelper(new View());
-    }
-
-    /**
      * Creates an OptionSet from an array
      *
+     * @param Component $component
      * @param array $jsonArray
      * @return OptionSet
      */
-    public static function fromArray(array $jsonArray) : OptionSet
+    public static function fromArray(Component $component, array $jsonArray) : OptionSet
     {
-        return new self($jsonArray);
+        return new self($component, $jsonArray);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param Component $component
+     * @param array $data
+     */
+    public function __construct(Component $component, array $data)
+    {
+        $this->component = $component;
+        $this->data = $data + [
+            'name' => null,
+            'token' => null,
+            'options' => [],
+        ];
+        $this->Url = new UrlHelper(new View());
     }
 
     /**
@@ -105,12 +115,55 @@ class OptionSet
     }
 
     /**
+     * Gets human readable labels for all options. If this option set is customizable, the custom code
+     * label will be set to the component's text value
+     *
+     * @return array
+     */
+    public function getOptionLabels() : array
+    {
+        $inherits = $this->getInherits();
+        if ($inherits) {
+            $inheritedComponent = $this->component
+                ->getComponentCollection()
+                ->getComponent(key($inherits));
+
+            return $inheritedComponent
+                ->getOptionSet(current($inherits))
+                ->getOptionLabels();
+        }
+
+        $options = collection($this->data['options'])->combine('code', 'name');
+        if ($this->isCustomizable()) {
+            $options = $options->appendItem($this->component->getText(), $this->data['text']['code']);
+        }
+
+        return $options->toArray();
+    }
+
+    /**
      * Gets the radio options for this option set
      *
      * @return array
      */
     public function getOptions() : array
     {
+        $inherits = $this->getInherits();
+        if ($inherits) {
+            $inheritOptions = $this->getInheritsOptions();
+            if ($inheritOptions['showOptions']) {
+                $inheritedComponent = $this->component
+                    ->getComponentCollection()
+                    ->getComponent(key($inherits));
+
+                return $inheritedComponent
+                    ->getOptionSet(current($inherits))
+                    ->getOptions();
+            } else {
+                return [];
+            }
+        }
+
         $options = collection($this->data['options'])
             ->map(function (array $option) {
                 $radioOptions = [
@@ -223,6 +276,26 @@ class OptionSet
 
         return [
             $this->data['inherits']['component'] => str_replace(['{', '}'], '', $this->data['inherits']['token'])
+        ];
+    }
+
+    /**
+     * Gets inherits options
+     *
+     * @return array
+     */
+    public function getInheritsOptions() : array
+    {
+        if (!isset($this->data['inherits'])) {
+            return [];
+        }
+
+        $options = $this->data['inherits'];
+        unset($options['component']);
+        unset($options['token']);
+
+        return $options + [
+            'showOptions' => false
         ];
     }
 }

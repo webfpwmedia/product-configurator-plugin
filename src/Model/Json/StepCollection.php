@@ -7,8 +7,12 @@ use Cake\Collection\Collection;
 class StepCollection extends Collection
 {
 
-    /** @var array */
-    private $aliases;
+    /**
+     * The collection of all components for all steps
+     *
+     * @var ComponentCollection
+     */
+    private $componentCollection;
 
     /**
      * Constructor.
@@ -18,13 +22,12 @@ class StepCollection extends Collection
     public function __construct($stepEntities)
     {
         $items = [];
+        $this->componentCollection = new ComponentCollection();
         foreach ($stepEntities as $stepEntity) {
-            $step = new Step($stepEntity);
+            $step = new Step($this, $stepEntity);
             $items[] = $step;
             foreach ($step->getComponents() as $component) {
-                if ($component->getComponentEntity()->alias) {
-                    $this->aliases[$component->getComponentEntity()->alias] = $component->getId();
-                }
+                $this->componentCollection->addComponent($component);
             }
         }
 
@@ -32,13 +35,12 @@ class StepCollection extends Collection
     }
 
     /**
-     * Gets a component entity id from its alias if it's part of this StepCollection
+     * Gets the component collection
      *
-     * @param string $alias
-     * @return string
+     * @return ComponentCollection
      */
-    public function getIdFromAlias($alias) : string
+    public function getComponentCollection() : ComponentCollection
     {
-        return $this->aliases[$alias];
+        return $this->componentCollection;
     }
 }

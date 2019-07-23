@@ -28,36 +28,41 @@ class Step
     /** @var Component[] */
     private $components = [];
 
+    /** @var ComponentCollection */
+    private $stepCollection;
+
     /** @var StepEntity */
     private $step;
 
     /**
      * Constructor.
      *
+     * @param StepCollection $stepCollection
      * @param StepEntity $step
      */
-    public function __construct(StepEntity $step)
+    public function __construct(StepCollection $stepCollection, StepEntity $step)
     {
+        $this->stepCollection = $stepCollection;
         $this->step = $step;
 
+        $this->components = [];
         foreach ($this->step->config as $data) {
-            $this->addComponent(Component::fromArray($data));
+            $this->components[] = Component::fromArray($this->stepCollection->getComponentCollection(), $data);
         }
     }
 
     /**
-     * Adds a component to the step
+     * Gets the StepCollection
      *
-     * @param Component $component
-     * @return void
+     * @return StepCollection
      */
-    public function addComponent(Component $component) : void
+    public function getStepCollection() : StepCollection
     {
-        $this->components[] = $component;
+        return $this->stepCollection;
     }
 
     /**
-     * Gets components included in this step
+     * Gets components for the step
      *
      * @return Component[]
      */

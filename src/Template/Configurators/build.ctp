@@ -67,7 +67,7 @@ $customTextMap = [];
                             }
                             ?>
 
-                            <div class="step-component">
+                            <div class="step-component" data-component="<?= $component->getId() ?>">
                                 <?php if ($component->getConfig('showQty')) : ?>
                                     <?= $this->Form->control($component->getId() . '.' . BuildsTable::QTY_INPUT, [
                                         'label' => 'Quantity',
@@ -80,26 +80,31 @@ $customTextMap = [];
                                     <?php
                                     $controlName = $component->getId() . '.' . $optionSet->getToken();
                                     $requires = $optionSet->getRequires();
+                                    $requiresData = null;
                                     if ($requires) {
                                         $requiredComponent = key($requires);
                                         if ($requiredComponent === OptionSet::SELF) {
-                                            $requiredComponent = $component->getId();
+                                            $requiredComponent = $component;
                                         } else {
-                                            $requiredComponent = $steps->getIdFromAlias($requiredComponent);
+                                            $requiredComponent = $step->getStepCollection()->getComponentCollection()->getComponent($requiredComponent);
                                         }
-                                        $requires = sprintf('data-requires="%s:%s"', $requiredComponent, current($requires));
+                                        $requiresData = sprintf('data-requires="%s:%s"', $requiredComponent->getId(), current($requires));
                                     }
                                     $inherits = $optionSet->getInherits();
+                                    $inheritsData = null;
+                                    if ($inherits) {
+                                        $inheritsData = sprintf('data-inherits="%s:%s"', $step->getStepCollection()->getComponentCollection()->getComponent(key($inherits))->getId(), current($inherits));
+                                    }
                                     ?>
 
-                                    <?php if ($inherits): ?>
-                                        <?=
-                                        $this->Form->hidden($controlName, [
-                                            'value' => sprintf('inherits:%s:%s', $steps->getIdFromAlias(key($inherits)), current($inherits))
-                                        ]);
-                                        ?>
-                                    <?php else: ?>
-                                        <fieldset data-component="<?= $component->getId() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requires ?>>
+                                    <fieldset data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?>>
+                                        <?php if ($inherits && !$optionSet->getOptions()): ?>
+                                            <?= $this->Form->control($controlName, [
+                                                'label' => false,
+                                                'hidden' => true,
+                                            ]);
+                                            ?>
+                                        <?php else: ?>
                                             <legend><?= h($optionSet->getLabel()) ?></legend>
 
                                             <?php
@@ -119,11 +124,11 @@ $customTextMap = [];
                                                 ] + $optionSet->getTextOptions());
                                             }
                                             ?>
-                                        </fieldset>
-                                    <?php endif; ?>
+                                        <?php endif; ?>
+                                    </fieldset>
                                 <?php endforeach; ?>
-                            <?php endforeach; ?>
-                        </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             <?php endforeach; ?>
