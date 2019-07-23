@@ -5,7 +5,7 @@ use ARC\ProductConfigurator\View\Helper\UrlHelper;
 use ARC\ProductConfigurator\View\Widget\JsonWidget;
 use ARC\ProductConfigurator\View\Widget\RadioWidget;
 use Cake\Core\Configure;
-use Cake\View\View;
+use App\View\AppView as View;
 
 /**
  * Plugin default view class.
@@ -32,17 +32,26 @@ class AppView extends View
             $templates = 'buildTemplates';
         }
 
-        $this->loadHelper('Url', [
-            'className' => UrlHelper::class,
-        ]);
+        try {
+            $this->helpers()->unload('Url');
+        } catch (\Exception $exception) {
+            # May not actually be loaded.
+        } finally {
+            $this->loadHelper('Url', [
+                'className' => UrlHelper::class,
+            ]);
+        }
 
-        $this->loadHelper('Form', [
-            'templates' => Configure::read("ARC.ProductConfigurator.$templates"),
-            'widgets' => [
-                'json' => [JsonWidget::class],
-                'radio' => [RadioWidget::class, 'nestingLabel'],
-            ],
-        ]);
+        try {
+            $this->loadHelper('Form');
+        } catch (\Exception $exception) {
+            # Configured below.
+        }
+
+        $this->Form->addWidget('json', [JsonWidget::class]);
+        $this->Form->addWidget('radio', [RadioWidget::class, 'nestingLabel']);
+
+        $this->Form->setConfig(['templates' => Configure::read("ARC.ProductConfigurator.$templates")]);
 
         Configure::write('App.imageBaseUrl', Configure::read('ARC.ProductConfigurator.imageBaseUrl'));
     }

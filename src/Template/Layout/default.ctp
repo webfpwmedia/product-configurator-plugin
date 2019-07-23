@@ -113,16 +113,14 @@ use Cake\Core\Configure;
                     <?= $this->Flash->render() ?>
 
                     <div class="main-content-container container-fluid px-4">
-                        <div class="page-header row no-gutters py-4">
-                            <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-                                <span class="text-uppercase page-subtitle">
-                                    <?= h(__($this->fetch('subtitle'))) ?>
-                                </span>
+                        <div class="page-header py-4">
+                            <span class="text-uppercase page-subtitle">
+                                <?= h(__($this->fetch('subtitle'))) ?>
+                            </span>
 
-                                <h3 class="page-title">
-                                    <?= h(__($this->fetch('title'))) ?>
-                                </h3>
-                            </div>
+                            <h3 class="page-title">
+                                <?= h(__($this->fetch('title'))) ?>
+                            </h3>
                         </div>
 
                         <?= $this->fetch('content') ?>
@@ -144,7 +142,7 @@ use Cake\Core\Configure;
 
         echo $this->fetch('jsPreApp');
 
-        echo $this->Html->script('ARC/ProductConfigurator.dist/app.bundle');
+        echo $this->Html->script('ARC/ProductConfigurator.dist/arc-product-configurator.bundle');
 
         echo $this->fetch('jsPostApp');
 

@@ -13,7 +13,7 @@ module.exports =
     {
         name: 'product-configurator',
         entry: {
-            app: './webroot/js/src/app.js'
+            'arc-product-configurator': './webroot/js/src/app.js'
         },
         output: {
             filename: '[name].bundle.js',
