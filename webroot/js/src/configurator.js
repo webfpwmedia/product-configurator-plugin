@@ -240,6 +240,10 @@ function buildImageStack(response, $element) {
                 $img.on('load', function () {
                     const map = c.options.customTextMap[image['component']];
                     for (let token in map) {
+                        if (!map[token].hasOwnProperty(c.state)) {
+                            continue;
+                        }
+
                         const $fieldset = c.getFieldset(image['component'], token);
                         const $radios = c.getInput(image['component'], token);
                         const $selected = $radios.filter(':checked');
