@@ -122,6 +122,9 @@ $customTextMap = [];
 
                                             if ($optionSet->isCustomizable()) {
                                                 $this->Form->unlockField($component->getId() . '.' . BuildsTable::CUSTOM_TEXT_INPUT);
+                                                echo $this->Form->text($component->getId() . '.' . BuildsTable::TEXT_INPUT, [
+                                                    'hidden' => true,
+                                                ]);
                                                 echo $this->Form->control($component->getId() . '.' . BuildsTable::CUSTOM_TEXT_INPUT, [
                                                     'label' => false,
                                                     'hidden' => true,

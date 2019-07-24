@@ -35,6 +35,11 @@ class BuildsTable extends Table
     const CUSTOM_TEXT_INPUT = '__customtext';
 
     /**
+     * Name of input holding text labels
+     */
+    const TEXT_INPUT = '__text';
+
+    /**
      * Name of input holding qty
      */
     const QTY_INPUT = '__qty';
@@ -112,14 +117,15 @@ class BuildsTable extends Table
                     unset($componentSelections[self::QTY_INPUT]);
                 }
 
-                unset($componentSelections[self::TOGGLE_INPUT]);
-                $component->addSelections($componentSelections);
-
                 // check for custom text label
-                if (!empty($componentSelections[self::CUSTOM_TEXT_INPUT])) {
-                    $component->addText($componentSelections[self::CUSTOM_TEXT_INPUT]);
+                if (isset($componentSelections[self::TEXT_INPUT])) {
+                    $component->addText($componentSelections[self::TEXT_INPUT]);
+                    unset($componentSelections[self::TEXT_INPUT]);
                     unset($componentSelections[self::CUSTOM_TEXT_INPUT]);
                 }
+
+                unset($componentSelections[self::TOGGLE_INPUT]);
+                $component->addSelections($componentSelections);
 
                 return $component;
             })

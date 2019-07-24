@@ -6,6 +6,7 @@ import $ from 'jquery';
 import Text from './text';
 
 const CUSTOM_TEXT_INPUT = '__customtext';
+const TEXT_INPUT = '__text';
 let preloaded = [];
 let changes = [];
 
@@ -147,6 +148,7 @@ window.Configurator = function Configurator($element, options) {
         const component = $fieldset.closest('.step-component').data('component');
         const customVal = $this.find('input').val();
         const $radios = $fieldset.find('input');
+        const $text = $fieldset.find('input[name="' + component + '[' + TEXT_INPUT + ']"]');
         const $customInput = $fieldset.find('input[name="' + component + '[' + CUSTOM_TEXT_INPUT + ']"]');
 
         $customInput.on('keydown', function (event) {
@@ -157,10 +159,12 @@ window.Configurator = function Configurator($element, options) {
 
         $radios.change(function () {
             const $selected = $radios.filter(':checked');
+            $text.val($selected.closest('label').text());
             if ($selected.val() === customVal) {
                 $customInput
                     .prop('hidden', false)
                     .prop('disabled', false);
+                $text.val($customInput.val());
             } else {
                 $customInput
                     .prop('hidden', true)
@@ -251,15 +255,13 @@ function buildImageStack(response, $element) {
                         const $selectedLabel = $selected.closest('label');
                         const $customInput = $fieldset.find('input[name="' + image['component'] + '[' + CUSTOM_TEXT_INPUT + ']"]');
 
-                        let text = $selectedLabel.text();
-                        if ($selectedLabel.data('custom')) {
-                            text = $customInput.val();
-                        }
+                        const component = getComponent(image['component'], response);
+                        const text = component.text;
 
                         const SVGText = new Text(
                             c.options.originalImageSize.width,
                             c.options.originalImageSize.height,
-                            getComponent(image['component'], response).selections,
+                            component.selections,
                             map[token][state]
                         );
 

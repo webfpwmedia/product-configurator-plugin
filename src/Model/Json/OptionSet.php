@@ -135,7 +135,7 @@ class OptionSet
 
         $options = collection($this->data['options'])->combine('code', 'name');
         if ($this->isCustomizable()) {
-            $options = $options->appendItem($this->component->getText(), $this->data['text']['code']);
+            $options = $options->appendItem($this->component->getText(), $this->getCustomizableToken());
         }
 
         return $options->toArray();
@@ -186,7 +186,7 @@ class OptionSet
 
         if ($this->isCustomizable()) {
             $options[] = [
-                'value' => $this->data['text']['code'],
+                'value' => $this->getCustomizableToken(),
                 'text' => 'Custom',
                 'label' => [
                     'data-custom' => true,
@@ -197,9 +197,28 @@ class OptionSet
         return $options;
     }
 
+    /**
+     * Checks if this option is customizable
+     *
+     * @return bool
+     */
     public function isCustomizable() : bool
     {
         return isset($this->data['text']);
+    }
+
+    /**
+     * Gets the token that indicates it's a customized text selection
+     *
+     * @return string|null
+     */
+    public function getCustomizableToken() : ?string
+    {
+        if (!$this->isCustomizable()) {
+            return null;
+        }
+
+        return $this->data['text']['code'];
     }
 
     /**
