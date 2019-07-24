@@ -57,6 +57,8 @@ class BuildsTable extends Table
         $this->setTable('builds');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+
+        $this->belongsTo('ARC/ProductConfigurator.Configurators');
     }
 
     /**

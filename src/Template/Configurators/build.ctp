@@ -45,6 +45,8 @@ $customTextMap = [];
         <div class="input-form">
             <?= $this->Form->create(new ConfiguratorContext($this->getRequest(), Bootstrap::fromArray($context))); ?>
 
+            <?= $this->Form->hidden('configurator_id', ['value' => $configurator->id]) ?>
+
             <?php
             $steps = new StepCollection($configurator->steps);
             ?>

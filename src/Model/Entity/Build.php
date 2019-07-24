@@ -17,6 +17,7 @@ use Exception;
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
  * @property array $extra
+ * @property string $configurator_id
  */
 class Build extends Entity
 {
@@ -36,6 +37,7 @@ class Build extends Entity
         'created' => true,
         'modified' => true,
         'extra' => true,
+        'configurator_id' => true,
     ];
 
     /**
