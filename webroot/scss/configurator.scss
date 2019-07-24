@@ -26,6 +26,7 @@ Implementing applications should override as needed.
       position: absolute;
       top: 0;
       left: 0;
+      max-width: 100%;
     }
 
     img:first-child {

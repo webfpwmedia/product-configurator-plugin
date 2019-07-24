@@ -95,6 +95,9 @@ $customTextMap = [];
                                     if ($inherits) {
                                         $inheritsData = sprintf('data-inherits="%s:%s"', $step->getStepCollection()->getComponentCollection()->getComponent(key($inherits))->getId(), current($inherits));
                                     }
+                                    if ($optionSet->isCustomizable()) {
+                                        $customTextMap[$component->getId()] = $optionSet->getTextMap();
+                                    }
                                     ?>
 
                                     <fieldset data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?>>

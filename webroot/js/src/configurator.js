@@ -66,8 +66,8 @@ window.Configurator = function Configurator($element, options) {
      * @param {string} token
      * @returns {jQuery}
      */
-    const getInput = function (component, token) {
-        return getFieldset(component, token).find(':input');
+    this.getInput = function (component, token) {
+        return c.getFieldset(component, token).find(':input');
     };
 
     /**
@@ -77,7 +77,7 @@ window.Configurator = function Configurator($element, options) {
      * @param {string} token
      * @returns {jQuery}
      */
-    const getFieldset = function (component, token) {
+    this.getFieldset = function (component, token) {
         return c.$form
             .find('[data-component="' + component + '"]')
             .find('fieldset[data-token="' + token + '"]');
@@ -89,7 +89,7 @@ window.Configurator = function Configurator($element, options) {
         const requires = $this.data('requires').split(':');
         $this.hide();
 
-        const $requirement = getInput(requires[0], requires[1]);
+        const $requirement = c.getInput(requires[0], requires[1]);
 
         $requirement.change(function () {
             const $required = $(this);
@@ -112,7 +112,7 @@ window.Configurator = function Configurator($element, options) {
         const $thisInput = $this.find(':input');
         const inherits = $this.data('inherits').split(':');
 
-        const $inherited = getInput(inherits[0], inherits[1]);
+        const $inherited = c.getInput(inherits[0], inherits[1]);
 
         $inherited.change(function () {
             const $inherit = $(this);
@@ -240,8 +240,8 @@ function buildImageStack(response, $element) {
                 $img.on('load', function () {
                     const map = c.options.customTextMap[image['component']];
                     for (let token in map) {
-                        const $fieldset = c.$form.find('fieldset[data-component="' + image['component'] + '"][data-token="' + token + '"]');
-                        const $radios = $fieldset.find('input:radio');
+                        const $fieldset = c.getFieldset(image['component'], token);
+                        const $radios = c.getInput(image['component'], token);
                         const $selected = $radios.filter(':checked');
                         const $selectedLabel = $selected.closest('label');
                         const $customInput = $fieldset.find('input[name="' + image['component'] + '[' + CUSTOM_TEXT_INPUT + ']"]');
@@ -251,17 +251,17 @@ function buildImageStack(response, $element) {
                             text = $customInput.val();
                         }
 
-                        const vScale = $img.height() / c.options.originalImageSize.height;
-                        const hScale = $img.width() / c.options.originalImageSize.width;
-                        const SVGText = new Text(getComponent(image['component'], response).selections, map[token]);
+                        const SVGText = new Text(
+                            c.options.originalImageSize.width,
+                            c.options.originalImageSize.height,
+                            getComponent(image['component'], response).selections,
+                            map[token][c.state]
+                        );
 
                         const $svg = $(SVGText.render(text))
                             .css({
                                 zIndex: parseInt(image['layer']) + 1,
-                                top: vScale * SVGText.getOptions().y,
-                                left: hScale * SVGText.getOptions().x,
-                                height: vScale * SVGText.getOptions().h,
-                                width: hScale * SVGText.getOptions().w
+                                width: $img.width()
                             });
 
                         const customInputChange = function () {
@@ -295,8 +295,8 @@ function buildImageStack(response, $element) {
  */
 function getComponent(component, response) {
     return response.build.components.reduce(function (carry, item) {
-        if (item.component === component) {
-            carry = item;
+        if (item.hasOwnProperty(component)) {
+            carry = item[component];
         }
 
         return carry;

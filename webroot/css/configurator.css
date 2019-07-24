@@ -7047,7 +7047,8 @@ a.text-dark:hover, a.text-dark:focus {
   .arc.configurator .image-stack img, .arc.configurator .image-stack svg {
     position: absolute;
     top: 0;
-    left: 0; }
+    left: 0;
+    max-width: 100%; }
   .arc.configurator .image-stack img:first-child {
     position: relative; }
 
