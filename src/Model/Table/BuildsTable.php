@@ -75,11 +75,6 @@ class BuildsTable extends Table
             ->allowEmptyString('id', 'create');
 
         $validator
-            ->requirePresence('images', 'create')
-            ->isArray('images')
-            ->allowEmptyArray('images', false);
-
-        $validator
             ->requirePresence('components', 'create')
             ->isArray('components')
             ->allowEmptyArray('components', false);

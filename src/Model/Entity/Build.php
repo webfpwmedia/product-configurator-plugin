@@ -7,7 +7,6 @@ use Cake\ORM\Entity;
  * Build Entity
  *
  * @property string $id
- * @property array $images
  * @property array $components
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
@@ -25,7 +24,6 @@ class Build extends Entity
      * @var array
      */
     protected $_accessible = [
-        'images' => true,
         'components' => true,
         'created' => true,
         'modified' => true,
