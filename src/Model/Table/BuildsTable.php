@@ -6,13 +6,10 @@ use ARC\ProductConfigurator\Model\Json\Component;
 use ARC\ProductConfigurator\Model\Json\ComponentCollection;
 use ARC\ProductConfigurator\ORM\Table;
 use ArrayObject;
-use Cake\Database\Expression\IdentifierExpression;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Exception;
 
 /**
  * Builds Model
@@ -136,56 +133,6 @@ class BuildsTable extends Table
             })
             ->toList();
 
-        $data['images'] = $this->__generateImageJson($components);
         $data['components'] = $components;
-    }
-
-    /**
-     * Returns array of images that match selected options
-     *
-     * @param Component[] $components Components
-     * @return array
-     */
-    private function __generateImageJson(array $components) : array
-    {
-        /** @var ImagesTable $ImagesTable */
-        $ImagesTable = $this->getTableLocator()->get('ARC/ProductConfigurator.Images');
-
-        $return = [];
-        foreach ($components as $component) {
-            try {
-                $template = $component->getImageTemplate();
-            } catch (Exception $exception) {
-                // don't bother looking for an image for component if the mask is invalid or not all selections are made
-                continue;
-            }
-
-            $images = $ImagesTable
-                ->find()
-                ->select([
-                    'position',
-                    'name',
-                    'layer',
-                ])
-                ->where([
-                    '"' . $template . '" REGEXP' => new IdentifierExpression('mask'),
-                ])
-                ->enableHydration(false)
-                ->groupBy('position')
-                ->map(function ($imagesByPosition) use ($component) {
-                    return [
-                        'component' => $component->getId(),
-                        'path' => $imagesByPosition[0]['name'],
-                        'layer' => $imagesByPosition[0]['layer'],
-                    ];
-                })
-                ->toArray();
-
-            if ($images) {
-                $return[] = $images;
-            }
-        }
-
-        return $return;
     }
 }
