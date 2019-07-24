@@ -61,6 +61,7 @@ return [
             ],
 
             'text' => [
+                'save' => 'Your build has been submitted.',
                 'submit' => 'Submit',
                 'front' => 'Front',
                 'back' => 'Back',

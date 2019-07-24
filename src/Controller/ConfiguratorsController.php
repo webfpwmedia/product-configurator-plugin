@@ -1,6 +1,7 @@
 <?php
 namespace ARC\ProductConfigurator\Controller;
 
+use Cake\Core\Configure;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
@@ -36,8 +37,8 @@ class ConfiguratorsController extends AppController
     /**
      * Public configurator builder
      *
-     * @param int|null $id
-     * @param int|null $buildId
+     * @param int|null $id Configurator.id
+     * @param int|null $buildId Build.id
      * @return \Cake\Http\Response|null
      */
     public function build($id = null, $buildId = null)
@@ -64,8 +65,10 @@ class ConfiguratorsController extends AppController
         if ($this->request->is(['post'])) {
             $build = $this->Builds->patchEntity($build, $this->request->getData());
             $this->request->getSession()->write('build', json_encode($build->components));
+
             if ($this->request->getData('extra.save') && $this->Builds->save($build)) {
-                $this->Flash->success(__('Your build has been submitted!'));
+                $this->Flash->success(__(Configure::read('ARC.ProductConfigurator.text.save')));
+
                 $result = EventManager::instance()->dispatch(new Event('ARC.ProductConfigurator.build', null, [
                     'id' => $build->id,
                     'configurator_id' => $id,
