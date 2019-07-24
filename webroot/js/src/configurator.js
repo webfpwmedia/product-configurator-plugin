@@ -236,11 +236,12 @@ function buildImageStack(response, $element) {
 
             $html.append($img);
 
+            const state = c.state;
             if (c.options.customTextMap.hasOwnProperty(image['component'])) {
                 $img.on('load', function () {
                     const map = c.options.customTextMap[image['component']];
                     for (let token in map) {
-                        if (!map[token].hasOwnProperty(c.state)) {
+                        if (!map[token].hasOwnProperty(state)) {
                             continue;
                         }
 
@@ -259,7 +260,7 @@ function buildImageStack(response, $element) {
                             c.options.originalImageSize.width,
                             c.options.originalImageSize.height,
                             getComponent(image['component'], response).selections,
-                            map[token][c.state]
+                            map[token][state]
                         );
 
                         const $svg = $(SVGText.render(text))
