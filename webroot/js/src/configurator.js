@@ -251,17 +251,17 @@ function buildImageStack(response, $element) {
                             text = $customInput.val();
                         }
 
-                        const vScale = $img.height() / c.options.originalImageSize.height;
-                        const hScale = $img.width() / c.options.originalImageSize.width;
-                        const SVGText = new Text(getComponent(image['component'], response).selections, map[token]);
+                        const SVGText = new Text(
+                            c.options.originalImageSize.width,
+                            c.options.originalImageSize.height,
+                            getComponent(image['component'], response).selections,
+                            map[token]
+                        );
 
                         const $svg = $(SVGText.render(text))
                             .css({
                                 zIndex: parseInt(image['layer']) + 1,
-                                top: vScale * SVGText.getOptions().y,
-                                left: hScale * SVGText.getOptions().x,
-                                height: vScale * SVGText.getOptions().h,
-                                width: hScale * SVGText.getOptions().w
+                                width: $img.width()
                             });
 
                         const customInputChange = function () {
@@ -295,8 +295,8 @@ function buildImageStack(response, $element) {
  */
 function getComponent(component, response) {
     return response.build.components.reduce(function (carry, item) {
-        if (item.component === component) {
-            carry = item;
+        if (item.hasOwnProperty(component)) {
+            carry = item[component];
         }
 
         return carry;
