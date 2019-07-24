@@ -255,7 +255,7 @@ function buildImageStack(response, $element) {
                             c.options.originalImageSize.width,
                             c.options.originalImageSize.height,
                             getComponent(image['component'], response).selections,
-                            map[token]
+                            map[token][c.state]
                         );
 
                         const $svg = $(SVGText.render(text))
