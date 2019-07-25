@@ -49,7 +49,7 @@ class ConfiguratorContext implements ContextInterface
      */
     public function val($field)
     {
-        list($componentId, $mask) = explode('.', $field);
+        list($componentId, $token) = explode('.', $field);
 
         $component = $this->_context
             ->getComponentCollection()
@@ -59,19 +59,35 @@ class ConfiguratorContext implements ContextInterface
             return null;
         }
 
-        if ($mask === BuildsTable::CUSTOM_TEXT_INPUT) {
-            return $component->getText();
+        if ($token === BuildsTable::TEXT_INPUT) {
+            // let JS set this
+            return null;
         }
 
-        if ($mask === BuildsTable::QTY_INPUT) {
+        if ($token === BuildsTable::CUSTOM_TEXT_INPUT) {
+            foreach ($component->getOptions() as $optionSet) {
+                if ($optionSet->isCustomizable()) {
+                    $customToken = $optionSet->getToken();
+                    $customizableToken = $optionSet->getCustomizableToken();
+                }
+            }
+
+            if ($component->getSelection($customToken) === $customizableToken) {
+                return $component->getText();
+            }
+
+            return null;
+        }
+
+        if ($token === BuildsTable::QTY_INPUT) {
             return $component->getQty();
         }
 
-        if ($mask === BuildsTable::TOGGLE_INPUT) {
+        if ($token === BuildsTable::TOGGLE_INPUT) {
             return (int)$component->toggle;
         }
 
-        return $component->getSelection($mask);
+        return $component->getSelection($token);
     }
 
     /**

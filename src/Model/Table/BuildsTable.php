@@ -6,13 +6,10 @@ use ARC\ProductConfigurator\Model\Json\Component;
 use ARC\ProductConfigurator\Model\Json\ComponentCollection;
 use ARC\ProductConfigurator\ORM\Table;
 use ArrayObject;
-use Cake\Database\Expression\IdentifierExpression;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Exception;
 
 /**
  * Builds Model
@@ -38,6 +35,11 @@ class BuildsTable extends Table
     const CUSTOM_TEXT_INPUT = '__customtext';
 
     /**
+     * Name of input holding text labels
+     */
+    const TEXT_INPUT = '__text';
+
+    /**
      * Name of input holding qty
      */
     const QTY_INPUT = '__qty';
@@ -60,6 +62,8 @@ class BuildsTable extends Table
         $this->setTable('builds');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
+
+        $this->belongsTo('ARC/ProductConfigurator.Configurators');
     }
 
     /**
@@ -73,11 +77,6 @@ class BuildsTable extends Table
         $validator
             ->uuid('id')
             ->allowEmptyString('id', 'create');
-
-        $validator
-            ->requirePresence('images', 'create')
-            ->isArray('images')
-            ->allowEmptyArray('images', false);
 
         $validator
             ->requirePresence('components', 'create')
@@ -118,14 +117,15 @@ class BuildsTable extends Table
                     unset($componentSelections[self::QTY_INPUT]);
                 }
 
-                unset($componentSelections[self::TOGGLE_INPUT]);
-                $component->addSelections($componentSelections);
-
                 // check for custom text label
-                if (!empty($componentSelections[self::CUSTOM_TEXT_INPUT])) {
-                    $component->addText($componentSelections[self::CUSTOM_TEXT_INPUT]);
+                if (isset($componentSelections[self::TEXT_INPUT])) {
+                    $component->addText($componentSelections[self::TEXT_INPUT]);
+                    unset($componentSelections[self::TEXT_INPUT]);
                     unset($componentSelections[self::CUSTOM_TEXT_INPUT]);
                 }
+
+                unset($componentSelections[self::TOGGLE_INPUT]);
+                $component->addSelections($componentSelections);
 
                 return $component;
             })
@@ -141,56 +141,6 @@ class BuildsTable extends Table
             })
             ->toList();
 
-        $data['images'] = $this->__generateImageJson($components);
         $data['components'] = $components;
-    }
-
-    /**
-     * Returns array of images that match selected options
-     *
-     * @param Component[] $components Components
-     * @return array
-     */
-    private function __generateImageJson(array $components) : array
-    {
-        /** @var ImagesTable $ImagesTable */
-        $ImagesTable = $this->getTableLocator()->get('ARC/ProductConfigurator.Images');
-
-        $return = [];
-        foreach ($components as $component) {
-            try {
-                $template = $component->getImageTemplate();
-            } catch (Exception $exception) {
-                // don't bother looking for an image for component if the mask is invalid or not all selections are made
-                continue;
-            }
-
-            $images = $ImagesTable
-                ->find()
-                ->select([
-                    'position',
-                    'name',
-                    'layer',
-                ])
-                ->where([
-                    '"' . $template . '" REGEXP' => new IdentifierExpression('mask'),
-                ])
-                ->enableHydration(false)
-                ->groupBy('position')
-                ->map(function ($imagesByPosition) use ($component) {
-                    return [
-                        'component' => $component->getId(),
-                        'path' => $imagesByPosition[0]['name'],
-                        'layer' => $imagesByPosition[0]['layer'],
-                    ];
-                })
-                ->toArray();
-
-            if ($images) {
-                $return[] = $images;
-            }
-        }
-
-        return $return;
     }
 }
