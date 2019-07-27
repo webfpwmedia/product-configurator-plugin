@@ -145,7 +145,7 @@ window.Configurator = function Configurator($element, options) {
     this.$form.find('[data-custom]').each(function () {
         const $this = $(this);
         const $fieldset = $this.closest('fieldset');
-        const component = $fieldset.closest('.step-component').data('component');
+        const component = $fieldset.closest('.component-options').data('component');
         const customVal = $this.find('input').val();
         const $radios = $fieldset.find('input');
         const $text = $fieldset.find('input[name="' + component + '[' + TEXT_INPUT + ']"]');
@@ -175,18 +175,26 @@ window.Configurator = function Configurator($element, options) {
         $radios.filter(':checked').change();
     });
 
-    const toggleStepComponent = function () {
+    const toggleComponent = function () {
         const $this = $(this);
-        const $stepComponent = $this.closest('.step-body').find('.step-component');
+        const $componentOptions = $this
+            .parents('#component-' + $this.data('component-id'))
+            .find('.component-options');
 
-        $this.is(':checked') ? $stepComponent.show() : $stepComponent.hide();
+        $this.is(':checked') ? $componentOptions.show() : $componentOptions.hide();
+
+        $componentOptions.find(':input').change();
     };
-    this.$form.find('[data-toggle]').click(toggleStepComponent);
-    toggleStepComponent.call(this.$form.find('[data-toggle]'));
+
+    this.$form.find('[data-toggle]').each(function () {
+        $(this).click(toggleComponent);
+        toggleComponent.call($(this));
+    });
 
     if (this.$form.length) {
         this.$form.change();
     }
+
     setState(c);
 }
 

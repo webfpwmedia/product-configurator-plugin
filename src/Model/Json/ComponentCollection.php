@@ -25,6 +25,20 @@ class ComponentCollection
     }
 
     /**
+     * Remove component from collection.
+     *
+     * @param Component $component
+     *
+     * @return $this
+     */
+    public function removeComponent(Component $component)
+    {
+        unset($this->components[$component->getId()]);
+
+        return $this;
+    }
+
+    /**
      * Gets a component id from its alias
      *
      * @param string $alias

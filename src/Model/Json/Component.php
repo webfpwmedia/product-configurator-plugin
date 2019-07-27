@@ -31,11 +31,15 @@ class Component implements JsonSerializable
      * Default config
      *
      * ### Configuration:
+     *
+     * - string $header: Component header (all option sets are "bundled" under this title).
      * - bool $showQty: Whether to show a qty field or not
+     * - bool $showToggle: Whether to show a toggler for selecting/deselecting the component
      *
      * @var array
      */
     protected $_defaultConfig = [
+        'header' => null,
         'showQty' => false,
         'showToggle' => false,
     ];

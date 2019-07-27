@@ -4,6 +4,7 @@ namespace ARC\ProductConfigurator\Model\Table;
 use ARC\ProductConfigurator\Mask\TokensMissingException;
 use ARC\ProductConfigurator\Model\Json\Component;
 use ARC\ProductConfigurator\Model\Json\ComponentCollection;
+use ARC\ProductConfigurator\Model\Json\OptionSet;
 use ARC\ProductConfigurator\ORM\Table;
 use ArrayObject;
 use Cake\Event\Event;
@@ -105,12 +106,16 @@ class BuildsTable extends Table
                 return Validation::uuid($key) && is_array($value);
             })
             ->toArray();
-        $components = collection($selections)
+
+        $componentCollection = new ComponentCollection();
+
+        collection($selections)
             ->filter(function ($componentSelections) {
                 return !isset($componentSelections[self::TOGGLE_INPUT]) || $componentSelections[self::TOGGLE_INPUT];
             })
-            ->map(function ($componentSelections, $componentId) {
-                $component = new Component(new ComponentCollection(), $componentId);
+            ->map(function ($componentSelections, $componentId) use ($componentCollection) {
+                $component = new Component($componentCollection, $componentId);
+                $componentCollection->addComponent($component);
 
                 if (isset($componentSelections[self::QTY_INPUT])) {
                     $component->setQty((int)$componentSelections[self::QTY_INPUT]);
@@ -129,18 +134,44 @@ class BuildsTable extends Table
 
                 return $component;
             })
-            ->filter(function (Component $component) {
+            ->each(function (Component $component) use ($componentCollection) {
                 try {
                     $component->getOptionTemplate();
                 } catch (TokensMissingException $exception) {
-                    // don't include this component if tokens are missing from selections
-                    return false;
+                    $componentCollection->removeComponent($component);
                 }
+            });
 
-                return true;
-            })
-            ->toList();
+        collection($componentCollection->getComponents())
+            ->each(function (Component $component) use ($componentCollection) {
+                foreach ($component->getSelections() as $token => $selection) {
+                    $optionSet = $component->getOptionSet($token);
+                    $requires = $optionSet->getRequires();
 
-        $data['components'] = $components;
+                    if (!$requires) {
+                        continue;
+                    }
+
+                    $id = key($requires);
+
+                    if ($id === OptionSet::SELF) {
+                        $id = $component->getId();
+                    }
+
+                    $requiredComponent = $componentCollection->getComponent($id);
+
+                    if (!$requiredComponent) {
+                        $componentCollection->removeComponent($component);
+
+                        continue;
+                    }
+
+                    if (empty($requiredComponent->getSelection(current($requires)))) {
+                        $componentCollection->removeComponent($component);
+                    }
+                }
+            });
+
+        $data['components'] = array_values($componentCollection->getComponents());
     }
 }
