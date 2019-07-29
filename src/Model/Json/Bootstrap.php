@@ -37,8 +37,11 @@ class Bootstrap
     public static function fromArray($jsonArray) : Bootstrap
     {
         $componentCollection = new ComponentCollection();
-        foreach ($jsonArray as $data) {
-            $componentCollection->addComponent(Component::fromArray($componentCollection, $data));
+        foreach ($jsonArray as $component) {
+            if (!$component instanceof Component) {
+                $component = Component::fromArray($componentCollection, $component);
+            }
+            $componentCollection->addComponent($component);
         }
 
         return new self($componentCollection);

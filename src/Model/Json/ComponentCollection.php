@@ -8,7 +8,7 @@ class ComponentCollection
     private $aliases;
 
     /** @var array */
-    private $components;
+    private $components = [];
 
     /**
      * Adds a component to the collection
@@ -63,11 +63,11 @@ class ComponentCollection
     /**
      * Gets all components in the collection
      *
-     * @return array
+     * @return Component[]
      */
     public function getComponents() : array
     {
-        return $this->components;
+        return array_values($this->components);
     }
 
     /**
