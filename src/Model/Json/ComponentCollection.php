@@ -47,6 +47,16 @@ class ComponentCollection
     }
 
     /**
+     * Removes a component from the collection
+     *
+     * @param Component $component
+     */
+    public function removeComponent(Component $component) : void
+    {
+        unset($this->components[$component->getId()]);
+    }
+
+    /**
      * Gets all components in the collection
      *
      * @return Component[]
