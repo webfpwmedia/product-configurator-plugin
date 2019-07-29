@@ -2,6 +2,7 @@
 namespace ARC\ProductConfigurator\Model\Json;
 
 use ARC\ProductConfigurator\View\Helper\UrlHelper;
+use Cake\Core\InstanceConfigTrait;
 use Cake\View\View;
 
 /**
@@ -63,8 +64,22 @@ use Cake\View\View;
  */
 class OptionSet
 {
+    use InstanceConfigTrait;
+
     /** @var string */
     const SELF = 'self';
+
+    protected $_defaultConfig = [];
+
+    /** @var array */
+    private $knownKeys = [
+        'name',
+        'token',
+        'options',
+        'inherits',
+        'requires',
+        'text',
+    ];
 
     /** @var array */
     private $data;
@@ -95,6 +110,12 @@ class OptionSet
      */
     public function __construct(Component $component, array $data)
     {
+        foreach ($data as $key => $config) {
+            if (!in_array($key, $this->knownKeys)) {
+                $this->setConfig($key, $config);
+            }
+        }
+
         $this->component = $component;
         $this->data = $data + [
             'name' => null,

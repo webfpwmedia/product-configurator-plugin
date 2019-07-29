@@ -8,7 +8,7 @@ class ComponentCollection
     private $aliases;
 
     /** @var array */
-    private $components;
+    private $components = [];
 
     /**
      * Adds a component to the collection
@@ -47,13 +47,23 @@ class ComponentCollection
     }
 
     /**
+     * Removes a component from the collection
+     *
+     * @param Component $component
+     */
+    public function removeComponent(Component $component) : void
+    {
+        unset($this->components[$component->getId()]);
+    }
+
+    /**
      * Gets all components in the collection
      *
-     * @return array
+     * @return Component[]
      */
     public function getComponents() : array
     {
-        return $this->components;
+        return array_values($this->components);
     }
 
     /**

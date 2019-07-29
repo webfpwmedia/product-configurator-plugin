@@ -100,17 +100,24 @@ class BuildsTable extends Table
      */
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
     {
+        $componentCollection = new ComponentCollection();
+
         $selections = collection($data->getArrayCopy())
             ->filter(function ($value, $key) {
                 return Validation::uuid($key) && is_array($value);
             })
             ->toArray();
-        $components = collection($selections)
+
+        collection($selections)
             ->filter(function ($componentSelections) {
                 return !isset($componentSelections[self::TOGGLE_INPUT]) || $componentSelections[self::TOGGLE_INPUT];
             })
-            ->map(function ($componentSelections, $componentId) {
-                $component = new Component(new ComponentCollection(), $componentId);
+            ->each(function ($componentSelections, $componentId) use ($componentCollection) {
+                $component = $componentCollection->getComponent($componentId);
+                if (!$component) {
+                    $component = new Component($componentCollection, $componentId);
+                    $componentCollection->addComponent($component);
+                }
 
                 if (isset($componentSelections[self::QTY_INPUT])) {
                     $component->setQty((int)$componentSelections[self::QTY_INPUT]);
@@ -127,20 +134,14 @@ class BuildsTable extends Table
                 unset($componentSelections[self::TOGGLE_INPUT]);
                 $component->addSelections($componentSelections);
 
-                return $component;
-            })
-            ->filter(function (Component $component) {
                 try {
                     $component->getOptionTemplate();
                 } catch (TokensMissingException $exception) {
-                    // don't include this component if tokens are missing from selections
-                    return false;
+                    $componentCollection->removeComponent($component);
                 }
-
-                return true;
             })
-            ->toList();
+            ->compile();
 
-        $data['components'] = $components;
+        $data['components'] = $componentCollection->getComponents();
     }
 }
