@@ -4,6 +4,7 @@ namespace ARC\ProductConfigurator\Model\Table;
 use ARC\ProductConfigurator\Mask\TokensMissingException;
 use ARC\ProductConfigurator\Model\Json\Component;
 use ARC\ProductConfigurator\Model\Json\ComponentCollection;
+use ARC\ProductConfigurator\Model\Json\OptionSet;
 use ARC\ProductConfigurator\ORM\Table;
 use ArrayObject;
 use Cake\Event\Event;
@@ -133,14 +134,46 @@ class BuildsTable extends Table
 
                 unset($componentSelections[self::TOGGLE_INPUT]);
                 $component->addSelections($componentSelections);
+            });
 
+        collection($componentCollection->getComponents())
+            ->each(function (Component $component) use ($componentCollection) {
                 try {
                     $component->getOptionTemplate();
                 } catch (TokensMissingException $exception) {
                     $componentCollection->removeComponent($component);
                 }
-            })
-            ->compile();
+            });
+
+        collection($componentCollection->getComponents())
+            ->each(function (Component $component) use ($componentCollection) {
+                foreach ($component->getSelections() as $token => $selection) {
+                    $optionSet = $component->getOptionSet($token);
+                    $requires = $optionSet->getRequires();
+
+                    if (!$requires) {
+                        continue;
+                    }
+
+                    $id = key($requires);
+
+                    if ($id === OptionSet::SELF) {
+                        $id = $component->getId();
+                    }
+
+                    $requiredComponent = $componentCollection->getComponent($id);
+
+                    if (!$requiredComponent) {
+                        $componentCollection->removeComponent($component);
+
+                        continue;
+                    }
+
+                    if (empty($requiredComponent->getSelection(current($requires)))) {
+                        $componentCollection->removeComponent($component);
+                    }
+                }
+            });
 
         $data['components'] = $componentCollection->getComponents();
     }
