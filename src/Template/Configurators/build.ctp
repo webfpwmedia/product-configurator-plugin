@@ -116,6 +116,7 @@ $customTextMap = [];
                                                 <?= $this->Form->control($controlName, [
                                                     'label' => false,
                                                     'hidden' => true,
+                                                    'templates' => ['inputContainer' => '{{content}}'],
                                                 ]);
                                                 ?>
                                             <?php else: ?>
