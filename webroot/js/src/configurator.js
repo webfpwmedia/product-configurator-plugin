@@ -247,7 +247,7 @@ window.Configurator = function Configurator($element, options) {
     };
 
     this.$form.find('[data-toggle]').each(function () {
-        $(this).click(toggleComponent);
+        $(this).change(toggleComponent);
         toggleComponent.call($(this));
     });
 
