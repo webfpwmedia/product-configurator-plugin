@@ -92,7 +92,7 @@ window.Configurator = function Configurator($element, options) {
      */
     const dispatchChange = function ($inputs, eventData = {}) {
         const $checked = $inputs.filter(':radio').filter(':checked');
-        const $input = $inputs.not(':radio').not('[type="hidden"]');
+        const $input = $inputs.filter(':input[hidden]').not('[disabled]');
 
         $input.trigger('change', eventData);
         $checked.trigger('change', eventData);
@@ -105,7 +105,7 @@ window.Configurator = function Configurator($element, options) {
      * @returns {boolean}
      */
     const hasValue = function ($inputs) {
-        return $inputs.filter(':checked').length > 0 || ($inputs.prop('hidden') && $inputs.val());
+        return $inputs.is(':checked') || ($inputs.prop('hidden') && $inputs.val());
     };
 
     /**
@@ -129,7 +129,7 @@ window.Configurator = function Configurator($element, options) {
             .prop('checked', false)
             .change();
 
-        $fieldset.find(':input').not(':radio').not('[type="hidden"]').not('[disabled]')
+        $fieldset.find(':input[hidden]').not('[disabled]')
             .val('')
             .change();
     };
@@ -237,22 +237,20 @@ window.Configurator = function Configurator($element, options) {
         });
     });
 
-    const toggleComponent = function () {
-        const $this = $(this);
-        const $componentOptions = $this
-            .parents('#component-' + $this.data('component-id'))
-            .find('.component-options');
-
-        $this.is(':checked') ? show($componentOptions) : hide($componentOptions);
-    };
-
     this.$form.find('[data-toggle]').each(function () {
-        $(this).change(toggleComponent);
-        toggleComponent.call($(this));
+        $(this).change(function () {
+            const $this = $(this);
+            const $componentOptions = $this
+                .parents('#component-' + $this.data('component-id'))
+                .find('.component-options');
+
+            $this.is(':checked') ? show($componentOptions) : hide($componentOptions);
+        });
     });
 
     if (this.$form.length) {
         dispatchChange(this.$form.find(':input'));
+        this.$form.find('[data-toggle]').change();
     }
 
     setState(c);
