@@ -84,48 +84,114 @@ window.Configurator = function Configurator($element, options) {
             .find('fieldset[data-token="' + token + '"]');
     };
 
+    /**
+     * Dispatches a change event only on the checked radio button OR the hidden text field
+     *
+     * @param {jQuery} $inputs jQuery collection of inputs
+     * @param {object} eventData Extra event data
+     */
+    const dispatchChange = function ($inputs, eventData = {}) {
+        const $checked = $inputs.filter(':radio').filter(':checked');
+        const $input = $inputs.not(':radio').not('[type="hidden"]');
+
+        $input.trigger('change', eventData);
+        $checked.trigger('change', eventData);
+    };
+
+    /**
+     * Checks if a jQuery collection of inputs either has a checked radio option or a hidden text field with a value
+     *
+     * @param {jQuery} $inputs jQuery collection of inputs
+     * @returns {boolean}
+     */
+    const hasValue = function ($inputs) {
+        return $inputs.filter(':checked').length > 0 || ($inputs.prop('hidden') && $inputs.val());
+    };
+
+    /**
+     * Hides a container
+     *
+     * - hides the container
+     * - unchecks selected options
+     * - empties hidden text inputs (inherits with showOptions:false)
+     *
+     * @param {jQuery} $container
+     */
+    const hide = function ($container) {
+        let $fieldset = $container;
+        if (!$fieldset.is('fieldset')) {
+            $fieldset = $container.find('fieldset');
+        }
+
+        $container.hide();
+
+        $fieldset.find(':radio').filter(':checked')
+            .prop('checked', false)
+            .change();
+
+        $fieldset.find(':input').not(':radio').not('[type="hidden"]').not('[disabled]')
+            .val('')
+            .change();
+    };
+
+    /**
+     * Shows a container
+     *
+     * - shows the container
+     * - triggers inherited radio options
+     *
+     * @param {jQuery} $container
+     */
+    const show = function ($container) {
+        let $fieldset = $container;
+        if (!$fieldset.is('fieldset')) {
+            $fieldset = $container.find('fieldset');
+        }
+
+        // MUST trigger inherited options change() event before showing container so the option is inherited
+        // as only invisible inputs can inherit
+        const inherits = $fieldset.data('inherits') ? $fieldset.data('inherits').split(':') : false;
+        if (inherits) {
+            const $inherited = c.getInput(inherits[0], inherits[1]);
+            dispatchChange($inherited, {
+                skipRequires: true
+            });
+        }
+
+        $container.show();
+    };
+
     this.$form.find('fieldset[data-requires]').each(function () {
         const $this = $(this);
-        const $thisInput = $this.find(':input').not('[type=hidden]');
         const requires = $this.data('requires').split(':');
-        $this.hide();
 
         const $requirement = c.getInput(requires[0], requires[1]);
 
-        $requirement.change(function () {
-            const $required = $(this);
-            if ($required.is(':radio') && !$required.is(':checked')) {
+        $requirement.change(function (event, data = {}) {
+            if (data.skipRequires) {
                 return;
             }
-            $required.val() ? $this.show() : $this.hide();
-
-            if ($this.is(':hidden')) {
-                $thisInput.prop('checked', false);
-                $thisInput.change();
-            }
+            hasValue($(this)) ? show($this) : hide($this);
         });
 
-        $requirement.filter(':checked').change();
+        if (!hasValue($requirement)) {
+            hide($this);
+        }
     });
 
     this.$form.find('fieldset[data-inherits]').each(function () {
         const $this = $(this);
-        const $thisInput = $this.find(':input');
+        const $thisInput = $this.find(':input').not('[type=hidden]');
         const inherits = $this.data('inherits').split(':');
 
         const $inherited = c.getInput(inherits[0], inherits[1]);
 
         $inherited.change(function () {
             const $inherit = $(this);
-            if ($inherit.is(':radio') && !$inherit.is(':checked')) {
-                return;
-            }
 
             if ($thisInput.is(':radio')) {
                 if ($thisInput.parent().is(':hidden')) {
                     $thisInput
-                        .closest('fieldset')
-                        .find(':radio')
                         .filter(function () {
                             return $(this).val() === $inherit.val()
                         })
@@ -138,8 +204,6 @@ window.Configurator = function Configurator($element, options) {
                     .change();
             }
         });
-
-        $inherited.filter(':checked').change();
     });
 
     this.$form.find('[data-custom]').each(function () {
@@ -171,8 +235,6 @@ window.Configurator = function Configurator($element, options) {
                     .prop('disabled', true);
             }
         });
-
-        $radios.filter(':checked').change();
     });
 
     const toggleComponent = function () {
@@ -181,9 +243,7 @@ window.Configurator = function Configurator($element, options) {
             .parents('#component-' + $this.data('component-id'))
             .find('.component-options');
 
-        $this.is(':checked') ? $componentOptions.show() : $componentOptions.hide();
-
-        $componentOptions.find(':input').change();
+        $this.is(':checked') ? show($componentOptions) : hide($componentOptions);
     };
 
     this.$form.find('[data-toggle]').each(function () {
@@ -192,7 +252,7 @@ window.Configurator = function Configurator($element, options) {
     });
 
     if (this.$form.length) {
-        this.$form.change();
+        dispatchChange(this.$form.find(':input'));
     }
 
     setState(c);
