@@ -158,6 +158,8 @@ window.Configurator = function Configurator($element, options) {
             });
         }
 
+        dispatchChange($fieldset.find(':input'));
+
         $container.show();
     };
 
@@ -196,12 +198,19 @@ window.Configurator = function Configurator($element, options) {
                             return $(this).val() === $inherit.val()
                         })
                         .prop('checked', true)
-                        .change();
+                        .trigger('change', {
+                            skipRequires: true
+                        });
                 }
             } else {
-                $thisInput
-                    .val($inherit.val())
-                    .change();
+                $thisInput.val($inherit.val());
+                let eventData = {};
+                if ($thisInput.parent().is(':hidden')) {
+                    eventData = {
+                        skipRequires: true
+                    };
+                }
+                $thisInput.trigger('change', eventData);
             }
         });
     });
