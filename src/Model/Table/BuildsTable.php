@@ -138,6 +138,34 @@ class BuildsTable extends Table
 
         collection($componentCollection->getComponents())
             ->each(function (Component $component) use ($componentCollection) {
+                foreach ($component->getOptions() as $optionSet) {
+                    $inherits = $optionSet->getInherits();
+                    if (!$inherits) {
+                        continue;
+                    }
+                    $inheritOptions = $optionSet->getInheritsOptions();
+                    if ($inheritOptions['showOptions']) {
+                        continue;
+                    }
+
+                    $id = key($inherits);
+                    if ($id === OptionSet::SELF) {
+                        $id = $component->getId();
+                    }
+
+                    $inheritedComponent = $componentCollection->getComponent($id);
+                    if (!$inheritedComponent) {
+                        $componentCollection->removeComponent($component);
+                    }
+
+                    $component->addSelections([
+                        $optionSet->getToken() => $inheritedComponent->getSelection($optionSet->getToken())
+                    ]);
+                }
+            });
+
+        collection($componentCollection->getComponents())
+            ->each(function (Component $component) use ($componentCollection) {
                 try {
                     $component->getOptionTemplate();
                 } catch (TokensMissingException $exception) {
