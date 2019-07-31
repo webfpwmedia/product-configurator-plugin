@@ -201,7 +201,18 @@ class OptionSet
                     ];
                 }
 
-                return $radioOptions;
+                unset($option['swatch']);
+                unset($option['code']);
+                unset($option['name']);
+                $dataAttributes = collection($option)
+                    ->map(function ($value, &$key) {
+                        $key = "data-$key";
+
+                        return h($value);
+                    })
+                    ->toArray();
+
+                return $radioOptions + $dataAttributes;
             })
             ->toList();
 
