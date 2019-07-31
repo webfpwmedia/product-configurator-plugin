@@ -156,6 +156,8 @@ class BuildsTable extends Table
                     $inheritedComponent = $componentCollection->getComponent($id);
                     if (!$inheritedComponent) {
                         $componentCollection->removeComponent($component);
+
+                        continue;
                     }
 
                     $component->addSelections([
