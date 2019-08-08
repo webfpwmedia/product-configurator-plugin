@@ -22,6 +22,8 @@ return [
              */
             'elementHook' => [
                 'buildFormPost' => null,
+                'layoutHeader' => 'Layout' . DS . 'header',
+                'layoutMetaTags' => null,
                 'layoutNavPre' => null,
                 'layoutNavPost' => null,
                 'layoutNavTop' => null,
