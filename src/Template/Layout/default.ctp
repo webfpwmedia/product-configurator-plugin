@@ -26,6 +26,8 @@ use Cake\Core\Configure;
         <meta name="description" content="<?= __(Configure::read('ARC.ProductConfigurator.meta.description')) ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+        <?= $this->elementHook('layoutMetaTags') ?>
+
         <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -113,15 +115,7 @@ use Cake\Core\Configure;
                     <?= $this->Flash->render() ?>
 
                     <div class="main-content-container container-fluid px-4">
-                        <div class="page-header py-4">
-                            <span class="text-uppercase page-subtitle">
-                                <?= h(__($this->fetch('subtitle'))) ?>
-                            </span>
-
-                            <h3 class="page-title">
-                                <?= h(__($this->fetch('title'))) ?>
-                            </h3>
-                        </div>
+                        <?= $this->elementHook('layoutHeader') ?>
 
                         <?= $this->fetch('content') ?>
                     </div>
