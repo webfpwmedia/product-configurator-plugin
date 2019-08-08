@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \ARC\ProductConfigurator\View\AppView $this
- * @var \ARC\ProductConfigurator\Model\Entity\Image[] $images
+ * @var Cake\ORM\Query $images
  */
 
 $this
@@ -13,7 +13,7 @@ $this
 <div class="row mb-4">
     <div class="col">
         <h6 class="m-0">
-            <?= __('{0} images in all configurators.', count($images)) ?>
+            <?= __('{0} images in all configurators.', $images->count()) ?>
         </h6>
     </div>
 

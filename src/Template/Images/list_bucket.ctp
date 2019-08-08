@@ -45,7 +45,7 @@ $this
                                 <td>
                                     <div>
                                         <?= $this->Html->image($file['path'], [
-                                            'size' => 'sm',
+                                            'size' => 'md',
                                             'class' => 'img-fluid',
                                         ]) ?>
                                     </div>

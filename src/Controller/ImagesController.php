@@ -45,7 +45,7 @@ class ImagesController extends AppController
             'version' => '2006-03-01',
         ]);
 
-        $adapter = new AwsS3Adapter($client, env('AMAZON_S3_BUCKET'), env('AMAZON_S3_PATH'));
+        $adapter = new AwsS3Adapter($client, env('AMAZON_S3_BUCKET'), env('AMAZON_S3_PATH_IMG'));
         $filesystem = new Filesystem($adapter);
 
         $images = $this->Images
