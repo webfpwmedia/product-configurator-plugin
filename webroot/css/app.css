@@ -14026,9 +14026,14 @@ div.jsoneditor-navigation-bar {
 
 .form-group {
   margin-bottom: 2rem; }
+  .form-group.error {
+    display: block; }
   .form-group .error-message {
     width: 100%;
     margin: 5px 0;
+    color: #dc3545; }
+  .form-group.required label::before {
+    content: '* ';
     color: #dc3545; }
 
 .navbar .navbar-nav .nav-item .nav-link {
