@@ -13,8 +13,18 @@ $this
     <div class="col-lg-8">
         <div class="card card-small mb-4">
             <div class="card-header border-bottom">
-                <h6 class="m-0">
-                    <?= __('Details') ?>
+                <h6 class="m-0 d-flex justify-content-between">
+                    <span><?= __('Details') ?></span>
+
+                    <?php
+
+                    if (!$configurator->isNew()) {
+                        echo $this->Html->link(__('Build') . ' <i class="material-icons">arrow_forward</i>',
+                            ['controller' => 'Configurators', 'action' => 'build', $configurator->id],
+                            ['escape' => false]);
+                    }
+
+                    ?>
                 </h6>
             </div>
 
