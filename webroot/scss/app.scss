@@ -25,10 +25,21 @@
 .form-group {
   margin-bottom: 2rem;
 
+  &.error {
+    display: block;
+  }
+
   .error-message {
     width: 100%;
     margin: 5px 0;
     color: $danger;
+  }
+
+  &.required {
+    label::before {
+      content: '* ';
+      color: #dc3545;
+    }
   }
 }
 
