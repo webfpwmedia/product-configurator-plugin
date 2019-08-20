@@ -68,12 +68,12 @@ class ConfiguratorContext implements ContextInterface
             foreach ($component->getOptions() as $optionSet) {
                 if ($optionSet->isCustomizable()) {
                     $customToken = $optionSet->getToken();
-                    $customizableToken = $optionSet->getCustomizableToken();
+                    $customizableValue = $optionSet->getCustomValue();
                 }
             }
 
-            if ($component->getSelection($customToken) === $customizableToken) {
-                return $component->getText();
+            if ($component->getSelection($customToken) === $customizableValue) {
+                return $component->getCustomText();
             }
 
             return null;

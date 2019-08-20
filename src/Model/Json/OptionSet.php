@@ -78,7 +78,7 @@ class OptionSet
         'options',
         'inherits',
         'requires',
-        'text',
+        'custom',
     ];
 
     /** @var array */
@@ -156,7 +156,7 @@ class OptionSet
 
         $options = collection($this->data['options'])->combine('code', 'name');
         if ($this->isCustomizable()) {
-            $options = $options->appendItem($this->component->getText(), $this->getCustomizableToken());
+            $options = $options->appendItem($this->component->getCustomText(), $this->getCustomValue());
         }
 
         return $options->toArray();
@@ -218,8 +218,8 @@ class OptionSet
 
         if ($this->isCustomizable()) {
             $options[] = [
-                'value' => $this->getCustomizableToken(),
-                'text' => 'Custom',
+                'value' => $this->getCustomValue(),
+                'text' => $this->getCustomLabel(),
                 'label' => [
                     'data-custom' => true,
                 ],
@@ -236,21 +236,35 @@ class OptionSet
      */
     public function isCustomizable() : bool
     {
-        return isset($this->data['text']);
+        return isset($this->data['custom']);
     }
 
     /**
-     * Gets the token that indicates it's a customized text selection
+     * Gets the radio value that indicates it's a customized text selection
      *
      * @return string|null
      */
-    public function getCustomizableToken() : ?string
+    public function getCustomValue() : ?string
     {
         if (!$this->isCustomizable()) {
             return null;
         }
 
-        return $this->data['text']['code'];
+        return $this->data['custom']['code'];
+    }
+
+    /**
+     * Gets the radio label for a custom radio
+     *
+     * @return string|null
+     */
+    public function getCustomLabel() : ?string
+    {
+        if (!$this->isCustomizable()) {
+            return null;
+        }
+
+        return $this->data['custom']['name'] ?? 'Custom';
     }
 
     /**
@@ -258,31 +272,31 @@ class OptionSet
      *
      * @return array|null
      */
-    public function getTextOptions() : ?array
+    public function getCustomOptions() : ?array
     {
         if (!$this->isCustomizable()) {
             return null;
         }
 
         return [
-            'default' => $this->data['text']['default'] ?? null,
-            'maxlength' => $this->data['text']['maxLength'] ?? 25,
+            'default' => $this->data['custom']['default'] ?? null,
+            'maxlength' => $this->data['custom']['maxLength'] ?? 25,
         ];
     }
 
     /**
-     * Gets the text map if this option set is customizable
+     * Gets the map if this option set is customizable
      *
      * @return array|null
      */
-    public function getTextMap() : ?array
+    public function getCustomMap() : ?array
     {
         if (!$this->isCustomizable()) {
             return null;
         }
 
         return [
-            $this->getToken() => $this->data['text']['map']
+            $this->getToken() => $this->data['custom']['map']
         ];
     }
 

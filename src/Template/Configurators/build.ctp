@@ -107,7 +107,7 @@ $customTextMap = [];
                                             $inheritsData = sprintf('data-inherits="%s:%s"', $step->getStepCollection()->getComponentCollection()->getComponent(key($inherits))->getId(), current($inherits));
                                         }
                                         if ($optionSet->isCustomizable()) {
-                                            $customTextMap[$component->getId()] = $optionSet->getTextMap();
+                                            $customTextMap[$component->getId()] = $optionSet->getCustomMap();
                                         }
                                         ?>
 
@@ -139,7 +139,7 @@ $customTextMap = [];
                                                         'label' => false,
                                                         'hidden' => true,
                                                         'disabled' => true,
-                                                    ] + $optionSet->getTextOptions());
+                                                    ] + $optionSet->getCustomOptions());
                                                 }
                                                 ?>
                                             <?php endif; ?>
