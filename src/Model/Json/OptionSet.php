@@ -186,7 +186,18 @@ class OptionSet
             }
         }
 
+        $custom = [];
+        if ($this->isCustomizable()) {
+            $custom = $this->data['custom'] + [
+                'custom' => true,
+            ];
+            unset($custom['maxLength']);
+            unset($custom['default']);
+        }
+
         $options = collection($this->data['options'])
+            ->appendItem($custom)
+            ->filter()
             ->map(function (array $option) {
                 $radioOptions = [
                     'value' => $option['code'],
@@ -202,6 +213,13 @@ class OptionSet
                     ];
                 }
 
+                if (isset($option['custom'])) {
+                    $radioOptions['label'] += [
+                        'data-custom' => true,
+                    ];
+                }
+
+                unset($option['custom']);
                 unset($option['swatch']);
                 unset($option['code']);
                 unset($option['name']);
@@ -216,16 +234,6 @@ class OptionSet
                 return $radioOptions + $dataAttributes;
             })
             ->toList();
-
-        if ($this->isCustomizable()) {
-            $options[] = [
-                'value' => $this->getCustomValue(),
-                'text' => $this->getCustomLabel(),
-                'label' => [
-                    'data-custom' => true,
-                ],
-            ];
-        }
 
         return $options;
     }
@@ -252,20 +260,6 @@ class OptionSet
         }
 
         return $this->data['custom']['code'];
-    }
-
-    /**
-     * Gets the radio label for a custom radio
-     *
-     * @return string|null
-     */
-    public function getCustomLabel() : ?string
-    {
-        if (!$this->isCustomizable()) {
-            return null;
-        }
-
-        return $this->data['custom']['name'] ?? 'Custom';
     }
 
     /**
