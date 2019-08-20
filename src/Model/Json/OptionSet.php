@@ -1,6 +1,7 @@
 <?php
 namespace ARC\ProductConfigurator\Model\Json;
 
+use ARC\ProductConfigurator\Mask\Mask;
 use ARC\ProductConfigurator\View\Helper\UrlHelper;
 use Cake\Core\InstanceConfigTrait;
 use Cake\View\View;
@@ -307,7 +308,9 @@ class OptionSet
      */
     public function getToken() : string
     {
-        return str_replace(['{', '}'], '', $this->data['token']);
+        $tokens = (new Mask($this->data['token']))->getTokens();
+
+        return $tokens[0];
     }
 
     /**
