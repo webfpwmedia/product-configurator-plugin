@@ -280,22 +280,6 @@ class OptionSet
     }
 
     /**
-     * Gets the map if this option set is customizable
-     *
-     * @return array|null
-     */
-    public function getCustomMap() : ?array
-    {
-        if (!$this->isCustomizable()) {
-            return null;
-        }
-
-        return [
-            $this->getToken() => $this->data['custom']['map']
-        ];
-    }
-
-    /**
      * Gets the token name
      *
      * @return string

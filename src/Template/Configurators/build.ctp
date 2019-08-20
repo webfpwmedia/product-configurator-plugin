@@ -16,8 +16,6 @@ use Cake\Core\Configure;
 $this
     ->assign('title', h($configurator->name))
     ->assign('subtitle', __('Configurator'));
-
-$customTextMap = [];
 ?>
 
 <div class="arc configurator">
@@ -106,9 +104,6 @@ $customTextMap = [];
                                         if ($inherits) {
                                             $inheritsData = sprintf('data-inherits="%s:%s"', $step->getStepCollection()->getComponentCollection()->getComponent(key($inherits))->getId(), current($inherits));
                                         }
-                                        if ($optionSet->isCustomizable()) {
-                                            $customTextMap[$component->getId()] = $optionSet->getCustomMap();
-                                        }
                                         ?>
 
                                         <fieldset id="<?= $component->getId() . '-' . $optionSet->getToken() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?>>
@@ -175,7 +170,6 @@ $customTextMap = [];
             imageQueryString: '<?= http_build_query(Configure::read('ARC.ProductConfigurator.imgix.md')) ?>',
             frontLabel: '<?= h(Configure::read('ARC.ProductConfigurator.text.front')) ?>',
             backLabel: '<?= h(Configure::read('ARC.ProductConfigurator.text.back')) ?>',
-            customTextMap: <?= json_encode($customTextMap) ?>,
             layerDirection: '<?= Configure::read('ARC.ProductConfigurator.layerDirection') ?>'
         });
     });

@@ -2,27 +2,11 @@
  *
  * @param {number} width Original image width
  * @param {number} height Original image height
- * @param {object} selections User key:value selections
- * @param {object} map Token/value map for svg options
+ * @param {object} options SVG and text options
  * @returns {Text}
  * @constructor
  */
-const Text = function Text(width, height, selections, map) {
-    let options = {};
-
-    for (let token in selections) {
-        const value = selections[token];
-        if (!map.hasOwnProperty(`{{${token}}}`)) {
-            continue;
-        }
-
-        const mapping = map[`{{${token}}}`];
-        if (!mapping.hasOwnProperty(value)) {
-            continue;
-        }
-
-        options = Object.assign(options, mapping[value]);
-    }
+const Text = function Text(width, height, options) {
 
     /**
      * Renders the text SVG
