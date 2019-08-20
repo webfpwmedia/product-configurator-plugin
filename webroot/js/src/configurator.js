@@ -26,7 +26,6 @@ window.Configurator = function Configurator($element, options) {
         imageQueryString: null,
         frontLabel: 'Front',
         backLabel: 'Back',
-        customTextMap: {},
         layerDirection: 'asc'
     }, options);
 
@@ -316,48 +315,62 @@ function buildImageStack(response, $element) {
             $html.append($img);
 
             const state = c.state;
-            if (c.options.customTextMap.hasOwnProperty(image['component'])) {
-                $img.on('load', function () {
-                    const map = c.options.customTextMap[image['component']];
-                    for (let token in map) {
-                        if (!map[token].hasOwnProperty(state)) {
-                            continue;
+
+            $img.on('load', function () {
+                let svgOptions = {};
+
+                const $component = c.$form.find('[data-component="' + image['component'] + '"]');
+                const $radios = $component.find(':radio');
+                const $selected = $radios.filter(':checked');
+
+                const $customInput = $component.find('input[name="' + image['component'] + '[' + CUSTOM_TEXT_INPUT + ']"]');
+
+                const customInputChange = function () {
+                    $svg.find('.text').text($(this).val());
+                };
+                $customInput.off('keyup', customInputChange);
+
+                let text = '';
+
+                // merge all custom text options for selected radios
+                $selected.each(function () {
+                    const $s = $(this);
+                    const textOptions = $s.data('text');
+                    if (textOptions && textOptions.hasOwnProperty(state)) {
+                        // check if we should use this label as the text content
+                        if (textOptions[state].hasOwnProperty('content') && textOptions[state].content === true) {
+                            text = $s.closest('label').text();
+                            if ($s.closest('label').data('custom')) {
+                                text = $customInput.val();
+                            }
                         }
 
-                        const $fieldset = c.getFieldset(image['component'], token);
-                        const $radios = c.getInput(image['component'], token);
-                        const $selected = $radios.filter(':checked');
-                        const $selectedLabel = $selected.closest('label');
-                        const $customInput = $fieldset.find('input[name="' + image['component'] + '[' + CUSTOM_TEXT_INPUT + ']"]');
+                        svgOptions = Object.assign(svgOptions, textOptions[state]);
+                    }
 
-                        const component = getComponent(image['component'], response);
-                        const text = component.text;
-
-                        const SVGText = new Text(
-                            c.options.originalImageSize.width,
-                            c.options.originalImageSize.height,
-                            component.selections,
-                            map[token][state]
-                        );
-
-                        const $svg = $(SVGText.render(text))
-                            .css({
-                                zIndex: parseInt(image['layer']) + 1,
-                                width: $img.width()
-                            });
-
-                        const customInputChange = function () {
-                            $svg.find('.text').text($(this).val());
-                        };
-                        $customInput.off('keyup', customInputChange);
-                        if ($selectedLabel.data('custom')) {
-                            $customInput.on('keyup', customInputChange);
-                        }
-
-                        $html.append($svg);
+                    if ($s.closest('label').data('custom')) {
+                        $customInput.on('keyup', customInputChange);
                     }
                 });
-            }
+
+                if (!svgOptions || !text) {
+                    return;
+                }
+
+                const SVGText = new Text(
+                    c.options.originalImageSize.width,
+                    c.options.originalImageSize.height,
+                    svgOptions
+                );
+
+                const $svg = $(SVGText.render(text))
+                    .css({
+                        zIndex: parseInt(image['layer']) + 1,
+                        width: $img.width()
+                    });
+
+                $html.append($svg);
+            });
         });
     }
 

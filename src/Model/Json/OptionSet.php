@@ -1,6 +1,7 @@
 <?php
 namespace ARC\ProductConfigurator\Model\Json;
 
+use ARC\ProductConfigurator\Mask\Mask;
 use ARC\ProductConfigurator\View\Helper\UrlHelper;
 use Cake\Core\InstanceConfigTrait;
 use Cake\View\View;
@@ -78,7 +79,7 @@ class OptionSet
         'options',
         'inherits',
         'requires',
-        'text',
+        'custom',
     ];
 
     /** @var array */
@@ -156,7 +157,7 @@ class OptionSet
 
         $options = collection($this->data['options'])->combine('code', 'name');
         if ($this->isCustomizable()) {
-            $options = $options->appendItem($this->component->getText(), $this->getCustomizableToken());
+            $options = $options->appendItem($this->component->getCustomText(), $this->getCustomValue());
         }
 
         return $options->toArray();
@@ -185,7 +186,18 @@ class OptionSet
             }
         }
 
+        $custom = [];
+        if ($this->isCustomizable()) {
+            $custom = $this->data['custom'] + [
+                'custom' => true,
+            ];
+            unset($custom['maxLength']);
+            unset($custom['default']);
+        }
+
         $options = collection($this->data['options'])
+            ->appendItem($custom)
+            ->filter()
             ->map(function (array $option) {
                 $radioOptions = [
                     'value' => $option['code'],
@@ -201,6 +213,13 @@ class OptionSet
                     ];
                 }
 
+                if (isset($option['custom'])) {
+                    $radioOptions['label'] += [
+                        'data-custom' => true,
+                    ];
+                }
+
+                unset($option['custom']);
                 unset($option['swatch']);
                 unset($option['code']);
                 unset($option['name']);
@@ -208,23 +227,13 @@ class OptionSet
                     ->map(function ($value, &$key) {
                         $key = "data-$key";
 
-                        return h($value);
+                        return h(json_encode($value));
                     })
                     ->toArray();
 
                 return $radioOptions + $dataAttributes;
             })
             ->toList();
-
-        if ($this->isCustomizable()) {
-            $options[] = [
-                'value' => $this->getCustomizableToken(),
-                'text' => 'Custom',
-                'label' => [
-                    'data-custom' => true,
-                ],
-            ];
-        }
 
         return $options;
     }
@@ -236,21 +245,21 @@ class OptionSet
      */
     public function isCustomizable() : bool
     {
-        return isset($this->data['text']);
+        return isset($this->data['custom']);
     }
 
     /**
-     * Gets the token that indicates it's a customized text selection
+     * Gets the radio value that indicates it's a customized text selection
      *
      * @return string|null
      */
-    public function getCustomizableToken() : ?string
+    public function getCustomValue() : ?string
     {
         if (!$this->isCustomizable()) {
             return null;
         }
 
-        return $this->data['text']['code'];
+        return $this->data['custom']['code'];
     }
 
     /**
@@ -258,31 +267,15 @@ class OptionSet
      *
      * @return array|null
      */
-    public function getTextOptions() : ?array
+    public function getCustomOptions() : ?array
     {
         if (!$this->isCustomizable()) {
             return null;
         }
 
         return [
-            'default' => $this->data['text']['default'] ?? null,
-            'maxlength' => $this->data['text']['maxLength'] ?? 25,
-        ];
-    }
-
-    /**
-     * Gets the text map if this option set is customizable
-     *
-     * @return array|null
-     */
-    public function getTextMap() : ?array
-    {
-        if (!$this->isCustomizable()) {
-            return null;
-        }
-
-        return [
-            $this->getToken() => $this->data['text']['map']
+            'default' => $this->data['custom']['default'] ?? null,
+            'maxlength' => $this->data['custom']['maxLength'] ?? 25,
         ];
     }
 
@@ -293,7 +286,9 @@ class OptionSet
      */
     public function getToken() : string
     {
-        return str_replace(['{', '}'], '', $this->data['token']);
+        $tokens = (new Mask($this->data['token']))->getTokens();
+
+        return $tokens[0];
     }
 
     /**

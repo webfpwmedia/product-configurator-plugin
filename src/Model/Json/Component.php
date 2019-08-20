@@ -79,7 +79,7 @@ class Component implements JsonSerializable
         $component = new self($componentCollection, $id);
         $component->addSelections($jsonArray[$id]['selections'] ?? []);
         if (isset($jsonArray[$id]['text'])) {
-            $component->addText($jsonArray[$id]['text']);
+            $component->addCustomText($jsonArray[$id]['text']);
         }
         if (isset($jsonArray[$id]['qty'])) {
             $component->setQty((int)$jsonArray[$id]['qty']);
@@ -186,22 +186,22 @@ class Component implements JsonSerializable
     }
 
     /**
-     * Adds a text label
+     * Adds custom text
      *
      * @param string $text
      * @return void
      */
-    public function addText(string $text) : void
+    public function addCustomText(string $text) : void
     {
         $this->data['text'] = $text;
     }
 
     /**
-     * Gets the text label
+     * Gets custom text
      *
      * @return string|null
      */
-    public function getText() : ?string
+    public function getCustomText() : ?string
     {
         return $this->data['text'] ?? null;
     }
