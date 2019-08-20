@@ -227,7 +227,7 @@ class OptionSet
                     ->map(function ($value, &$key) {
                         $key = "data-$key";
 
-                        return h($value);
+                        return h(json_encode($value));
                     })
                     ->toArray();
 
