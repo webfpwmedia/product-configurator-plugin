@@ -67,13 +67,20 @@ $this
                                 <?php endif; ?>
 
                                 <?php
+                                $includes = [];
                                 if ($component->getConfig('showToggle')) {
+                                    if ($component->getConfig('includes')) {
+                                        $includes = [
+                                            'data-includes' => json_encode($component->getConfig('includes'))
+                                        ];
+                                    }
+
                                     echo $this->Form->control($component->getId() . '.' . BuildsTable::TOGGLE_INPUT, [
                                         'type' => 'checkbox',
                                         'label' => __('Select Component'),
                                         'data-toggle' => true,
                                         'data-component-id' => $component->getId(),
-                                    ]);
+                                    ] + $includes);
                                 }
                                 ?>
 
