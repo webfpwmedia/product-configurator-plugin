@@ -191,7 +191,7 @@ window.Configurator = function Configurator($element, options) {
             const $inherit = $(this);
 
             if ($thisInput.is(':radio')) {
-                if ($thisInput.parent().is(':hidden')) {
+                if ($thisInput.parent().is(':hidden') && !$thisInput.is(':disabled')) {
                     $thisInput
                         .filter(function () {
                             return $(this).val() === $inherit.val()
@@ -259,7 +259,6 @@ window.Configurator = function Configurator($element, options) {
     this.$form.find('[data-includes]').change(function () {
         const $toggle = $(this);
         const includes = $toggle.data('includes');
-
         const checked = $toggle.is(':checked');
 
         for (let component in includes) {
@@ -286,14 +285,13 @@ window.Configurator = function Configurator($element, options) {
                         .filter(function () {
                             return $(this).val() === autoSelectValue
                         })
-                        .prop('checked', true)
-                        .trigger('change', {
-                            skipRequires: true
-                        });
+                        .prop('checked', true);
 
                     const $unchecked = $tokenInputs.filter(':not(:checked)');
                     $unchecked.prop('disabled', true);
                     $tokenInputs.closest('label').addClass('disabled');
+
+                    dispatchChange($tokenInputs);
                 }
             } else {
                 $toggle.prop('disabled', false);
