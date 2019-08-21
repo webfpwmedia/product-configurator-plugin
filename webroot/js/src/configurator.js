@@ -191,7 +191,7 @@ window.Configurator = function Configurator($element, options) {
             const $inherit = $(this);
 
             if ($thisInput.is(':radio')) {
-                if ($thisInput.parent().is(':hidden')) {
+                if ($thisInput.parent().is(':hidden') && !$thisInput.is(':disabled')) {
                     $thisInput
                         .filter(function () {
                             return $(this).val() === $inherit.val()
@@ -253,6 +253,79 @@ window.Configurator = function Configurator($element, options) {
                 .find('.component-options');
 
             $this.is(':checked') ? show($componentOptions) : hide($componentOptions);
+        });
+    });
+
+    this.$form.find('[data-includes]').each(function () {
+        const $component = $(this);
+        const includes = $component.data('includes');
+
+        const $toggle = $component.find('[data-toggle]');
+        let $inputs = $component.find(':input');
+        if ($toggle.length) {
+            $inputs = $toggle;
+        }
+
+        $inputs.change(function () {
+            const $input = $(this);
+
+            // component is toggled or has all options selected
+            let valid = true;
+            if ($input.is(':checkbox')) {
+                valid = $input.is(':checked');
+            } else {
+                $component.find('fieldset').each(function () {
+                    if ($(this).find(':radio:checked').length === 0) {
+                        valid = false;
+                    }
+                });
+            }
+
+            for (let component in includes) {
+                const selections = includes[component];
+                const $component = c.$form.find('#component-' + component);
+                const $toggle = $component.find('[data-toggle]');
+
+                if (valid) {
+                    $toggle.prop('checked', true);
+                    $toggle.prop('disabled', true);
+
+                    // add hidden field so value is still submitted
+                    const $hidden = $toggle.clone();
+                    $hidden.prop('disabled', false);
+                    $hidden.prop('type', 'hidden');
+                    $hidden.addClass('disable-hidden');
+                    $toggle.parent().append($hidden);
+
+                    for (let token in selections) {
+                        const $tokenInputs = c.getInput(component, token);
+                        const autoSelectValue = selections[token];
+
+                        $tokenInputs
+                            .filter(function () {
+                                return $(this).val() === autoSelectValue
+                            })
+                            .prop('checked', true);
+
+                        const $unchecked = $tokenInputs.filter(':not(:checked)');
+                        $unchecked.prop('disabled', true);
+                        $tokenInputs.closest('label').addClass('disabled');
+
+                        dispatchChange($tokenInputs);
+                    }
+                } else {
+                    $toggle.prop('disabled', false);
+                    $toggle.parent().find('.disable-hidden').remove();
+
+                    for (let token in selections) {
+                        const $tokenInputs = c.getInput(component, token);
+                        $tokenInputs.prop('disabled', false);
+                        $tokenInputs.closest('label').removeClass('disabled');
+                    }
+                }
+
+                $toggle.change();
+            }
         });
     });
 

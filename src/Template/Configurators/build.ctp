@@ -59,7 +59,13 @@ $this
 
                     <div class="step-body">
                         <?php foreach ($step->getComponents() as $component) : ?>
-                            <div class="component" id="component-<?= $component->getId() ?>">
+                            <?php
+                            $includes = null;
+                            if ($component->getConfig('includes')) {
+                                $includes = sprintf('data-includes="%s"', h(json_encode($component->getConfig('includes'))));
+                            }
+                            ?>
+                            <div class="component" id="component-<?= $component->getId() ?>" <?= $includes ?>>
                                 <?php if ($component->getConfig('header')): ?>
                                     <h3 class="component-header">
                                         <?= $component->getConfig('header') ?>
