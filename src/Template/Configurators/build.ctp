@@ -59,7 +59,13 @@ $this
 
                     <div class="step-body">
                         <?php foreach ($step->getComponents() as $component) : ?>
-                            <div class="component" id="component-<?= $component->getId() ?>">
+                            <?php
+                            $includes = null;
+                            if ($component->getConfig('includes')) {
+                                $includes = sprintf('data-includes="%s"', h(json_encode($component->getConfig('includes'))));
+                            }
+                            ?>
+                            <div class="component" id="component-<?= $component->getId() ?>" <?= $includes ?>>
                                 <?php if ($component->getConfig('header')): ?>
                                     <h3 class="component-header">
                                         <?= $component->getConfig('header') ?>
@@ -67,20 +73,13 @@ $this
                                 <?php endif; ?>
 
                                 <?php
-                                $includes = [];
                                 if ($component->getConfig('showToggle')) {
-                                    if ($component->getConfig('includes')) {
-                                        $includes = [
-                                            'data-includes' => json_encode($component->getConfig('includes'))
-                                        ];
-                                    }
-
                                     echo $this->Form->control($component->getId() . '.' . BuildsTable::TOGGLE_INPUT, [
                                         'type' => 'checkbox',
                                         'label' => __('Select Component'),
                                         'data-toggle' => true,
                                         'data-component-id' => $component->getId(),
-                                    ] + $includes);
+                                    ]);
                                 }
                                 ?>
 
