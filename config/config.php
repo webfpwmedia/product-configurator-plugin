@@ -67,6 +67,8 @@ return [
                 'submit' => 'Submit',
                 'front' => 'Front',
                 'back' => 'Back',
+                'uploadFront' => 'Upload Front Image',
+                'uploadBack' => 'Upload Back Image',
             ],
 
             // Form templates to use for the admin pages

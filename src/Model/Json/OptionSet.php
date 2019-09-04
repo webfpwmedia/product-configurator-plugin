@@ -78,6 +78,7 @@ class OptionSet
         'token',
         'options',
         'inherits',
+        'imageUpload',
         'requires',
         'custom',
     ];
@@ -343,5 +344,30 @@ class OptionSet
         return $options + [
             'showOptions' => false
         ];
+    }
+
+    /**
+     * Get image uploader configuration.
+     *
+     * ### Expected Format:
+     *
+     * ```
+     * {
+     *      "front": {
+     *          "h": 500,
+     *          "w": 1000,
+     *          "x": 250,
+     *          "y": 300,
+     *          "aspectRatio": 2,
+     *      },
+     *      "back": { ... }
+     * }
+     * ```
+     *
+     * @return array
+     */
+    public function getImageUpload(): array
+    {
+        return $this->data['imageUpload'] ?? [];
     }
 }

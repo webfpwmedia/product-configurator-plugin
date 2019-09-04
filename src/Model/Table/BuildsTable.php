@@ -1,7 +1,9 @@
 <?php
 namespace ARC\ProductConfigurator\Model\Table;
 
+use ARC\ProductConfigurator\Filesystem\AmazonS3;
 use ARC\ProductConfigurator\Mask\TokensMissingException;
+use ARC\ProductConfigurator\Model\Entity\Build;
 use ARC\ProductConfigurator\Model\Json\Component;
 use ARC\ProductConfigurator\Model\Json\ComponentCollection;
 use ARC\ProductConfigurator\Model\Json\OptionSet;
@@ -9,8 +11,11 @@ use ARC\ProductConfigurator\ORM\Table;
 use ArrayObject;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\Utility\Hash;
+use Cake\Utility\Text;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use League\Flysystem\FileNotFoundException;
 
 /**
  * Builds Model
@@ -49,6 +54,15 @@ class BuildsTable extends Table
      * Name of toggle checkbox
      */
     const TOGGLE_INPUT = '__toggle';
+
+    /**
+     * Index of acceptable mime types and their corresponding file extensions.
+     *
+     * @const array
+     */
+    const FILE_TYPES = [
+        'image/png' => 'png',
+    ];
 
     /**
      * Initialize method
@@ -205,6 +219,80 @@ class BuildsTable extends Table
                 }
             });
 
+        # User-uploaded images are stored in `uploads`.
+        if (isset($data['uploads']) && is_array($data['uploads'])) {
+            collection($data['uploads'])
+                ->each(function ($uploads, $componentId) use ($componentCollection) {
+                    foreach ($uploads as $token => $upload) {
+                        $component = new Component($componentCollection, $componentId);
+                        $component->addSelections([$token => Component::SELECTION_UPLOAD]);
+
+                        foreach ($upload as $position => $file) {
+                            if ($file) {
+                                list($prefix, $file) = explode(',', $file);
+
+                                $mimeType = str_replace('data:', null, $prefix);
+                                $mimeType = str_replace(';base64', null, $mimeType);
+
+                                if (!isset(self::FILE_TYPES[$mimeType])) {
+                                    continue;
+                                }
+
+                                $image = [
+                                    'name' => Text::uuid() . '.' . self::FILE_TYPES[$mimeType],
+                                    'data' => $file,
+                                ];
+
+                                $component->addImage($token . '.' . $position, $image);
+                            }
+                        }
+
+                        if ($component->getImages()) {
+                            $componentCollection->addComponent($component);
+                        }
+                    }
+                });
+        }
+
         $data['components'] = $componentCollection->getComponents();
+    }
+
+    /**
+     * beforeSave.
+     *
+     * @param Event $event
+     * @param Build $build
+     * @param ArrayObject $options
+     *
+     * @return bool|void
+     */
+    public function beforeSave(Event $event, Build $build, ArrayObject $options)
+    {
+        $filesystem = AmazonS3::get(env('AMAZON_S3_PATH_UPLOAD'));
+
+        foreach ($build->components as $component) {
+            foreach ($component->getImages() as $path => $image) {
+                $response = $filesystem->put($image['name'], base64_decode($image['data']));
+
+                if (!$response) {
+                    return false;
+                }
+
+                if (!$build->isNew()) {
+                    $extantImages = Hash::extract($build->getOriginal('components'), '{n}.{s}.images.{s}');
+
+                    foreach ($extantImages as $extantImage) {
+                        try {
+                            $filesystem->delete($extantImage);
+                        } catch (\Exception $exception) {
+                            # Deleting old images isn't mission-critical.
+                        }
+                    }
+                }
+
+                # Persist image name to database.
+                $component->setImageName($path);
+            }
+        }
     }
 }

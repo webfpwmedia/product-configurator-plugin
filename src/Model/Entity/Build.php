@@ -5,6 +5,7 @@ use ARC\ProductConfigurator\Model\Json\Component as ComponentJson;
 use ARC\ProductConfigurator\Model\Json\ComponentCollection;
 use ARC\ProductConfigurator\Model\Table\ImagesTable;
 use Cake\Database\Expression\IdentifierExpression;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Exception;
@@ -13,10 +14,11 @@ use Exception;
  * Build Entity
  *
  * @property string $id
- * @property array $components
- * @property \Cake\I18n\FrozenTime|null $created
- * @property \Cake\I18n\FrozenTime|null $modified
+ * @property array|ComponentJson[] $components
+ * @property FrozenTime|null $created
+ * @property FrozenTime|null $modified
  * @property array $extra
+ * @property array $uploads Enabled via component key `imageUpload`.
  * @property string $configurator_id
  */
 class Build extends Entity
@@ -37,6 +39,7 @@ class Build extends Entity
         'created' => true,
         'modified' => true,
         'extra' => true,
+        'uploads' => true,
         'configurator_id' => true,
     ];
 

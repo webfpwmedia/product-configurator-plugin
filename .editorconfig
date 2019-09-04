@@ -13,16 +13,17 @@ trim_trailing_whitespace = true
 [*.bat]
 end_of_line = crlf
 
-[*.scss]
-indent_style = space
+[Makefile]
+indent_style = tab
+
+[*.json]
 indent_size = 2
 
-[*.yml]
-indent_style = space
+[*.scss]
 indent_size = 2
 
 [*.twig]
 insert_final_newline = false
 
-[Makefile]
-indent_style = tab
+[*.yml]
+indent_size = 2

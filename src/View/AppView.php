@@ -2,6 +2,8 @@
 namespace ARC\ProductConfigurator\View;
 
 use ARC\ProductConfigurator\View\Helper\UrlHelper;
+use ARC\ProductConfigurator\View\Widget\BlobWidget;
+use ARC\ProductConfigurator\View\Widget\InsecureFileWidget;
 use ARC\ProductConfigurator\View\Widget\JsonWidget;
 use ARC\ProductConfigurator\View\Widget\RadioWidget;
 use Cake\Core\Configure;
@@ -48,6 +50,8 @@ class AppView extends View
             # Configured below.
         }
 
+        $this->Form->addWidget('blob', BlobWidget::class);
+        $this->Form->addWidget('insecureFile', InsecureFileWidget::class);
         $this->Form->addWidget('json', [JsonWidget::class]);
         $this->Form->addWidget('radio', [RadioWidget::class, 'nestingLabel']);
 
