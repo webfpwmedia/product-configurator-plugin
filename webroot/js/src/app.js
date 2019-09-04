@@ -5,9 +5,11 @@ import './ajaxForm';
 import './configurator';
 import JSONEditor from 'jsoneditor';
 import NSResizer from "./nsresizer";
+import Cropper from 'cropperjs';
 
-// make jQuery available outside of modules
+// Make libraries available outside of modules.
 window.$ = $;
+window.Cropper = Cropper;
 
 $(document).ready(function () {
     $('.json-editor').each(function () {

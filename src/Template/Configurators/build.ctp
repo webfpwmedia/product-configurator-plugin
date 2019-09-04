@@ -12,6 +12,7 @@ use ARC\ProductConfigurator\Model\Json\Step;
 use ARC\ProductConfigurator\Model\Json\StepCollection;
 use ARC\ProductConfigurator\Model\Table\BuildsTable;
 use Cake\Core\Configure;
+use Cake\Utility\Hash;
 
 $this
     ->assign('title', h($configurator->name))
@@ -120,6 +121,39 @@ $this
                                                     'templates' => ['inputContainer' => '{{content}}'],
                                                 ]);
                                                 ?>
+                                            <?php elseif ($optionSet->getImageUpload()):
+                                                foreach ($optionSet->getImageUpload() as $position => $options) {
+                                                    $blobId = 'uploads.' . $controlName . '.' . $position;
+
+                                                    echo $this->Html->tag('legend', h($optionSet->getLabel()));
+
+                                                    echo $this->Form->control($controlName . '.' . $position, [
+                                                        'label' => __(Configure::read('ARC.ProductConfigurator.text.uploadFront')),
+                                                        'type' => 'insecureFile',
+                                                        'name' => false,
+                                                        'class' => 'sr-only',
+                                                        'accept' => 'image/*',
+                                                        'data-blob-id' => $blobId,
+                                                        'data-component-id' => $component->getId(),
+                                                        'data-position' => 'front',
+                                                        'data-upload' => json_encode($options),
+                                                    ]);
+
+                                                    $imageLocation = $optionSet->getToken() . '.' . $position;
+                                                    $extantImage = Hash::extract($context, '{n}.{s}.images[' . $imageLocation . '].{s}');
+
+                                                    echo $this->Form->control($blobId, [
+                                                        'type' => 'blob',
+                                                        'hidden' => true,
+                                                        'label' => false,
+                                                        'id' => $blobId,
+                                                        'data-config' => json_encode($options),
+                                                        'value' => $extantImage ? $extantImage[0] : null,
+                                                    ]);
+
+                                                    $this->Form->unlockField($blobId);
+                                                }
+                                                ?>
                                             <?php else: ?>
                                                 <legend><?= h($optionSet->getLabel()) ?></legend>
 
@@ -165,6 +199,24 @@ $this
 
 <?= $this->Html->script('ARC/ProductConfigurator.dist/arc-product-configurator.bundle') ?>
 
+<div id="cropper-controls" class="btn-group btn-group-sm mb-1" role="group" aria-label="Image Controls" style="display: none;">
+    <button type="button" class="btn btn-secondary cropper-control rotate-left">
+        <i class="fas fa-undo-alt"></i>
+    </button>
+
+    <button type="button" class="btn btn-secondary cropper-control rotate-right">
+        <i class="fas fa-redo-alt"></i>
+    </button>
+
+    <button type="button" class="btn btn-secondary cropper-control zoom-in">
+        <i class="fas fa-search-plus"></i>
+    </button>
+
+    <button type="button" class="btn btn-secondary cropper-control zoom-out">
+        <i class="fas fa-search-minus"></i>
+    </button>
+</div>
+
 <script>
     $(document).ready(function () {
         const configurator = new Configurator($('.arc.configurator'), {
@@ -180,4 +232,3 @@ $this
         });
     });
 </script>
-

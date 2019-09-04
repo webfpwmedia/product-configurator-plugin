@@ -6,6 +6,7 @@ use ARC\ProductConfigurator\Model\Entity\Component as ComponentEntity;
 use Cake\Core\InstanceConfigTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use JsonSerializable;
+use LogicException;
 
 /**
  * Component
@@ -28,6 +29,13 @@ class Component implements JsonSerializable
     use LocatorAwareTrait;
 
     /**
+     * For file uploads, token values will be selected as this string.
+     *
+     * @const string
+     */
+    const SELECTION_UPLOAD = 'UPLOAD';
+
+    /**
      * Default config
      *
      * ### Configuration:
@@ -44,11 +52,25 @@ class Component implements JsonSerializable
         'showToggle' => false,
     ];
 
-    /** @var array */
+    /**
+     * Supported keys for configured builds.
+     *
+     * @var array
+     */
     private $data = [
         'qty' => 1,
-        'selections' => []
+        'selections' => [],
+        'images' => [],
     ];
+
+    /**
+     * Index of images configured via user upload.
+     *
+     * Stores base64 encoded versions of each image, indexed by `token.position`.
+     *
+     * @var array
+     */
+    private $images = [];
 
     /** @var string */
     private $id;
@@ -121,14 +143,64 @@ class Component implements JsonSerializable
     }
 
     /**
-     * Adds selections
+     * Adds selections to the `Component`.
      *
      * @param array $selections
-     * @retur void
+     *
+     * @return Component
      */
-    public function addSelections(array $selections) : void
+    public function addSelections(array $selections): Component
     {
         $this->data['selections'] = array_merge($this->data['selections'], $selections);
+
+        return $this;
+    }
+
+    /**
+     * Set binary image data to `Component`, indexed by `token.position`.
+     *
+     * @param string $path
+     * @param array $image
+     *      `name` The image name with extension.
+     *      `data` Base64 encoded string of image.
+     *
+     * @return Component
+     */
+    public function addImage(string $path, array $image): Component
+    {
+        $this->images = array_merge($this->images, [$path => $image]);
+
+        return $this;
+    }
+
+    /**
+     * Set image name into saveable `uploads` key based on `token.position`.
+     *
+     * @param string $path
+     *
+     * @return Component
+     *
+     * @throws LogicException If trying to get-set an image that hasn't been added.
+     */
+    public function setImageName(string $path): Component
+    {
+        if (!isset($this->images[$path]['name'])) {
+            throw new LogicException(__('Cannot persist an image name that does not exist.'));
+        }
+
+        $this->data['images'] = [$path => $this->images[$path]['name']];
+
+        return $this;
+    }
+
+    /**
+     * Get uploaded images.
+     *
+     * @return array
+     */
+    public function getImages(): array
+    {
+        return $this->images;
     }
 
     /**

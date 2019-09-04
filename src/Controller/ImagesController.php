@@ -1,14 +1,13 @@
 <?php
 namespace ARC\ProductConfigurator\Controller;
 
-use Aws\S3\S3Client;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
-use League\Flysystem\Filesystem;
+use ARC\ProductConfigurator\Filesystem\AmazonS3;
+use ARC\ProductConfigurator\Model\Table\ImagesTable;
 
 /**
  * Images Controller
  *
- * @property \ARC\ProductConfigurator\Model\Table\ImagesTable $Images
+ * @property ImagesTable $Images
  *
  * @method \ARC\ProductConfigurator\Model\Entity\Image[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
@@ -36,17 +35,7 @@ class ImagesController extends AppController
      */
     public function listBucket()
     {
-        $client = new S3Client([
-            'credentials' => [
-                'key'    => env('AMAZON_S3_KEY'),
-                'secret' => env('AMAZON_S3_SECRET'),
-            ],
-            'region' => env('AMAZON_S3_REGION'),
-            'version' => '2006-03-01',
-        ]);
-
-        $adapter = new AwsS3Adapter($client, env('AMAZON_S3_BUCKET'), env('AMAZON_S3_PATH_IMG'));
-        $filesystem = new Filesystem($adapter);
+        $filesystem = AmazonS3::get(env('AMAZON_S3_PATH_IMG'));
 
         $images = $this->Images
             ->find()

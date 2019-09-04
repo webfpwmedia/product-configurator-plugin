@@ -7,8 +7,10 @@ import Text from './text';
 
 const CUSTOM_TEXT_INPUT = '__customtext';
 const TEXT_INPUT = '__text';
+
 let preloaded = [];
 let changes = [];
+let croppers = [];
 
 /**
  * @param {jQuery} $element
@@ -329,13 +331,87 @@ window.Configurator = function Configurator($element, options) {
         });
     });
 
+    this.$form.find('[data-upload]').each(function () {
+        const $this = $(this);
+        const options = $this.data('upload');
+        const $cropperWrapper = $('<div></div>');
+        const $cropperImg = $('<img>');
+
+        const $cropperControls = $('#cropper-controls')
+            .clone()
+            .prop('id', $this.data('blob-id') + '-cropper-controls');
+
+        $cropperWrapper
+            .append($cropperControls)
+            .append($cropperImg);
+
+        $this.closest('fieldset').append($cropperWrapper);
+
+        options.crop = function () {
+            let cropper = this.cropper;
+
+            c.buildImageStack(c.lastResponse);
+
+            // Post base64 encoded data instead of uploading a file.
+            let canvas = cropper.getCanvasData();
+            let cropbox = cropper.getCropBoxData();
+
+            // Width & height will yield the same value as scaling is proportionate.
+            let ratio = canvas.naturalWidth / canvas.width;
+
+            let highResCrop = {
+                width: cropbox.width * ratio,
+                height: cropbox.height * ratio,
+                left: cropbox.left * ratio,
+                top: cropbox.top * ratio
+            };
+
+            $('[id="' + $this.data('blob-id') + '"]').val(cropper.getCroppedCanvas(highResCrop).toDataURL());
+        };
+
+        options.dragMode = 'move';
+        options.viewMode = 2;
+        options.zoomOnWheel = false;
+
+        const cropper = new Cropper($cropperImg[0], options);
+
+        $cropperControls.find('.cropper-control.rotate-left').on('click', function () {
+            cropper.rotate(-90);
+        });
+        $cropperControls.find('.cropper-control.rotate-right').on('click', function () {
+            cropper.rotate(90);
+        });
+        $cropperControls.find('.cropper-control.zoom-in').on('click', function () {
+            cropper.zoom(.1);
+        });
+        $cropperControls.find('.cropper-control.zoom-out').on('click', function () {
+            cropper.zoom(-.1);
+        });
+
+        $this.on('change', function () {
+            if (this.files && this.files[0]) {
+                $cropperImg.prop('src', URL.createObjectURL(this.files[0]));
+                $cropperControls.prop('style', '');
+
+                $cropperImg.one('load', function () {
+                    cropper.replace($cropperImg.prop('src'), false);
+                });
+            }
+        });
+
+        croppers.push({
+            'cropper': cropper,
+            'config': $this.data('upload')
+        });
+    });
+
     if (this.$form.length) {
         dispatchChange(this.$form.find(':input'));
         this.$form.find('[data-toggle]').change();
     }
 
     setState(c);
-}
+};
 
 /**
  * Sets image state and changes state toggle label
@@ -361,9 +437,9 @@ function buildImageStack(response, $element) {
     }
 
     let $html = $('<div></div>');
+    let c = this;
 
     if (response.build.hasOwnProperty('images')) {
-        let c = this;
         response.build.images.forEach(function (componentImages) {
             // preload images
             if (componentImages.hasOwnProperty('front')) {
@@ -379,7 +455,7 @@ function buildImageStack(response, $element) {
 
             const image = componentImages[c.state];
 
-            const $img = $('<img>')
+            const $img = $('<img class="build-preview">')
                 .prop('src', getImageSrc(image['path'], c.options))
                 .css({
                     zIndex: image['layer'] * (c.options.layerDirection === 'asc' ? 1 : -1)
@@ -452,6 +528,35 @@ function buildImageStack(response, $element) {
     }
 
     $element.html($html);
+
+    $html.find('img').eq(0).on('load', function () {
+        const $preview = $(this);
+
+        $('input[type="blob"]').each(function () {
+            if (!$(this).val()) {
+                return;
+            }
+
+            let $img = $('<img class="blob-preview">');
+
+            let ratio = {
+                w: $preview.width() / c.options.originalImageSize.width,
+                h: $preview.height() / c.options.originalImageSize.height
+            };
+
+            $img
+                .css({
+                    'top': ratio.h * $(this).data('config').y,
+                    'left': ratio.w * $(this).data('config').x,
+                    'width': ratio.w * $(this).data('config').w,
+                    'height': ratio.h * $(this).data('config').h,
+                    'z-index': $(this).data('config').layer
+                })
+                .prop('src', $(this).val());
+
+            $element.find('div').append($img);
+        });
+    });
 }
 
 /**

@@ -6,6 +6,7 @@ Implementing applications should override as needed.
  */
 
 @import "../../node_modules/bootstrap/scss/bootstrap";
+@import "../../node_modules/cropperjs/dist/cropper.min";
 
 .arc.configurator {
   .nav-steps {
