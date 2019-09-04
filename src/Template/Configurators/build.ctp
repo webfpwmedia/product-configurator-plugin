@@ -230,7 +230,5 @@ $this
             backLabel: '<?= h(Configure::read('ARC.ProductConfigurator.text.back')) ?>',
             layerDirection: '<?= Configure::read('ARC.ProductConfigurator.layerDirection') ?>'
         });
-
-
     });
 </script>

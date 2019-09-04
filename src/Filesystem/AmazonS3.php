@@ -15,11 +15,11 @@ class AmazonS3
     /**
      * Get Amazon S3 filesystem object.
      *
-     * @param string $bucket
+     * @param string $prefix
      *
      * @return Filesystem
      */
-    public static function get(string $bucket): Filesystem
+    public static function get(string $prefix): Filesystem
     {
         $client = new S3Client([
             'credentials' => [
@@ -30,7 +30,7 @@ class AmazonS3
             'version' => '2006-03-01',
         ]);
 
-        $adapter = new AwsS3Adapter($client, env('AMAZON_S3_BUCKET'), env('AMAZON_S3_PATH_UPLOAD'));
+        $adapter = new AwsS3Adapter($client, env('AMAZON_S3_BUCKET'), $prefix);
 
         return new Filesystem($adapter);
     }
