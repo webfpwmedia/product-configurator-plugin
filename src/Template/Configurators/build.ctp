@@ -110,6 +110,7 @@ $this
                                         $inheritsData = null;
                                         if ($inherits) {
                                             $inheritsData = sprintf('data-inherits="%s:%s"', $step->getStepCollection()->getComponentCollection()->getComponent(key($inherits))->getId(), current($inherits));
+                                            $inheritsData .= sprintf(' data-inherits-options=\'%s\'', h(json_encode($optionSet->getInheritsOptions())));
                                         }
                                         ?>
 

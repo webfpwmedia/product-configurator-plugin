@@ -184,6 +184,7 @@ window.Configurator = function Configurator($element, options) {
 
     this.$form.find('fieldset[data-inherits]').each(function () {
         const $this = $(this);
+        const options = $(this).data('inherits-options');
         const $thisInput = $this.find(':input').not('[type=hidden]');
         const inherits = $this.data('inherits').split(':');
 
@@ -191,12 +192,16 @@ window.Configurator = function Configurator($element, options) {
 
         $inherited.change(function () {
             const $inherit = $(this);
+            let val = $inherit.val();
+            if (options.map.hasOwnProperty(val)) {
+                val = options.map[val];
+            }
 
             if ($thisInput.is(':radio')) {
                 if ($thisInput.parent().is(':hidden') && !$thisInput.is(':disabled')) {
                     $thisInput
                         .filter(function () {
-                            return $(this).val() === $inherit.val()
+                            return $(this).val() === val
                         })
                         .prop('checked', true)
                         .trigger('change', {
@@ -204,7 +209,7 @@ window.Configurator = function Configurator($element, options) {
                         });
                 }
             } else {
-                $thisInput.val($inherit.val());
+                $thisInput.val(val);
                 let eventData = {};
                 if ($thisInput.parent().is(':hidden')) {
                     eventData = {
