@@ -179,9 +179,20 @@ class OptionSet
                     ->getComponentCollection()
                     ->getComponent(key($inherits));
 
-                return $inheritedComponent
+                $options = $inheritedComponent
                     ->getOptionSet(current($inherits))
                     ->getOptions();
+
+                $options = collection($options)
+                    ->map(function ($option) use ($inheritOptions) {
+                        if (isset($inheritOptions['map'][$option['value']])) {
+                            $option['value'] = $inheritOptions['map'][$option['value']];
+                        }
+
+                        return $option;
+                    });
+
+                return $options->toList();
             } else {
                 return [];
             }
