@@ -113,7 +113,7 @@ $this
                                         }
                                         ?>
 
-                                        <fieldset id="<?= $component->getId() . '-' . $optionSet->getToken() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?>>
+                                        <fieldset data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?>>
                                             <?php if ($inherits && !$optionSet->getOptions()): ?>
                                                 <?= $this->Form->control($controlName, [
                                                     'label' => false,
