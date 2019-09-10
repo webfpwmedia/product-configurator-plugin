@@ -342,7 +342,8 @@ class OptionSet
         unset($options['token']);
 
         return $options + [
-            'showOptions' => false
+            'showOptions' => false,
+            'map' => [],
         ];
     }
 
