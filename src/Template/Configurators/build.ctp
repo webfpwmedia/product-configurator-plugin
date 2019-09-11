@@ -114,10 +114,16 @@ $this
                                         if ($inherits) {
                                             $inheritsData = sprintf('data-inherits="%s:%s"', $step->getStepCollection()->getComponentCollection()->getComponent(key($inherits))->getId(), current($inherits));
                                         }
+
+                                        $noOptions = $inherits && !$optionSet->getOptions();
+                                        $class = '';
+                                        if ($noOptions) {
+                                            $class .= 'optionless';
+                                        }
                                         ?>
 
-                                        <fieldset id="<?= $component->getId() . '-' . $optionSet->getToken() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?>>
-                                            <?php if ($inherits && !$optionSet->getOptions()): ?>
+                                    <fieldset id="<?= $component->getId() . '-' . $optionSet->getToken() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?> class="<?= $class ?>">
+                                            <?php if ($noOptions): ?>
                                                 <?= $this->Form->control($controlName, [
                                                     'label' => false,
                                                     'hidden' => true,

@@ -64,4 +64,8 @@ Implementing applications should override as needed.
     vertical-align: text-top;
     margin-right: .7rem;
   }
+
+  fieldset.optionless {
+    display: none !important;
+  }
 }
