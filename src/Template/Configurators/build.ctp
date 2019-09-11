@@ -121,8 +121,7 @@ $this
                                             $class .= 'optionless';
                                         }
                                         ?>
-
-                                    <fieldset id="<?= $component->getId() . '-' . $optionSet->getToken() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?> class="<?= $class ?>">
+                                        <fieldset data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?> class="<?= $class ?>">
                                             <?php if ($noOptions): ?>
                                                 <?= $this->Form->control($controlName, [
                                                     'label' => false,
