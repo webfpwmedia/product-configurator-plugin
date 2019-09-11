@@ -69,20 +69,23 @@ $this
                             <div class="component" id="component-<?= $component->getId() ?>" <?= $includes ?>>
                                 <?php if ($component->getConfig('header')): ?>
                                     <h3 class="component-header">
-                                        <?= $component->getConfig('header') ?>
+                                        <?php
+                                        if ($component->getConfig('showToggle')) {
+                                            echo $this->Form->control($component->getId() . '.' . BuildsTable::TOGGLE_INPUT, [
+                                                'templates' => [
+                                                    'inputContainer' => '{{content}}',
+                                                ],
+                                                'type' => 'checkbox',
+                                                'label' => $component->getConfig('header'),
+                                                'data-toggle' => true,
+                                                'data-component-id' => $component->getId(),
+                                            ]);
+                                        } else {
+                                            echo h($component->getConfig('header'));
+                                        }
+                                        ?>
                                     </h3>
                                 <?php endif; ?>
-
-                                <?php
-                                if ($component->getConfig('showToggle')) {
-                                    echo $this->Form->control($component->getId() . '.' . BuildsTable::TOGGLE_INPUT, [
-                                        'type' => 'checkbox',
-                                        'label' => __('Select Component'),
-                                        'data-toggle' => true,
-                                        'data-component-id' => $component->getId(),
-                                    ]);
-                                }
-                                ?>
 
                                 <div class="component-options" data-component="<?= $component->getId() ?>">
                                     <?php if ($component->getConfig('showQty')) : ?>
@@ -111,10 +114,16 @@ $this
                                         if ($inherits) {
                                             $inheritsData = sprintf('data-inherits="%s:%s"', $step->getStepCollection()->getComponentCollection()->getComponent(key($inherits))->getId(), current($inherits));
                                         }
+
+                                        $noOptions = $inherits && !$optionSet->getOptions();
+                                        $class = '';
+                                        if ($noOptions) {
+                                            $class .= 'optionless';
+                                        }
                                         ?>
 
-                                        <fieldset id="<?= $component->getId() . '-' . $optionSet->getToken() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?>>
-                                            <?php if ($inherits && !$optionSet->getOptions()): ?>
+                                    <fieldset id="<?= $component->getId() . '-' . $optionSet->getToken() ?>" data-token="<?= $optionSet->getToken() ?>" <?= $requiresData ?> <?= $inheritsData ?> class="<?= $class ?>">
+                                            <?php if ($noOptions): ?>
                                                 <?= $this->Form->control($controlName, [
                                                     'label' => false,
                                                     'hidden' => true,
