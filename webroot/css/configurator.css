@@ -7311,4 +7311,11 @@ a.text-dark:hover, a.text-dark:focus {
   .arc.configurator label.swatch input {
     display: none; }
 
+.arc.configurator [data-toggle] {
+  vertical-align: text-top;
+  margin-right: .7rem; }
+
+.arc.configurator fieldset.optionless {
+  display: none !important; }
+
 /*# sourceMappingURL=configurator.css.map */

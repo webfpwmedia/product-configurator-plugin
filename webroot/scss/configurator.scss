@@ -59,4 +59,13 @@ Implementing applications should override as needed.
       display: none;
     }
   }
+
+  [data-toggle] {
+    vertical-align: text-top;
+    margin-right: .7rem;
+  }
+
+  fieldset.optionless {
+    display: none !important;
+  }
 }
