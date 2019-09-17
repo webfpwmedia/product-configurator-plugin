@@ -174,8 +174,14 @@ class BuildsTable extends Table
                         continue;
                     }
 
+                    $inheritedSelection = $inheritedComponent->getSelection($optionSet->getToken());
+                    if ($inheritedSelection === null) {
+                        // this selection is an already-mapped selection, keep current selections
+                        continue;
+                    }
+
                     $component->addSelections([
-                        $optionSet->getToken() => $inheritedComponent->getSelection($optionSet->getToken())
+                        $optionSet->getToken() => $inheritOptions['map'][$inheritedSelection] ?? $inheritedSelection
                     ]);
                 }
             });
