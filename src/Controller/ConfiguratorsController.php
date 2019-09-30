@@ -101,7 +101,7 @@ class ConfiguratorsController extends AppController
      */
     public function index()
     {
-        $configurators = $this->paginate($this->Configurators);
+        $configurators = $this->Configurators->find();
 
         $this->set(compact('configurators'));
     }

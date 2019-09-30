@@ -22,7 +22,7 @@ class ComponentsController extends AppController
             ->find()
             ->order(['name' => 'asc', 'mask' => 'asc']);
 
-        $this->set('components', $this->Paginator->paginate($components));
+        $this->set('components', $components);
     }
 
     /**
