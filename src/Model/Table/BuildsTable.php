@@ -5,6 +5,7 @@ use ARC\ProductConfigurator\Filesystem\AmazonS3;
 use ARC\ProductConfigurator\Mask\TokensMissingException;
 use ARC\ProductConfigurator\Model\Entity\Build;
 use ARC\ProductConfigurator\Model\Json\Component;
+use ARC\ProductConfigurator\Model\Json\Component as ComponentJson;
 use ARC\ProductConfigurator\Model\Json\ComponentCollection;
 use ARC\ProductConfigurator\Model\Json\OptionSet;
 use ARC\ProductConfigurator\ORM\Table;
@@ -15,7 +16,6 @@ use Cake\Utility\Hash;
 use Cake\Utility\Text;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use League\Flysystem\FileNotFoundException;
 
 /**
  * Builds Model
@@ -275,8 +275,13 @@ class BuildsTable extends Table
     public function beforeSave(Event $event, Build $build, ArrayObject $options)
     {
         $filesystem = AmazonS3::get(env('AMAZON_S3_PATH_UPLOAD'));
+        $componentCollection = new ComponentCollection();
 
         foreach ($build->components as $component) {
+            if (!$component instanceof ComponentJson) {
+                $component = ComponentJson::fromArray($componentCollection, $component);
+            }
+
             foreach ($component->getImages() as $path => $image) {
                 $response = $filesystem->put($image['name'], base64_decode($image['data']));
 
