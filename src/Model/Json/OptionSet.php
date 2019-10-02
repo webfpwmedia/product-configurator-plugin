@@ -156,11 +156,12 @@ class OptionSet
                 ->getOptionLabels();
 
             if (!empty($this->getInheritsOptions()['map'])) {
+                $map = $this->getInheritsOptions()['map'];
                 $mappedLabels = [];
 
                 foreach ($optionLabels as $code => $name) {
-                    if (isset($this->getInheritsOptions()['map'][$code])) {
-                        $mappedLabels[$this->getInheritsOptions()['map'][$code]] = $name;
+                    if (isset($map[$code])) {
+                        $mappedLabels[$map[$code]['code']] = $map[$code]['name'];
                     }
                 }
 
@@ -200,7 +201,10 @@ class OptionSet
                 $options = collection($options)
                     ->map(function ($option) use ($inheritOptions) {
                         if (isset($inheritOptions['map'][$option['value']])) {
-                            $option['value'] = $inheritOptions['map'][$option['value']];
+                            $mappedCode = $option['value'];
+
+                            $option['value'] = $inheritOptions['map'][$mappedCode]['code'];
+                            $option['text'] = $inheritOptions['map'][$mappedCode]['name'];
                         }
 
                         return $option;
