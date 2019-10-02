@@ -194,7 +194,7 @@ window.Configurator = function Configurator($element, options) {
             const $inherit = $(this);
             let val = $inherit.val();
             if (options.map.hasOwnProperty(val)) {
-                val = options.map[val];
+                val = options.map[val].code;
             }
 
             if ($thisInput.is(':radio')) {

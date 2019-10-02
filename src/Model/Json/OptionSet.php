@@ -151,9 +151,21 @@ class OptionSet
                 ->getComponentCollection()
                 ->getComponent(key($inherits));
 
-            return $inheritedComponent
+            $optionLabels = $inheritedComponent
                 ->getOptionSet(current($inherits))
                 ->getOptionLabels();
+
+            if (!empty($this->getInheritsOptions()['map'])) {
+                $map = $this->getInheritsOptions()['map'];
+
+                foreach ($optionLabels as $code => $name) {
+                    if (isset($map[$code])) {
+                        $optionLabels[$map[$code]['code']] = $map[$code]['name'];
+                    }
+                }
+            }
+
+            return $optionLabels;
         }
 
         $options = collection($this->data['options'])->combine('code', 'name');
@@ -186,11 +198,15 @@ class OptionSet
                 $options = collection($options)
                     ->map(function ($option) use ($inheritOptions) {
                         if (isset($inheritOptions['map'][$option['value']])) {
-                            $option['value'] = $inheritOptions['map'][$option['value']];
+                            $mappedCode = $option['value'];
+
+                            $option['value'] = $inheritOptions['map'][$mappedCode]['code'];
+                            $option['text'] = $inheritOptions['map'][$mappedCode]['name'];
                         }
 
                         return $option;
-                    });
+                    })
+                    ->indexBy('value');
 
                 return $options->toList();
             } else {
