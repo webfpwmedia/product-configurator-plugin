@@ -69,6 +69,9 @@ class ComponentsController extends AppController
             if ($this->Components->save($component)) {
                 $this->Flash->success(__('The component has been saved.'));
 
+                # Invalidate user's session to prevent false-positive build pages.
+                $this->request->getSession()->delete('build');
+
                 return $this->redirect(['action' => 'edit', $component->id]);
             }
 
@@ -95,6 +98,9 @@ class ComponentsController extends AppController
 
         if ($this->Components->delete($component)) {
             $this->Flash->success(__('The component has been deleted.'));
+
+            # Invalidate user's session to prevent false-positive build pages.
+            $this->request->getSession()->delete('build');
         } else {
             $this->Flash->error(__('The component could not be deleted. Please, try again.'));
         }
