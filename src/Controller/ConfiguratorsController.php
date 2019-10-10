@@ -1,6 +1,7 @@
 <?php
 namespace ARC\ProductConfigurator\Controller;
 
+use ARC\ProductConfigurator\Model\Entity\Configurator;
 use Cake\Core\Configure;
 use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
@@ -50,10 +51,8 @@ class ConfiguratorsController extends AppController
                 ],
             ]
         ]);
-        $context = $configurator->bootstrap;
-        if ($this->request->getSession()->read('build')) {
-            $context = json_decode($this->request->getSession()->read('build'), true);
-        }
+
+        $context = $this->getContext($configurator);
 
         $build = $this->Builds->newEntity();
 
@@ -187,5 +186,29 @@ class ConfiguratorsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Setup configurator context from entity or session, validating session integrity.
+     *
+     * @param Configurator $configurator
+     *
+     * @return array
+     */
+    private function getContext(Configurator $configurator)
+    {
+        $context = $configurator->bootstrap;
+
+        if ($this->request->getSession()->read('build')) {
+            $context = json_decode($this->request->getSession()->read('build'), true);
+
+            # Components can be deleted, removed from steps, et al.
+            if (!$this->Configurators->validate($configurator, $context)) {
+                $this->request->getSession()->delete('build');
+                $context = $configurator->bootstrap;
+            }
+        }
+
+        return $context;
     }
 }

@@ -1,7 +1,11 @@
 <?php
 namespace ARC\ProductConfigurator\Model\Table;
 
+use ARC\ProductConfigurator\Model\Entity\Configurator;
+use ARC\ProductConfigurator\Model\Json\Component;
+use ARC\ProductConfigurator\Model\Json\StepCollection;
 use ARC\ProductConfigurator\ORM\Table;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validator;
 
 /**
@@ -22,6 +26,8 @@ use Cake\Validation\Validator;
  */
 class ConfiguratorsTable extends Table
 {
+    use LocatorAwareTrait;
+
     /**
      * Initialize method
      *
@@ -78,5 +84,49 @@ class ConfiguratorsTable extends Table
             ->greaterThan('height', 0, __('Must be greater than 0.'));
 
         return $validator;
+    }
+
+    /**
+     * Validates `$context` against `Configurator` based on:
+     *
+     * - Components existing in database.
+     * - Components existing in steps associated with `Configurator`.
+     *
+     * @param Configurator $configurator
+     * @param array $context
+     *
+     * @return bool
+     */
+    public function validate(Configurator $configurator, array $context)
+    {
+        $componentsTable = $this
+            ->getTableLocator()
+            ->get('ARC/ProductConfigurator.Components');
+
+        $steps = $this->Steps
+            ->find()
+            ->where(['configurator_id' => $configurator->id]);
+
+        $steps = new StepCollection($steps->toList());
+
+        $componentIds = collection($steps->getComponentCollection()->getComponents())
+            ->map(function (Component $component) {
+                return $component->getId();
+            })
+            ->toList();
+
+        foreach ($context as $component) {
+            $componentId = key($component);
+
+            if (!$componentsTable->exists(['id' => $componentId])) {
+                return false;
+            }
+
+            if (!in_array($componentId, $componentIds)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
