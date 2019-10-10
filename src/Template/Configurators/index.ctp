@@ -8,7 +8,7 @@ $this
     ->assign('title', 'Configurators')
     ->assign('subtitle', __('Index Of'));
 
-?>
+use Cake\Core\Configure; ?>
 
 <div class="row">
     <div class="col">
@@ -42,8 +42,8 @@ $this
                             <?php foreach ($configurators as $configurator): ?>
                                 <tr>
                                     <td><?= h($configurator->name) ?></td>
-                                    <td><?= h($configurator->created) ?></td>
-                                    <td><?= h($configurator->modified) ?></td>
+                                    <td><?= $configurator->created->setTimezone(Configure::read('ARC.ProductConfigurator.timezone')) ?></td>
+                                    <td><?= $configurator->modified->setTimezone(Configure::read('ARC.ProductConfigurator.timezone')) ?></td>
                                     <td class="text-right">
                                         <?= $this->Html->link(__('Details'),
                                             ['action' => 'edit', $configurator->id],

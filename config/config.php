@@ -71,6 +71,8 @@ return [
                 'uploadBack' => 'Upload Back Image',
             ],
 
+            'timezone' => 'UTC',
+
             // Form templates to use for the admin pages
             'adminTemplates' => 'ARC/ProductConfigurator.templates_admin',
             // Form templates to use for the build page

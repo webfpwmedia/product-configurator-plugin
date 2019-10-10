@@ -8,7 +8,7 @@ $this
     ->assign('title', 'Image Index')
     ->assign('subtitle', __('Configurator'));
 
-?>
+use Cake\Core\Configure; ?>
 
 <div class="row mb-4">
     <div class="col">
@@ -54,7 +54,7 @@ $this
                 <div class="card-footer">
                     <small class="text-muted">
                         <?= __('Last Modified') ?>
-                        <?= h($image->modified) ?>
+                        <?= $image->modified->setTimezone(Configure::read('ARC.ProductConfigurator.timezone')) ?>
                     </small>
                 </div>
             </div>

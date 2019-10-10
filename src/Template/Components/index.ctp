@@ -8,7 +8,7 @@ $this
     ->assign('title', 'Components')
     ->assign('subtitle', __('Index Of'));
 
-?>
+use Cake\Core\Configure; ?>
 
 <div class="row">
     <div class="col">
@@ -51,8 +51,8 @@ $this
                                     </td>
                                     <td><?= h($component->alias) ?></td>
                                     <td><?= h($component->mask) ?></td>
-                                    <td><?= h($component->created) ?></td>
-                                    <td><?= h($component->modified) ?></td>
+                                    <td><?= $component->created->setTimezone(Configure::read('ARC.ProductConfigurator.timezone')) ?></td>
+                                    <td><?= $component->modified->setTimezone(Configure::read('ARC.ProductConfigurator.timezone')) ?></td>
                                     <td class="text-right">
                                         <?= $this->Html->link(__('Details'),
                                             ['action' => 'edit', $component->id],
