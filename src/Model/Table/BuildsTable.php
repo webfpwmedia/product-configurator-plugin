@@ -174,7 +174,7 @@ class BuildsTable extends Table
                         continue;
                     }
 
-                    $inheritedSelection = $inheritedComponent->getSelection($optionSet->getToken());
+                    $inheritedSelection = $inheritedComponent->getSelection(current($inherits));
                     if ($inheritedSelection === null) {
                         // this selection is an already-mapped selection, keep current selections
                         continue;
