@@ -150,6 +150,10 @@ $this
                                                         'data-upload' => json_encode($options),
                                                     ]);
 
+                                                    if (isset($options['note'])) {
+                                                        echo $this->Html->tag('p', h($options['note']));
+                                                    }
+
                                                     $imageLocation = $optionSet->getToken() . '.' . $position;
                                                     $extantImage = Hash::extract($context, '{n}.{s}.images[' . $imageLocation . '].{s}');
 
