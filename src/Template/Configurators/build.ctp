@@ -19,6 +19,8 @@ $this
     ->assign('subtitle', __('Configurator'));
 ?>
 
+<?= $this->elementHook('buildPageHeader') ?>
+
 <div class="arc configurator">
     <ol class="nav-steps">
         <?php foreach ($configurator->steps as $step): ?>
