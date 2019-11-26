@@ -19,6 +19,8 @@ $this
     ->assign('subtitle', __('Configurator'));
 ?>
 
+<?= $this->elementHook('buildPageHeader') ?>
+
 <div class="arc configurator">
     <ol class="nav-steps">
         <?php foreach ($configurator->steps as $step): ?>
@@ -147,6 +149,10 @@ $this
                                                         'data-position' => 'front',
                                                         'data-upload' => json_encode($options),
                                                     ]);
+
+                                                    if (isset($options['note'])) {
+                                                        echo $this->Html->tag('p', h($options['note']));
+                                                    }
 
                                                     $imageLocation = $optionSet->getToken() . '.' . $position;
                                                     $extantImage = Hash::extract($context, '{n}.{s}.images[' . $imageLocation . '].{s}');

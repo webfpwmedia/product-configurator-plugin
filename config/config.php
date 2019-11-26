@@ -22,6 +22,7 @@ return [
              */
             'elementHook' => [
                 'buildFormPost' => null,
+                'buildPageHeader' => null,
                 'layoutHeader' => 'Layout' . DS . 'header',
                 'layoutMetaTags' => null,
                 'layoutNavPre' => null,
