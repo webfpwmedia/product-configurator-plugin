@@ -425,8 +425,14 @@ window.Configurator = function Configurator($element, options) {
  * @return void
  */
 function setState(Configurator) {
+    let lastState = Configurator.state === 'front' ? 'back' : 'front';
+    let newState = lastState === 'front' ? 'back' : 'front';
+
+    Configurator.$stateToggle.removeClass('state-' + lastState);
+    Configurator.$stateToggle.addClass('state-' + newState);
+
     Configurator.buildImageStack(Configurator.lastResponse);
-    Configurator.$stateToggle.html(Configurator.state === 'front' ? Configurator.options.backLabel : Configurator.options.frontLabel);
+    Configurator.$stateToggle.html(lastState === 'front' ? Configurator.options.backLabel : Configurator.options.frontLabel);
 }
 
 /**
