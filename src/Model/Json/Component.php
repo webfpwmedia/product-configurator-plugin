@@ -320,6 +320,34 @@ class Component implements JsonSerializable
     }
 
     /**
+     * Gets the description for the component from the selected options
+     *
+     * @return string
+     */
+    public function getDescription() : string
+    {
+        $descriptions = $this->data['selections'];
+        foreach ($descriptions as $token => &$selection) {
+            $optionSet = $this->getOptionSet($token);
+            $selection = $optionSet->getOptionLabels()[$selection];
+            if ($optionSet->isCustomizable() && $selection === $this->getCustomText()) {
+                $selection = '"' . $selection . '"';
+            }
+        }
+
+        preg_match_all(Mask::TOKEN_MATCHER, $this->getComponentEntity()->mask, $matches);
+
+        $orderedValues = collection($matches[2])
+            ->map(function ($token) use ($descriptions) {
+                return $descriptions[$token];
+            })
+            ->prependItem($this->getComponentEntity()->name)
+            ->toList();
+
+        return implode(' ', $orderedValues);
+    }
+
+    /**
      * Gets the component collection
      *
      * @return ComponentCollection
