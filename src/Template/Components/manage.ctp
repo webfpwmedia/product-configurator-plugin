@@ -71,6 +71,8 @@ $this
                     ],
                 ]) ?>
 
+                <?= $this->elementHook('componentFormPost') ?>
+
                 <?= $this->Form->submit(__('Save')) ?>
                 <?= $this->Form->end() ?>
             </div>
